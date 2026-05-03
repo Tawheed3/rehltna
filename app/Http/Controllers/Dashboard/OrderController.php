@@ -82,19 +82,13 @@ class OrderController extends Controller
 
             if ($request->get('payment_status') === 'paid') {
                 try {
-                    $order->load(['items.item', 'user.package']);
+                    $order->load(['items', 'user']);
 
                     $user = $order->user;
 
                     if ($user) {
 
-                        $basePoints = 0;
-
                         foreach ($order->items as $orderItem) {
-
-                            if ($orderItem->item && $orderItem->item->earned_points) {
-                                $basePoints += $orderItem->item->earned_points;
-                            }
 
                             $existing = DB::table('item_residency_users')
                                 ->where('residency_user_id', $user->id)
@@ -123,11 +117,11 @@ class OrderController extends Controller
                             }
                         }
 
-                        if ($basePoints > 0) {
-                            $multiplier = $user->package ? $user->package->points_multiplier : 1.00;
-                            $finalPoints = $basePoints * $multiplier;
-                            $user->increment('earned_points', $finalPoints);
-                            $user->increment('available_points', $finalPoints);
+                        // 1 SAR spent = 1 point earned (based on final amount paid after all discounts)
+                        $earnedPoints = (int) $order->total_amount;
+                        if ($earnedPoints > 0) {
+                            $user->increment('earned_points', $earnedPoints);
+                            $user->increment('available_points', $earnedPoints);
                         }
 
                     }

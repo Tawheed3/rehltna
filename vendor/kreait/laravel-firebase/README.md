@@ -1,24 +1,25 @@
 # Firebase for Laravel
 
-A Laravel package for the [Firebase PHP Admin SDK](https://github.com/beste/firebase-php).
+A Laravel package for the [Firebase PHP Admin SDK](https://github.com/kreait/firebase-php).
 
 [![Current version](https://img.shields.io/packagist/v/kreait/laravel-firebase.svg?logo=composer)](https://packagist.org/packages/kreait/laravel-firebase)
 [![Monthly Downloads](https://img.shields.io/packagist/dm/kreait/laravel-firebase.svg)](https://packagist.org/packages/kreait/laravel-firebase/stats)
 [![Total Downloads](https://img.shields.io/packagist/dt/kreait/laravel-firebase.svg)](https://packagist.org/packages/kreait/laravel-firebase/stats)
-[![Tests](https://github.com/beste/laravel-firebase/actions/workflows/tests.yml/badge.svg)](https://github.com/beste/laravel-firebase/actions/workflows/tests.yml)
+[![Tests](https://github.com/kreait/laravel-firebase/workflows/Tests/badge.svg?branch=main)](https://github.com/kreait/laravel-firebase/actions)
+[![codecov](https://codecov.io/gh/kreait/laravel-firebase/branch/main/graph/badge.svg)](https://codecov.io/gh/kreait/laravel-firebase)
 [![Sponsor](https://img.shields.io/static/v1?logo=GitHub&label=Sponsor&message=%E2%9D%A4&color=ff69b4)](https://github.com/sponsors/jeromegamez)
 
-> [!IMPORTANT]
-> **Support the project:** This library is downloaded 1M+ times monthly and powers thousands of applications.
-> If it saves you or your team time, please consider
-> [sponsoring its development](https://github.com/sponsors/jeromegamez).
+---
 
-> [!NOTE]
-> The project moved from the `kreait` to the `beste` GitHub Organization in January 2026.
-> The namespace remains `Kreait\Laravel\Firebase` and the package name remains `kreait/laravel-firebase`.
-> Please update your remote URL if you have forked or cloned the repository.
+## The future of the Firebase Admin PHP SDK
+
+Please read about the future of the Firebase Admin PHP SDK on the
+[SDK's GitHub Repository](https://github.com/kreait/firebase-php).
+
+---
 
 - [Installation](#installation)
+  - [Laravel](#laravel)
 - [Configuration](#configuration)
   - [Credentials with JSON files](#credentials-with-json-files)
   - [Credentials with Arrays](#credentials-with-arrays)
@@ -119,7 +120,7 @@ $anotherAppAuth = Firebase::project('another-app')->auth();
 **Only the latest version is actively supported.**
 
 Earlier versions will receive security fixes as long as their **lowest** SDK requirement receives security fixes. You
-can find the currently supported versions and support options in the [SDK's README](https://github.com/beste/firebase-php).
+can find the currently supported versions and support options in the [SDK's README](https://github.com/kreait/firebase-php).
 
 | Version | Initial Release | Supported SDK Versions | Supported Laravel Versions | Status       |
 |---------|-----------------|------------------------|----------------------------|--------------|

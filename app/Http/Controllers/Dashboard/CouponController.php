@@ -26,13 +26,7 @@ class CouponController extends Controller
      */
     public function create(): View
     {
-        $items = Item::query()->whereDoesntHave('assignedCoupons', function ($query) {
-            $query->where('status', 1)
-                ->where(function ($q) {
-                    $q->whereNull('expires_at')
-                        ->orWhereDate('expires_at', '>', now());
-                });
-        })->get();
+        $items = Item::query()->get();
 
         return view('pages.coupons.create', compact('items'));
     }
@@ -53,12 +47,6 @@ class CouponController extends Controller
                 'status' => 'required|boolean',
             ]);
 
-            if (!$request->has('items') || empty($request->items)) {
-                if (Coupon::query()->doesntHave('items')->exists()) {
-                    return redirect()->back()->with('error', 'There is already an active Global Coupon running.')->withInput();
-                }
-            }
-
             $coupon = Coupon::query()->create($request->except('items'));
 
             if ($request->has('items')) {
@@ -78,13 +66,7 @@ class CouponController extends Controller
     public function edit($id): View
     {
         $coupon = Coupon::with('items')->findOrFail(decrypt($id));
-        $items = Item::query()->whereDoesntHave('assignedCoupons', function ($query) use ($coupon) {
-            $query->where('coupons.id', '!=', $coupon->id)
-                ->where('status', 1)
-                ->where(function ($q) {
-                    $q->whereNull('expires_at')->orWhereDate('expires_at', '>', now());
-                });
-        })->get();
+        $items = Item::query()->get();
         $selectedItems = $coupon->items->pluck('id')->toArray();
         return view('pages.coupons.edit', compact('coupon', 'items', 'selectedItems'));
     }
@@ -106,12 +88,6 @@ class CouponController extends Controller
                 'value' => 'required|numeric',
                 'status' => 'required|boolean',
             ]);
-
-            if (!$request->has('items') || empty($request->items)) {
-                if (Coupon::query()->doesntHave('items')->where('id', '!=', $id)->exists()) {
-                    return redirect()->back()->with('error', 'There is already an active Global Coupon running.')->withInput();
-                }
-            }
 
             $coupon->update($request->except('items'));
             $coupon->items()->sync($request->items ?? []);

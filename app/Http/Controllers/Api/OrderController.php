@@ -88,7 +88,7 @@ class OrderController extends Controller
                             if ($coupon->type == 'percent') {
                                 $discountAmount += ($data['total'] * $coupon->value) / 100;
                             } else {
-                                $discountAmount += min($coupon->value, $data['total']);
+                                $discountAmount += min($coupon->value * $data['attendees_count'], $data['total']);
                             }
                         }
                     }
@@ -96,7 +96,8 @@ class OrderController extends Controller
                     if ($coupon->type == 'percent') {
                         $discountAmount = ($subTotal * $coupon->value) / 100;
                     } else {
-                        $discountAmount = min($coupon->value, $subTotal);
+                        $totalAttendees = array_sum(array_column($orderItemsData, 'attendees_count'));
+                        $discountAmount = min($coupon->value * $totalAttendees, $subTotal);
                     }
                 }
             }
@@ -111,9 +112,9 @@ class OrderController extends Controller
         if ($usePoints && $email) {
             $user = ResidencyUser::where('email', $email)->first();
             if ($user && $user->available_points > 0) {
-                $pointsValueInSAR = $user->available_points / 10;
+                $pointsValueInSAR = $user->available_points / 50;
                 $pointsDiscount = min($pointsValueInSAR, $finalTotal);
-                $pointsUsed = $pointsDiscount * 10;
+                $pointsUsed = $pointsDiscount * 50;
                 $finalTotal -= $pointsDiscount;
             }
         }
@@ -643,17 +644,11 @@ class OrderController extends Controller
         ]);
 
         try {
-            $order->load(['items.item', 'user.package']);
+            $order->load(['items', 'user']);
             $user = $order->user;
 
             if ($user) {
-                $basePoints = 0;
-
                 foreach ($order->items as $orderItem) {
-                    if ($orderItem->item && $orderItem->item->earned_points) {
-                        $basePoints += $orderItem->item->earned_points;
-                    }
-
                     $existing = DB::table('item_residency_users')
                         ->where('residency_user_id', $user->id)
                         ->where('item_id', $orderItem->item_id)
@@ -677,11 +672,11 @@ class OrderController extends Controller
                     }
                 }
 
-                if ($basePoints > 0) {
-                    $multiplier = $user->package ? $user->package->points_multiplier : 1.00;
-                    $finalPoints = $basePoints * $multiplier;
-                    $user->increment('earned_points', $finalPoints);
-                    $user->increment('available_points', $finalPoints);
+                // 1 SAR spent = 1 point earned (based on final amount paid after all discounts)
+                $earnedPoints = (int) $order->total_amount;
+                if ($earnedPoints > 0) {
+                    $user->increment('earned_points', $earnedPoints);
+                    $user->increment('available_points', $earnedPoints);
                 }
             }
         } catch (\Exception $e) {

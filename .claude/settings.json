@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r '\\\\$_GET\\\\|\\\\$_POST\\\\|\\\\$_REQUEST' /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/app '--include=*.php')",
+      "Bash(composer require *)",
+      "Bash(php artisan *)",
+      "Bash(curl -s http://127.0.0.1:8000 -o /dev/null -w \"%{http_code}\")",
+      "Bash(pkill -f \"php artisan serve\")"
+    ]
+  }
+}

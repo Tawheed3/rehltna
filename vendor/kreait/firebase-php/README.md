@@ -1,15 +1,17 @@
 <div align="center">
 
-# Firebase Admin SDK for PHP
+# Firebase for PHP
 
 <img src="docs/_static/logo.svg" alt="Firebase Admin PHP SDK Logo" width="120">
+
+<p><em>Firebase Admin SDK for PHP</em></p>
 
 [![Current version](https://img.shields.io/packagist/v/kreait/firebase-php.svg?logo=composer)](https://packagist.org/packages/kreait/firebase-php)
 [![Monthly Downloads](https://img.shields.io/packagist/dm/kreait/firebase-php.svg)](https://packagist.org/packages/kreait/firebase-php/stats)
 [![Total Downloads](https://img.shields.io/packagist/dt/kreait/firebase-php.svg)](https://packagist.org/packages/kreait/firebase-php/stats)<br/>
-[![CI](https://github.com/beste/firebase-php/actions/workflows/ci.yml/badge.svg)](https://github.com/beste/firebase-php/actions/workflows/ci.yml)
-[![Secure Tests](https://github.com/beste/firebase-php/actions/workflows/secure-tests.yml/badge.svg)](https://github.com/beste/firebase-php/actions/workflows/secure-tests.yml)
-[![Docs](https://github.com/beste/firebase-php/actions/workflows/docs.yml/badge.svg)](https://github.com/beste/firebase-php/actions/workflows/docs.yml)
+[![Tests](https://github.com/kreait/firebase-php/actions/workflows/tests.yml/badge.svg)](https://github.com/kreait/firebase-php/actions/workflows/tests.yml)
+[![Integration Tests](https://github.com/kreait/firebase-php/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/kreait/firebase-php/actions/workflows/integration-tests.yml)
+[![Emulator Tests](https://github.com/kreait/firebase-php/actions/workflows/emulator-tests.yml/badge.svg)](https://github.com/kreait/firebase-php/actions/workflows/emulator-tests.yml)
 [![Sponsor](https://img.shields.io/static/v1?logo=GitHub&label=Sponsor&message=%E2%9D%A4&color=ff69b4)](https://github.com/sponsors/jeromegamez)
 
 </div>
@@ -20,9 +22,9 @@
 > [sponsoring its development](https://github.com/sponsors/jeromegamez).
 
 > [!NOTE]
-> The project moved from the `kreait` to the `beste` GitHub Organization in January 2026.
-> The namespace remains `Kreait\Firebase` and the package name remains `kreait/firebase-php`.
-> Please update your remote URL if you have forked or cloned the repository.
+> If you are interested in using the PHP Admin SDK as a client for end-user access (for example, in a web application),
+> as opposed to admin access from a privileged environment (like a server), you should instead follow the
+> [instructions for setting up the client JavaScript SDK](https://firebase.google.com/docs/web/setup).
 
 ## Overview
 
@@ -37,15 +39,15 @@ Composer is a dependency management tool for PHP that allows you to declare the 
 your project needs and installs them into your project.
 
 ```bash
-composer require "kreait/firebase-php:^8.0"
+composer require "kreait/firebase-php:^7.0"
 ```
 
 Please continue to the [Setup section](docs/setup.rst) to learn more about connecting your application to Firebase.
 
 If you want to use the SDK within a Framework, please follow the installation instructions here:
 
-- **Laravel**: https://packagist.org/packages/kreait/laravel-firebase
-- **Symfony**: https://packagist.org/packages/kreait/firebase-bundle
+- **Laravel**: https://github.com/kreait/laravel-firebase
+- **Symfony**: https://github.com/kreait/firebase-bundle
 
 ## Quickstart
 
@@ -64,16 +66,11 @@ $cloudStorage = $factory->createStorage();
 $firestore = $factory->createFirestore();
 ```
 
-## Sponsors
+## Powered by
 
-<div align="center" style="display: flex; justify-content: center; align-items: center; gap: 40px;">
-  <a href="https://exitable.nl/"><img src="docs/_static/sponsors/logo-exitable.png" alt="Exitable" height="48"></a>
-  <a href="https://jb.gg/OpenSourceSupport"><img src="docs/_static/sponsors/jetbrains.svg" alt="JetBrains" height="48"></a>
-</div>
+[![JetBrains logo.](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg)](https://jb.gg/OpenSourceSupport)
 
-<div align="center">
-  <sub>Thanks to <a href="https://exitable.nl/">Exitable</a> and <a href="https://www.jetbrains.com/">JetBrains</a> for supporting this project.</sub>
-</div>
+Thanks to [JetBrains](https://www.jetbrains.com/) credits for providing [a free PhpStorm license](https://jb.gg/OpenSourceSupport) for the development of this open-source package.
 
 ## License
 

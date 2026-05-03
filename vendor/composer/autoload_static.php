@@ -53,30 +53,30 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
     );
 
     public static $prefixLengthsPsr4 = array (
-        'v' => 
+        'v' =>
         array (
             'voku\\' => 5,
         ),
-        'p' => 
+        'p' =>
         array (
             'phpseclib3\\' => 11,
         ),
-        'Z' => 
+        'Z' =>
         array (
             'ZipStream\\' => 10,
         ),
-        'W' => 
+        'W' =>
         array (
             'Whoops\\' => 7,
         ),
-        'T' => 
+        'T' =>
         array (
             'Tree\\' => 5,
             'TijsVerkoyen\\CssToInlineStyles\\' => 31,
             'Tests\\' => 6,
             'Termwind\\' => 9,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Uuid\\' => 22,
             'Symfony\\Polyfill\\Php85\\' => 23,
@@ -121,13 +121,13 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
             'Spatie\\Crawler\\' => 15,
             'Spatie\\Browsershot\\' => 19,
         ),
-        'R' => 
+        'R' =>
         array (
             'Rize\\' => 5,
             'Ramsey\\Uuid\\' => 12,
             'Ramsey\\Collection\\' => 18,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psy\\' => 4,
             'Psr\\SimpleCache\\' => 16,
@@ -143,12 +143,12 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
             'PhpOffice\\PhpSpreadsheet\\' => 25,
             'ParagonIE\\ConstantTime\\' => 23,
         ),
-        'N' => 
+        'N' =>
         array (
             'NunoMaduro\\Collision\\' => 21,
             'Nette\\' => 6,
         ),
-        'M' => 
+        'M' =>
         array (
             'Monolog\\' => 8,
             'Mockery\\' => 8,
@@ -156,7 +156,7 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
             'Masterminds\\' => 12,
             'Maatwebsite\\Excel\\' => 18,
         ),
-        'L' => 
+        'L' =>
         array (
             'League\\Uri\\' => 11,
             'League\\MimeTypeDetection\\' => 25,
@@ -172,22 +172,22 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
             'Laravel\\Prompts\\' => 16,
             'Laravel\\Pail\\' => 13,
         ),
-        'K' => 
+        'K' =>
         array (
             'Kreait\\Laravel\\Firebase\\' => 24,
             'Kreait\\Firebase\\JWT\\' => 20,
             'Kreait\\Firebase\\' => 16,
         ),
-        'J' => 
+        'J' =>
         array (
             'JmesPath\\' => 9,
         ),
-        'I' => 
+        'I' =>
         array (
             'Illuminate\\Support\\' => 19,
             'Illuminate\\' => 11,
         ),
-        'G' => 
+        'G' =>
         array (
             'GuzzleHttp\\UriTemplate\\' => 23,
             'GuzzleHttp\\Psr7\\' => 16,
@@ -220,18 +220,18 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
             'GPBMetadata\\Google\\Api\\' => 23,
             'GPBMetadata\\ApiCore\\' => 20,
         ),
-        'F' => 
+        'F' =>
         array (
             'Fruitcake\\Cors\\' => 15,
             'Firebase\\JWT\\' => 13,
             'Fig\\Http\\Message\\' => 17,
             'Faker\\' => 6,
         ),
-        'E' => 
+        'E' =>
         array (
             'Egulias\\EmailValidator\\' => 23,
         ),
-        'D' => 
+        'D' =>
         array (
             'Dotenv\\' => 7,
             'Doctrine\\Inflector\\' => 19,
@@ -243,7 +243,7 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
             'Database\\Seeders\\' => 17,
             'Database\\Factories\\' => 19,
         ),
-        'C' => 
+        'C' =>
         array (
             'CuyZ\\Valinor\\' => 13,
             'Cron\\' => 5,
@@ -253,612 +253,612 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
             'Carbon\\Doctrine\\' => 16,
             'Carbon\\' => 7,
         ),
-        'B' => 
+        'B' =>
         array (
             'Brick\\Math\\' => 11,
             'Beste\\Clock\\' => 12,
             'Beste\\Cache\\' => 12,
         ),
-        'A' => 
+        'A' =>
         array (
             'App\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'voku\\' => 
+        'voku\\' =>
         array (
             0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
         ),
-        'phpseclib3\\' => 
+        'phpseclib3\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
-        'ZipStream\\' => 
+        'ZipStream\\' =>
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
         ),
-        'Whoops\\' => 
+        'Whoops\\' =>
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
         ),
-        'Tree\\' => 
+        'Tree\\' =>
         array (
             0 => __DIR__ . '/..' . '/nicmart/tree/src',
         ),
-        'TijsVerkoyen\\CssToInlineStyles\\' => 
+        'TijsVerkoyen\\CssToInlineStyles\\' =>
         array (
             0 => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src',
         ),
-        'Tests\\' => 
+        'Tests\\' =>
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'Termwind\\' => 
+        'Termwind\\' =>
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/termwind/src',
         ),
-        'Symfony\\Polyfill\\Uuid\\' => 
+        'Symfony\\Polyfill\\Uuid\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-uuid',
         ),
-        'Symfony\\Polyfill\\Php85\\' => 
+        'Symfony\\Polyfill\\Php85\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php85',
         ),
-        'Symfony\\Polyfill\\Php84\\' => 
+        'Symfony\\Polyfill\\Php84\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php84',
         ),
-        'Symfony\\Polyfill\\Php83\\' => 
+        'Symfony\\Polyfill\\Php83\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php83',
         ),
-        'Symfony\\Polyfill\\Php80\\' => 
+        'Symfony\\Polyfill\\Php80\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
         ),
-        'Symfony\\Polyfill\\Intl\\Idn\\' => 
+        'Symfony\\Polyfill\\Intl\\Idn\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-idn',
         ),
-        'Symfony\\Polyfill\\Intl\\Grapheme\\' => 
+        'Symfony\\Polyfill\\Intl\\Grapheme\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Contracts\\Translation\\' => 
+        'Symfony\\Contracts\\Translation\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/translation-contracts',
         ),
-        'Symfony\\Contracts\\Service\\' => 
+        'Symfony\\Contracts\\Service\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
-        'Symfony\\Contracts\\EventDispatcher\\' => 
+        'Symfony\\Contracts\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts',
         ),
-        'Symfony\\Contracts\\Cache\\' => 
+        'Symfony\\Contracts\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/cache-contracts',
         ),
-        'Symfony\\Component\\Yaml\\' => 
+        'Symfony\\Component\\Yaml\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
-        'Symfony\\Component\\VarExporter\\' => 
+        'Symfony\\Component\\VarExporter\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/var-exporter',
         ),
-        'Symfony\\Component\\VarDumper\\' => 
+        'Symfony\\Component\\VarDumper\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
-        'Symfony\\Component\\Uid\\' => 
+        'Symfony\\Component\\Uid\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/uid',
         ),
-        'Symfony\\Component\\Translation\\' => 
+        'Symfony\\Component\\Translation\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
         ),
-        'Symfony\\Component\\String\\' => 
+        'Symfony\\Component\\String\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/string',
         ),
-        'Symfony\\Component\\Routing\\' => 
+        'Symfony\\Component\\Routing\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
         ),
-        'Symfony\\Component\\Process\\' => 
+        'Symfony\\Component\\Process\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
         ),
-        'Symfony\\Component\\Mime\\' => 
+        'Symfony\\Component\\Mime\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/mime',
         ),
-        'Symfony\\Component\\Mailer\\' => 
+        'Symfony\\Component\\Mailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/mailer',
         ),
-        'Symfony\\Component\\HttpKernel\\' => 
+        'Symfony\\Component\\HttpKernel\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/http-kernel',
         ),
-        'Symfony\\Component\\HttpFoundation\\' => 
+        'Symfony\\Component\\HttpFoundation\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
-        'Symfony\\Component\\Finder\\' => 
+        'Symfony\\Component\\Finder\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/finder',
         ),
-        'Symfony\\Component\\EventDispatcher\\' => 
+        'Symfony\\Component\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
         ),
-        'Symfony\\Component\\ErrorHandler\\' => 
+        'Symfony\\Component\\ErrorHandler\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/error-handler',
         ),
-        'Symfony\\Component\\DomCrawler\\' => 
+        'Symfony\\Component\\DomCrawler\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/dom-crawler',
         ),
-        'Symfony\\Component\\CssSelector\\' => 
+        'Symfony\\Component\\CssSelector\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/css-selector',
         ),
-        'Symfony\\Component\\Console\\' => 
+        'Symfony\\Component\\Console\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
         ),
-        'Symfony\\Component\\Clock\\' => 
+        'Symfony\\Component\\Clock\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/clock',
         ),
-        'Symfony\\Component\\Cache\\' => 
+        'Symfony\\Component\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
         ),
-        'Spatie\\TemporaryDirectory\\' => 
+        'Spatie\\TemporaryDirectory\\' =>
         array (
             0 => __DIR__ . '/..' . '/spatie/temporary-directory/src',
         ),
-        'Spatie\\Sitemap\\' => 
+        'Spatie\\Sitemap\\' =>
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-sitemap/src',
         ),
-        'Spatie\\Robots\\' => 
+        'Spatie\\Robots\\' =>
         array (
             0 => __DIR__ . '/..' . '/spatie/robots-txt/src',
         ),
-        'Spatie\\Multitenancy\\Database\\Factories\\' => 
+        'Spatie\\Multitenancy\\Database\\Factories\\' =>
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-multitenancy/database/factories',
         ),
-        'Spatie\\Multitenancy\\' => 
+        'Spatie\\Multitenancy\\' =>
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-multitenancy/src',
         ),
-        'Spatie\\LaravelPackageTools\\' => 
+        'Spatie\\LaravelPackageTools\\' =>
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-package-tools/src',
         ),
-        'Spatie\\Crawler\\' => 
+        'Spatie\\Crawler\\' =>
         array (
             0 => __DIR__ . '/..' . '/spatie/crawler/src',
         ),
-        'Spatie\\Browsershot\\' => 
+        'Spatie\\Browsershot\\' =>
         array (
             0 => __DIR__ . '/..' . '/spatie/browsershot/src',
         ),
-        'Rize\\' => 
+        'Rize\\' =>
         array (
             0 => __DIR__ . '/..' . '/rize/uri-template/src/Rize',
         ),
-        'Ramsey\\Uuid\\' => 
+        'Ramsey\\Uuid\\' =>
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
         ),
-        'Ramsey\\Collection\\' => 
+        'Ramsey\\Collection\\' =>
         array (
             0 => __DIR__ . '/..' . '/ramsey/collection/src',
         ),
-        'Psy\\' => 
+        'Psy\\' =>
         array (
             0 => __DIR__ . '/..' . '/psy/psysh/src',
         ),
-        'Psr\\SimpleCache\\' => 
+        'Psr\\SimpleCache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Http\\Client\\' => 
+        'Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'Psr\\EventDispatcher\\' => 
+        'Psr\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
         ),
-        'Psr\\Container\\' => 
+        'Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Psr\\Clock\\' => 
+        'Psr\\Clock\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
-        'Psr\\Cache\\' => 
+        'Psr\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
-        'PhpParser\\' => 
+        'PhpParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'PhpOption\\' => 
+        'PhpOption\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
-        'PhpOffice\\PhpSpreadsheet\\' => 
+        'PhpOffice\\PhpSpreadsheet\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
-        'ParagonIE\\ConstantTime\\' => 
+        'ParagonIE\\ConstantTime\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'NunoMaduro\\Collision\\' => 
+        'NunoMaduro\\Collision\\' =>
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
         ),
-        'Nette\\' => 
+        'Nette\\' =>
         array (
             0 => __DIR__ . '/..' . '/nette/schema/src',
             1 => __DIR__ . '/..' . '/nette/utils/src',
         ),
-        'Monolog\\' => 
+        'Monolog\\' =>
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'Mockery\\' => 
+        'Mockery\\' =>
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
         ),
-        'Matrix\\' => 
+        'Matrix\\' =>
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
-        'Masterminds\\' => 
+        'Masterminds\\' =>
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
-        'Maatwebsite\\Excel\\' => 
+        'Maatwebsite\\Excel\\' =>
         array (
             0 => __DIR__ . '/..' . '/maatwebsite/excel/src',
         ),
-        'League\\Uri\\' => 
+        'League\\Uri\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/uri',
             1 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
-        'League\\MimeTypeDetection\\' => 
+        'League\\MimeTypeDetection\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
         ),
-        'League\\Flysystem\\Local\\' => 
+        'League\\Flysystem\\Local\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/flysystem-local',
         ),
-        'League\\Flysystem\\' => 
+        'League\\Flysystem\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
         ),
-        'League\\Config\\' => 
+        'League\\Config\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/config/src',
         ),
-        'League\\CommonMark\\' => 
+        'League\\CommonMark\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/commonmark/src',
         ),
-        'Lcobucci\\JWT\\' => 
+        'Lcobucci\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
         ),
-        'Laravel\\Tinker\\' => 
+        'Laravel\\Tinker\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/tinker/src',
         ),
-        'Laravel\\SerializableClosure\\' => 
+        'Laravel\\SerializableClosure\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/serializable-closure/src',
         ),
-        'Laravel\\Sanctum\\' => 
+        'Laravel\\Sanctum\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/sanctum/src',
         ),
-        'Laravel\\Sail\\' => 
+        'Laravel\\Sail\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/sail/src',
         ),
-        'Laravel\\Prompts\\' => 
+        'Laravel\\Prompts\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/prompts/src',
         ),
-        'Laravel\\Pail\\' => 
+        'Laravel\\Pail\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/pail/src',
         ),
-        'Kreait\\Laravel\\Firebase\\' => 
+        'Kreait\\Laravel\\Firebase\\' =>
         array (
             0 => __DIR__ . '/..' . '/kreait/laravel-firebase/src',
         ),
-        'Kreait\\Firebase\\JWT\\' => 
+        'Kreait\\Firebase\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/kreait/firebase-tokens/src/JWT',
         ),
-        'Kreait\\Firebase\\' => 
+        'Kreait\\Firebase\\' =>
         array (
-            0 => __DIR__ . '/..' . '/kreait/firebase-php/src',
+            0 => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase',
         ),
-        'JmesPath\\' => 
+        'JmesPath\\' =>
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
         ),
-        'Illuminate\\Support\\' => 
+        'Illuminate\\Support\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Macroable',
             1 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Collections',
             2 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Conditionable',
             3 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Reflection',
         ),
-        'Illuminate\\' => 
+        'Illuminate\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
         ),
-        'GuzzleHttp\\UriTemplate\\' => 
+        'GuzzleHttp\\UriTemplate\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/uri-template/src',
         ),
-        'GuzzleHttp\\Psr7\\' => 
+        'GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' => 
+        'GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Grpc\\Gcp\\' => 
+        'Grpc\\Gcp\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/grpc-gcp/src',
         ),
-        'Grpc\\' => 
+        'Grpc\\' =>
         array (
             0 => __DIR__ . '/..' . '/grpc/grpc/src/lib',
         ),
-        'GrahamCampbell\\ResultType\\' => 
+        'GrahamCampbell\\ResultType\\' =>
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
         ),
-        'Google\\Type\\' => 
+        'Google\\Type\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/src/Type',
         ),
-        'Google\\Service\\' => 
+        'Google\\Service\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/apiclient-services/src',
         ),
-        'Google\\Rpc\\' => 
+        'Google\\Rpc\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/src/Rpc',
         ),
-        'Google\\Protobuf\\' => 
+        'Google\\Protobuf\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf',
         ),
-        'Google\\LongRunning\\' => 
+        'Google\\LongRunning\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/longrunning/src/LongRunning',
         ),
-        'Google\\Iam\\' => 
+        'Google\\Iam\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/src/Iam',
         ),
-        'Google\\Cloud\\Storage\\' => 
+        'Google\\Cloud\\Storage\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/cloud-storage/src',
         ),
-        'Google\\Cloud\\Core\\' => 
+        'Google\\Cloud\\Core\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/cloud-core/src',
         ),
-        'Google\\Cloud\\' => 
+        'Google\\Cloud\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/src/Cloud',
         ),
-        'Google\\Auth\\' => 
+        'Google\\Auth\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/auth/src',
         ),
-        'Google\\Api\\' => 
+        'Google\\Api\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/src/Api',
         ),
-        'Google\\ApiCore\\LongRunning\\' => 
+        'Google\\ApiCore\\LongRunning\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/longrunning/src/ApiCore/LongRunning',
         ),
-        'Google\\ApiCore\\' => 
+        'Google\\ApiCore\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/gax/src',
         ),
-        'Google\\' => 
+        'Google\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/apiclient/src',
         ),
-        'GPBMetadata\\Google\\Type\\' => 
+        'GPBMetadata\\Google\\Type\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/metadata/Type',
         ),
-        'GPBMetadata\\Google\\Rpc\\' => 
+        'GPBMetadata\\Google\\Rpc\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/metadata/Rpc',
         ),
-        'GPBMetadata\\Google\\Protobuf\\' => 
+        'GPBMetadata\\Google\\Protobuf\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/protobuf/src/GPBMetadata/Google/Protobuf',
         ),
-        'GPBMetadata\\Google\\Longrunning\\' => 
+        'GPBMetadata\\Google\\Longrunning\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/longrunning/metadata/Longrunning',
         ),
-        'GPBMetadata\\Google\\Logging\\' => 
+        'GPBMetadata\\Google\\Logging\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/metadata/Logging',
         ),
-        'GPBMetadata\\Google\\Iam\\' => 
+        'GPBMetadata\\Google\\Iam\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/metadata/Iam',
         ),
-        'GPBMetadata\\Google\\Cloud\\' => 
+        'GPBMetadata\\Google\\Cloud\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/metadata/Cloud',
         ),
-        'GPBMetadata\\Google\\Api\\' => 
+        'GPBMetadata\\Google\\Api\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/metadata/Api',
         ),
-        'GPBMetadata\\ApiCore\\' => 
+        'GPBMetadata\\ApiCore\\' =>
         array (
             0 => __DIR__ . '/..' . '/google/gax/metadata/ApiCore',
         ),
-        'Fruitcake\\Cors\\' => 
+        'Fruitcake\\Cors\\' =>
         array (
             0 => __DIR__ . '/..' . '/fruitcake/php-cors/src',
         ),
-        'Firebase\\JWT\\' => 
+        'Firebase\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
-        'Fig\\Http\\Message\\' => 
+        'Fig\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/fig/http-message-util/src',
         ),
-        'Faker\\' => 
+        'Faker\\' =>
         array (
             0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
         ),
-        'Egulias\\EmailValidator\\' => 
+        'Egulias\\EmailValidator\\' =>
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/src',
         ),
-        'Dotenv\\' => 
+        'Dotenv\\' =>
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
-        'Doctrine\\Inflector\\' => 
+        'Doctrine\\Inflector\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/src',
         ),
-        'Doctrine\\Deprecations\\' => 
+        'Doctrine\\Deprecations\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/deprecations/src',
         ),
-        'Doctrine\\DBAL\\' => 
+        'Doctrine\\DBAL\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/dbal/src',
         ),
-        'Doctrine\\Common\\Lexer\\' => 
+        'Doctrine\\Common\\Lexer\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/lexer/src',
         ),
-        'Dflydev\\DotAccessData\\' => 
+        'Dflydev\\DotAccessData\\' =>
         array (
             0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
         ),
-        'DeepCopy\\' => 
+        'DeepCopy\\' =>
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Database\\Seeders\\' => 
+        'Database\\Seeders\\' =>
         array (
             0 => __DIR__ . '/../..' . '/database/seeders',
             1 => __DIR__ . '/..' . '/laravel/pint/database/seeders',
         ),
-        'Database\\Factories\\' => 
+        'Database\\Factories\\' =>
         array (
             0 => __DIR__ . '/../..' . '/database/factories',
             1 => __DIR__ . '/..' . '/laravel/pint/database/factories',
         ),
-        'CuyZ\\Valinor\\' => 
+        'CuyZ\\Valinor\\' =>
         array (
             0 => __DIR__ . '/..' . '/cuyz/valinor/src',
         ),
-        'Cron\\' => 
+        'Cron\\' =>
         array (
             0 => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron',
         ),
-        'Composer\\Semver\\' => 
+        'Composer\\Semver\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
         ),
-        'Composer\\Pcre\\' => 
+        'Composer\\Pcre\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
-        'Complex\\' => 
+        'Complex\\' =>
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
-        'Carbon\\Doctrine\\' => 
+        'Carbon\\Doctrine\\' =>
         array (
             0 => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine',
         ),
-        'Carbon\\' => 
+        'Carbon\\' =>
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
         ),
-        'Brick\\Math\\' => 
+        'Brick\\Math\\' =>
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
-        'Beste\\Clock\\' => 
+        'Beste\\Clock\\' =>
         array (
             0 => __DIR__ . '/..' . '/beste/clock/src/Clock',
         ),
-        'Beste\\Cache\\' => 
+        'Beste\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/beste/in-memory-cache/src',
         ),
-        'App\\' => 
+        'App\\' =>
         array (
             0 => __DIR__ . '/../..' . '/app',
             1 => __DIR__ . '/..' . '/laravel/pint/app',
@@ -866,9 +866,9 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
     );
 
     public static $prefixesPsr0 = array (
-        'H' => 
+        'H' =>
         array (
-            'HTMLPurifier' => 
+            'HTMLPurifier' =>
             array (
                 0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
             ),
@@ -1012,9 +1012,13 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'App\\Models\\Folder' => __DIR__ . '/../..' . '/app/Models/Folder.php',
         'App\\Models\\Gallery' => __DIR__ . '/../..' . '/app/Models/Gallery.php',
         'App\\Models\\Item' => __DIR__ . '/../..' . '/app/Models/Item.php',
+        'App\\Models\\ItemExclude' => __DIR__ . '/../..' . '/app/Models/ItemExclude.php',
         'App\\Models\\ItemItinerary' => __DIR__ . '/../..' . '/app/Models/ItemItinerary.php',
+        'App\\Models\\ItemItineraryPlace' => __DIR__ . '/../..' . '/app/Models/ItemItineraryPlace.php',
         'App\\Models\\ItemPackage' => __DIR__ . '/../..' . '/app/Models/ItemPackage.php',
+        'App\\Models\\ItemPrice' => __DIR__ . '/../..' . '/app/Models/ItemPrice.php',
         'App\\Models\\ItemResidencyUser' => __DIR__ . '/../..' . '/app/Models/ItemResidencyUser.php',
+        'App\\Models\\ItemRoute' => __DIR__ . '/../..' . '/app/Models/ItemRoute.php',
         'App\\Models\\ItemType' => __DIR__ . '/../..' . '/app/Models/ItemType.php',
         'App\\Models\\Lead' => __DIR__ . '/../..' . '/app/Models/Lead.php',
         'App\\Models\\LeadMagnet' => __DIR__ . '/../..' . '/app/Models/LeadMagnet.php',
@@ -1319,10 +1323,22 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'CuyZ\\Valinor\\Mapper\\ArgumentsMapper' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/ArgumentsMapper.php',
         'CuyZ\\Valinor\\Mapper\\ArgumentsMapperError' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/ArgumentsMapperError.php',
         'CuyZ\\Valinor\\Mapper\\AsConverter' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/AsConverter.php',
+        'CuyZ\\Valinor\\Mapper\\Configurator\\ConvertKeysToCamelCase' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Configurator/ConvertKeysToCamelCase.php',
+        'CuyZ\\Valinor\\Mapper\\Configurator\\ConvertKeysToSnakeCase' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Configurator/ConvertKeysToSnakeCase.php',
+        'CuyZ\\Valinor\\Mapper\\Configurator\\MapperBuilderConfigurator' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Configurator/MapperBuilderConfigurator.php',
+        'CuyZ\\Valinor\\Mapper\\Configurator\\RestrictKeysToCamelCase' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Configurator/RestrictKeysToCamelCase.php',
+        'CuyZ\\Valinor\\Mapper\\Configurator\\RestrictKeysToKebabCase' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Configurator/RestrictKeysToKebabCase.php',
+        'CuyZ\\Valinor\\Mapper\\Configurator\\RestrictKeysToPascalCase' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Configurator/RestrictKeysToPascalCase.php',
+        'CuyZ\\Valinor\\Mapper\\Configurator\\RestrictKeysToSnakeCase' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Configurator/RestrictKeysToSnakeCase.php',
         'CuyZ\\Valinor\\Mapper\\Exception\\InvalidMappingTypeSignature' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Exception/InvalidMappingTypeSignature.php',
         'CuyZ\\Valinor\\Mapper\\Exception\\MappingLogicalException' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Exception/MappingLogicalException.php',
+        'CuyZ\\Valinor\\Mapper\\Exception\\PsrRequestParsedBodyIsObject' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Exception/PsrRequestParsedBodyIsObject.php',
         'CuyZ\\Valinor\\Mapper\\Exception\\TypeErrorDuringArgumentsMapping' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Exception/TypeErrorDuringArgumentsMapping.php',
         'CuyZ\\Valinor\\Mapper\\Exception\\TypeErrorDuringMapping' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Exception/TypeErrorDuringMapping.php',
+        'CuyZ\\Valinor\\Mapper\\Http\\FromBody' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Http/FromBody.php',
+        'CuyZ\\Valinor\\Mapper\\Http\\FromQuery' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Http/FromQuery.php',
+        'CuyZ\\Valinor\\Mapper\\Http\\FromRoute' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Http/FromRoute.php',
+        'CuyZ\\Valinor\\Mapper\\Http\\HttpRequest' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Http/HttpRequest.php',
         'CuyZ\\Valinor\\Mapper\\MappingError' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/MappingError.php',
         'CuyZ\\Valinor\\Mapper\\Object\\Argument' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Object/Argument.php',
         'CuyZ\\Valinor\\Mapper\\Object\\Arguments' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Object/Arguments.php',
@@ -1372,8 +1388,11 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'CuyZ\\Valinor\\Mapper\\TreeMapper' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/TreeMapper.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\ArrayNodeBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/ArrayNodeBuilder.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\ConverterContainer' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/ConverterContainer.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\HttpRequestNodeBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/HttpRequestNodeBuilder.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\InterfaceInferringContainer' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/InterfaceInferringContainer.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\InterfaceNodeBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/InterfaceNodeBuilder.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\KeyConversionPipeline' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/KeyConversionPipeline.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\KeyConverterNodeBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/KeyConverterNodeBuilder.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\ListNodeBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/ListNodeBuilder.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\MixedNodeBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/MixedNodeBuilder.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\Node' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/Node.php',
@@ -1387,14 +1406,18 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\UnionNodeBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/UnionNodeBuilder.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Builder\\ValueConverterNodeBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Builder/ValueConverterNodeBuilder.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\CannotInferFinalClass' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/CannotInferFinalClass.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\CannotMapHttpRequestToUnsealedShapedArray' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/CannotMapHttpRequestToUnsealedShapedArray.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\CannotMapToPermissiveType' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/CannotMapToPermissiveType.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\CannotResolveObjectType' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/CannotResolveObjectType.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\CannotResolveTypeFromUnion' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/CannotResolveTypeFromUnion.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\CannotUseBothFromBodyAttributes' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/CannotUseBothFromBodyAttributes.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\CannotUseBothFromQueryAttributes' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/CannotUseBothFromQueryAttributes.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\CircularDependencyDetected' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/CircularDependencyDetected.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\ConverterHasInvalidCallableParameter' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/ConverterHasInvalidCallableParameter.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\ConverterHasInvalidReturnType' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/ConverterHasInvalidReturnType.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\ConverterHasNoParameter' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/ConverterHasNoParameter.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\ConverterHasTooManyParameters' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/ConverterHasTooManyParameters.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\HttpRequestKeyCollision' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/HttpRequestKeyCollision.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\InterfaceHasBothConstructorAndInfer' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/InterfaceHasBothConstructorAndInfer.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\InvalidArrayKey' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/InvalidArrayKey.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\InvalidIterableKeyType' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/InvalidIterableKeyType.php',
@@ -1402,6 +1425,10 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\InvalidNodeDuringValueConversion' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/InvalidNodeDuringValueConversion.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\InvalidNodeValue' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/InvalidNodeValue.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\InvalidResolvedImplementationValue' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/InvalidResolvedImplementationValue.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\KeyConverterHasInvalidStringParameter' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/KeyConverterHasInvalidStringParameter.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\KeyConverterHasNoParameter' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/KeyConverterHasNoParameter.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\KeyConverterHasTooManyParameters' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/KeyConverterHasTooManyParameters.php',
+        'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\KeysCollision' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/KeysCollision.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\MissingNodeValue' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/MissingNodeValue.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\MissingObjectImplementationRegistration' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/MissingObjectImplementationRegistration.php',
         'CuyZ\\Valinor\\Mapper\\Tree\\Exception\\ObjectImplementationCallbackError' => __DIR__ . '/..' . '/cuyz/valinor/src/Mapper/Tree/Exception/ObjectImplementationCallbackError.php',
@@ -1437,6 +1464,7 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'CuyZ\\Valinor\\NormalizerBuilder' => __DIR__ . '/..' . '/cuyz/valinor/src/NormalizerBuilder.php',
         'CuyZ\\Valinor\\Normalizer\\ArrayNormalizer' => __DIR__ . '/..' . '/cuyz/valinor/src/Normalizer/ArrayNormalizer.php',
         'CuyZ\\Valinor\\Normalizer\\AsTransformer' => __DIR__ . '/..' . '/cuyz/valinor/src/Normalizer/AsTransformer.php',
+        'CuyZ\\Valinor\\Normalizer\\Configurator\\NormalizerBuilderConfigurator' => __DIR__ . '/..' . '/cuyz/valinor/src/Normalizer/Configurator/NormalizerBuilderConfigurator.php',
         'CuyZ\\Valinor\\Normalizer\\Exception\\CircularReferenceFoundDuringNormalization' => __DIR__ . '/..' . '/cuyz/valinor/src/Normalizer/Exception/CircularReferenceFoundDuringNormalization.php',
         'CuyZ\\Valinor\\Normalizer\\Exception\\KeyTransformerHasTooManyParameters' => __DIR__ . '/..' . '/cuyz/valinor/src/Normalizer/Exception/KeyTransformerHasTooManyParameters.php',
         'CuyZ\\Valinor\\Normalizer\\Exception\\KeyTransformerParameterInvalidType' => __DIR__ . '/..' . '/cuyz/valinor/src/Normalizer/Exception/KeyTransformerParameterInvalidType.php',
@@ -3007,6 +3035,9 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'Google\\Api\\Backend' => __DIR__ . '/..' . '/google/common-protos/src/Api/Backend.php',
         'Google\\Api\\BackendRule' => __DIR__ . '/..' . '/google/common-protos/src/Api/BackendRule.php',
         'Google\\Api\\BackendRule\\PathTranslation' => __DIR__ . '/..' . '/google/common-protos/src/Api/BackendRule/PathTranslation.php',
+        'Google\\Api\\BatchingConfigProto' => __DIR__ . '/..' . '/google/common-protos/src/Api/BatchingConfigProto.php',
+        'Google\\Api\\BatchingDescriptorProto' => __DIR__ . '/..' . '/google/common-protos/src/Api/BatchingDescriptorProto.php',
+        'Google\\Api\\BatchingSettingsProto' => __DIR__ . '/..' . '/google/common-protos/src/Api/BatchingSettingsProto.php',
         'Google\\Api\\Billing' => __DIR__ . '/..' . '/google/common-protos/src/Api/Billing.php',
         'Google\\Api\\Billing\\BillingDestination' => __DIR__ . '/..' . '/google/common-protos/src/Api/Billing/BillingDestination.php',
         'Google\\Api\\ChangeType' => __DIR__ . '/..' . '/google/common-protos/src/Api/ChangeType.php',
@@ -3036,6 +3067,7 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'Google\\Api\\FieldInfo' => __DIR__ . '/..' . '/google/common-protos/src/Api/FieldInfo.php',
         'Google\\Api\\FieldInfo\\Format' => __DIR__ . '/..' . '/google/common-protos/src/Api/FieldInfo/Format.php',
         'Google\\Api\\FieldPolicy' => __DIR__ . '/..' . '/google/common-protos/src/Api/FieldPolicy.php',
+        'Google\\Api\\FlowControlLimitExceededBehaviorProto' => __DIR__ . '/..' . '/google/common-protos/src/Api/FlowControlLimitExceededBehaviorProto.php',
         'Google\\Api\\GoSettings' => __DIR__ . '/..' . '/google/common-protos/src/Api/GoSettings.php',
         'Google\\Api\\Http' => __DIR__ . '/..' . '/google/common-protos/src/Api/Http.php',
         'Google\\Api\\HttpBody' => __DIR__ . '/..' . '/google/common-protos/src/Api/HttpBody.php',
@@ -3366,8 +3398,6 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'Google\\Protobuf\\FieldMask' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/FieldMask.php',
         'Google\\Protobuf\\Field\\Cardinality' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Field/Cardinality.php',
         'Google\\Protobuf\\Field\\Kind' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Field/Kind.php',
-        'Google\\Protobuf\\Field_Cardinality' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Field_Cardinality.php',
-        'Google\\Protobuf\\Field_Kind' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Field_Kind.php',
         'Google\\Protobuf\\FloatValue' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/FloatValue.php',
         'Google\\Protobuf\\GPBEmpty' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/GPBEmpty.php',
         'Google\\Protobuf\\Int32Value' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Int32Value.php',
@@ -3445,7 +3475,6 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'Google\\Protobuf\\Internal\\OneofField' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Internal/OneofField.php',
         'Google\\Protobuf\\Internal\\OneofOptions' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Internal/OneofOptions.php',
         'Google\\Protobuf\\Internal\\RawInputStream' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Internal/RawInputStream.php',
-        'Google\\Protobuf\\Internal\\RepeatedField' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Internal/RepeatedField.php',
         'Google\\Protobuf\\Internal\\RepeatedFieldIter' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Internal/RepeatedFieldIter.php',
         'Google\\Protobuf\\Internal\\ServiceDescriptorProto' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Internal/ServiceDescriptorProto.php',
         'Google\\Protobuf\\Internal\\ServiceOptions' => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf/Internal/ServiceOptions.php',
@@ -37253,153 +37282,170 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'JmesPath\\TreeCompiler' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/TreeCompiler.php',
         'JmesPath\\TreeInterpreter' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/TreeInterpreter.php',
         'JmesPath\\Utils' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/Utils.php',
-        'Kreait\\Firebase\\AppCheck' => __DIR__ . '/..' . '/kreait/firebase-php/src/AppCheck.php',
-        'Kreait\\Firebase\\AppCheck\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/AppCheck/ApiClient.php',
-        'Kreait\\Firebase\\AppCheck\\AppCheckToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/AppCheck/AppCheckToken.php',
-        'Kreait\\Firebase\\AppCheck\\AppCheckTokenGenerator' => __DIR__ . '/..' . '/kreait/firebase-php/src/AppCheck/AppCheckTokenGenerator.php',
-        'Kreait\\Firebase\\AppCheck\\AppCheckTokenOptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/AppCheck/AppCheckTokenOptions.php',
-        'Kreait\\Firebase\\AppCheck\\AppCheckTokenVerifier' => __DIR__ . '/..' . '/kreait/firebase-php/src/AppCheck/AppCheckTokenVerifier.php',
-        'Kreait\\Firebase\\AppCheck\\DecodedAppCheckToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/AppCheck/DecodedAppCheckToken.php',
-        'Kreait\\Firebase\\AppCheck\\VerifyAppCheckTokenResponse' => __DIR__ . '/..' . '/kreait/firebase-php/src/AppCheck/VerifyAppCheckTokenResponse.php',
-        'Kreait\\Firebase\\Auth' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth.php',
-        'Kreait\\Firebase\\Auth\\ActionCodeSettings' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/ActionCodeSettings.php',
-        'Kreait\\Firebase\\Auth\\ActionCodeSettings\\ValidatedActionCodeSettings' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/ActionCodeSettings/ValidatedActionCodeSettings.php',
-        'Kreait\\Firebase\\Auth\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/ApiClient.php',
-        'Kreait\\Firebase\\Auth\\AuthResourceUrlBuilder' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/AuthResourceUrlBuilder.php',
-        'Kreait\\Firebase\\Auth\\CreateActionLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/CreateActionLink.php',
-        'Kreait\\Firebase\\Auth\\CreateActionLink\\FailedToCreateActionLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/CreateActionLink/FailedToCreateActionLink.php',
-        'Kreait\\Firebase\\Auth\\CreateActionLink\\GuzzleApiClientHandler' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/CreateActionLink/GuzzleApiClientHandler.php',
-        'Kreait\\Firebase\\Auth\\CreateSessionCookie' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/CreateSessionCookie.php',
-        'Kreait\\Firebase\\Auth\\CreateSessionCookie\\FailedToCreateSessionCookie' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/CreateSessionCookie/FailedToCreateSessionCookie.php',
-        'Kreait\\Firebase\\Auth\\CreateSessionCookie\\GuzzleApiClientHandler' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/CreateSessionCookie/GuzzleApiClientHandler.php',
-        'Kreait\\Firebase\\Auth\\CustomTokenViaGoogleCredentials' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/CustomTokenViaGoogleCredentials.php',
-        'Kreait\\Firebase\\Auth\\DeleteUsersRequest' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/DeleteUsersRequest.php',
-        'Kreait\\Firebase\\Auth\\DeleteUsersResult' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/DeleteUsersResult.php',
-        'Kreait\\Firebase\\Auth\\IsTenantAware' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/IsTenantAware.php',
-        'Kreait\\Firebase\\Auth\\MfaInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/MfaInfo.php',
-        'Kreait\\Firebase\\Auth\\ProjectAwareAuthResourceUrlBuilder' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/ProjectAwareAuthResourceUrlBuilder.php',
-        'Kreait\\Firebase\\Auth\\SendActionLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SendActionLink.php',
-        'Kreait\\Firebase\\Auth\\SendActionLink\\FailedToSendActionLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SendActionLink/FailedToSendActionLink.php',
-        'Kreait\\Firebase\\Auth\\SendActionLink\\GuzzleApiClientHandler' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SendActionLink/GuzzleApiClientHandler.php',
-        'Kreait\\Firebase\\Auth\\SignIn' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignIn.php',
-        'Kreait\\Firebase\\Auth\\SignInAnonymously' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignInAnonymously.php',
-        'Kreait\\Firebase\\Auth\\SignInResult' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignInResult.php',
-        'Kreait\\Firebase\\Auth\\SignInWithCustomToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignInWithCustomToken.php',
-        'Kreait\\Firebase\\Auth\\SignInWithEmailAndOobCode' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignInWithEmailAndOobCode.php',
-        'Kreait\\Firebase\\Auth\\SignInWithEmailAndPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignInWithEmailAndPassword.php',
-        'Kreait\\Firebase\\Auth\\SignInWithIdpCredentials' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignInWithIdpCredentials.php',
-        'Kreait\\Firebase\\Auth\\SignInWithRefreshToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignInWithRefreshToken.php',
-        'Kreait\\Firebase\\Auth\\SignIn\\FailedToSignIn' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignIn/FailedToSignIn.php',
-        'Kreait\\Firebase\\Auth\\SignIn\\GuzzleHandler' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/SignIn/GuzzleHandler.php',
-        'Kreait\\Firebase\\Auth\\TenantAwareAuthResourceUrlBuilder' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/TenantAwareAuthResourceUrlBuilder.php',
-        'Kreait\\Firebase\\Auth\\UserInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/UserInfo.php',
-        'Kreait\\Firebase\\Auth\\UserMetaData' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/UserMetaData.php',
-        'Kreait\\Firebase\\Auth\\UserQuery' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/UserQuery.php',
-        'Kreait\\Firebase\\Auth\\UserRecord' => __DIR__ . '/..' . '/kreait/firebase-php/src/Auth/UserRecord.php',
-        'Kreait\\Firebase\\Contract\\AppCheck' => __DIR__ . '/..' . '/kreait/firebase-php/src/Contract/AppCheck.php',
-        'Kreait\\Firebase\\Contract\\AppCheckWithReplayProtection' => __DIR__ . '/..' . '/kreait/firebase-php/src/Contract/AppCheckWithReplayProtection.php',
-        'Kreait\\Firebase\\Contract\\Auth' => __DIR__ . '/..' . '/kreait/firebase-php/src/Contract/Auth.php',
-        'Kreait\\Firebase\\Contract\\Database' => __DIR__ . '/..' . '/kreait/firebase-php/src/Contract/Database.php',
-        'Kreait\\Firebase\\Contract\\Firestore' => __DIR__ . '/..' . '/kreait/firebase-php/src/Contract/Firestore.php',
-        'Kreait\\Firebase\\Contract\\Messaging' => __DIR__ . '/..' . '/kreait/firebase-php/src/Contract/Messaging.php',
-        'Kreait\\Firebase\\Contract\\RemoteConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Contract/RemoteConfig.php',
-        'Kreait\\Firebase\\Contract\\Storage' => __DIR__ . '/..' . '/kreait/firebase-php/src/Contract/Storage.php',
-        'Kreait\\Firebase\\Database' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database.php',
-        'Kreait\\Firebase\\Database\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/ApiClient.php',
-        'Kreait\\Firebase\\Database\\Query' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter\\EndAt' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter/EndAt.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter\\EndBefore' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter/EndBefore.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter\\EqualTo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter/EqualTo.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter\\LimitToFirst' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter/LimitToFirst.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter\\LimitToLast' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter/LimitToLast.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter\\Shallow' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter/Shallow.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter\\StartAfter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter/StartAfter.php',
-        'Kreait\\Firebase\\Database\\Query\\Filter\\StartAt' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Filter/StartAt.php',
-        'Kreait\\Firebase\\Database\\Query\\Modifier' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Modifier.php',
-        'Kreait\\Firebase\\Database\\Query\\ModifierTrait' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/ModifierTrait.php',
-        'Kreait\\Firebase\\Database\\Query\\Sorter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Sorter.php',
-        'Kreait\\Firebase\\Database\\Query\\Sorter\\Noop' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Sorter/Noop.php',
-        'Kreait\\Firebase\\Database\\Query\\Sorter\\OrderByChild' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Sorter/OrderByChild.php',
-        'Kreait\\Firebase\\Database\\Query\\Sorter\\OrderByKey' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Sorter/OrderByKey.php',
-        'Kreait\\Firebase\\Database\\Query\\Sorter\\OrderByValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Query/Sorter/OrderByValue.php',
-        'Kreait\\Firebase\\Database\\Reference' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Reference.php',
-        'Kreait\\Firebase\\Database\\RuleSet' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/RuleSet.php',
-        'Kreait\\Firebase\\Database\\Snapshot' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Snapshot.php',
-        'Kreait\\Firebase\\Database\\Transaction' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/Transaction.php',
-        'Kreait\\Firebase\\Database\\UrlBuilder' => __DIR__ . '/..' . '/kreait/firebase-php/src/Database/UrlBuilder.php',
-        'Kreait\\Firebase\\Exception\\AppCheckApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheckApiExceptionConverter.php',
-        'Kreait\\Firebase\\Exception\\AppCheckException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheckException.php',
-        'Kreait\\Firebase\\Exception\\AppCheck\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheck/ApiConnectionFailed.php',
-        'Kreait\\Firebase\\Exception\\AppCheck\\AppCheckError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheck/AppCheckError.php',
-        'Kreait\\Firebase\\Exception\\AppCheck\\FailedToVerifyAppCheckReplayProtection' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheck/FailedToVerifyAppCheckReplayProtection.php',
-        'Kreait\\Firebase\\Exception\\AppCheck\\FailedToVerifyAppCheckToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheck/FailedToVerifyAppCheckToken.php',
-        'Kreait\\Firebase\\Exception\\AppCheck\\InvalidAppCheckToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheck/InvalidAppCheckToken.php',
-        'Kreait\\Firebase\\Exception\\AppCheck\\InvalidAppCheckTokenOptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheck/InvalidAppCheckTokenOptions.php',
-        'Kreait\\Firebase\\Exception\\AppCheck\\PermissionDenied' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AppCheck/PermissionDenied.php',
-        'Kreait\\Firebase\\Exception\\AuthApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AuthApiExceptionConverter.php',
-        'Kreait\\Firebase\\Exception\\AuthException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/AuthException.php',
-        'Kreait\\Firebase\\Exception\\Auth\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/ApiConnectionFailed.php',
-        'Kreait\\Firebase\\Exception\\Auth\\AuthError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/AuthError.php',
-        'Kreait\\Firebase\\Exception\\Auth\\CredentialsMismatch' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/CredentialsMismatch.php',
-        'Kreait\\Firebase\\Exception\\Auth\\EmailExists' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/EmailExists.php',
-        'Kreait\\Firebase\\Exception\\Auth\\EmailNotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/EmailNotFound.php',
-        'Kreait\\Firebase\\Exception\\Auth\\ExpiredOobCode' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/ExpiredOobCode.php',
-        'Kreait\\Firebase\\Exception\\Auth\\FailedToVerifySessionCookie' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/FailedToVerifySessionCookie.php',
-        'Kreait\\Firebase\\Exception\\Auth\\FailedToVerifyToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/FailedToVerifyToken.php',
-        'Kreait\\Firebase\\Exception\\Auth\\InvalidCustomToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/InvalidCustomToken.php',
-        'Kreait\\Firebase\\Exception\\Auth\\InvalidOobCode' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/InvalidOobCode.php',
-        'Kreait\\Firebase\\Exception\\Auth\\InvalidPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/InvalidPassword.php',
-        'Kreait\\Firebase\\Exception\\Auth\\MissingPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/MissingPassword.php',
-        'Kreait\\Firebase\\Exception\\Auth\\OperationNotAllowed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/OperationNotAllowed.php',
-        'Kreait\\Firebase\\Exception\\Auth\\PhoneNumberExists' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/PhoneNumberExists.php',
-        'Kreait\\Firebase\\Exception\\Auth\\ProviderLinkFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/ProviderLinkFailed.php',
-        'Kreait\\Firebase\\Exception\\Auth\\RevokedIdToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/RevokedIdToken.php',
-        'Kreait\\Firebase\\Exception\\Auth\\RevokedSessionCookie' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/RevokedSessionCookie.php',
-        'Kreait\\Firebase\\Exception\\Auth\\UserDisabled' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/UserDisabled.php',
-        'Kreait\\Firebase\\Exception\\Auth\\UserNotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/UserNotFound.php',
-        'Kreait\\Firebase\\Exception\\Auth\\WeakPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Auth/WeakPassword.php',
-        'Kreait\\Firebase\\Exception\\DatabaseApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/DatabaseApiExceptionConverter.php',
-        'Kreait\\Firebase\\Exception\\DatabaseException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/DatabaseException.php',
-        'Kreait\\Firebase\\Exception\\Database\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Database/ApiConnectionFailed.php',
-        'Kreait\\Firebase\\Exception\\Database\\DatabaseError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Database/DatabaseError.php',
-        'Kreait\\Firebase\\Exception\\Database\\DatabaseNotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Database/DatabaseNotFound.php',
-        'Kreait\\Firebase\\Exception\\Database\\PermissionDenied' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Database/PermissionDenied.php',
-        'Kreait\\Firebase\\Exception\\Database\\PreconditionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Database/PreconditionFailed.php',
-        'Kreait\\Firebase\\Exception\\Database\\ReferenceHasNotBeenSnapshotted' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Database/ReferenceHasNotBeenSnapshotted.php',
-        'Kreait\\Firebase\\Exception\\Database\\TransactionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Database/TransactionFailed.php',
-        'Kreait\\Firebase\\Exception\\Database\\UnsupportedQuery' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Database/UnsupportedQuery.php',
-        'Kreait\\Firebase\\Exception\\FirebaseException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/FirebaseException.php',
-        'Kreait\\Firebase\\Exception\\HasErrors' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/HasErrors.php',
-        'Kreait\\Firebase\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/InvalidArgumentException.php',
-        'Kreait\\Firebase\\Exception\\LogicException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/LogicException.php',
-        'Kreait\\Firebase\\Exception\\MessagingApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/MessagingApiExceptionConverter.php',
-        'Kreait\\Firebase\\Exception\\MessagingException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/MessagingException.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/ApiConnectionFailed.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\AuthenticationError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/AuthenticationError.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\InvalidArgument' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/InvalidArgument.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\InvalidMessage' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/InvalidMessage.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\MessagingError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/MessagingError.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\NotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/NotFound.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\QuotaExceeded' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/QuotaExceeded.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\ServerError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/ServerError.php',
-        'Kreait\\Firebase\\Exception\\Messaging\\ServerUnavailable' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/Messaging/ServerUnavailable.php',
-        'Kreait\\Firebase\\Exception\\OutOfRangeException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/OutOfRangeException.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfigApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfigApiExceptionConverter.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfigException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfigException.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfig\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfig/ApiConnectionFailed.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfig\\OperationAborted' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfig/OperationAborted.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfig\\PermissionDenied' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfig/PermissionDenied.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfig\\RemoteConfigError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfig/RemoteConfigError.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfig\\ValidationFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfig/ValidationFailed.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfig\\VersionMismatch' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfig/VersionMismatch.php',
-        'Kreait\\Firebase\\Exception\\RemoteConfig\\VersionNotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RemoteConfig/VersionNotFound.php',
-        'Kreait\\Firebase\\Exception\\RuntimeException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Exception/RuntimeException.php',
-        'Kreait\\Firebase\\Factory' => __DIR__ . '/..' . '/kreait/firebase-php/src/Factory.php',
-        'Kreait\\Firebase\\Firestore' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firestore.php',
-        'Kreait\\Firebase\\Http\\ErrorResponseParser' => __DIR__ . '/..' . '/kreait/firebase-php/src/Http/ErrorResponseParser.php',
-        'Kreait\\Firebase\\Http\\HttpClientOptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Http/HttpClientOptions.php',
-        'Kreait\\Firebase\\Http\\Middleware' => __DIR__ . '/..' . '/kreait/firebase-php/src/Http/Middleware.php',
+        'Kreait\\Firebase\\AppCheck' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/AppCheck.php',
+        'Kreait\\Firebase\\AppCheck\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/AppCheck/ApiClient.php',
+        'Kreait\\Firebase\\AppCheck\\AppCheckToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/AppCheck/AppCheckToken.php',
+        'Kreait\\Firebase\\AppCheck\\AppCheckTokenGenerator' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/AppCheck/AppCheckTokenGenerator.php',
+        'Kreait\\Firebase\\AppCheck\\AppCheckTokenOptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/AppCheck/AppCheckTokenOptions.php',
+        'Kreait\\Firebase\\AppCheck\\AppCheckTokenVerifier' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/AppCheck/AppCheckTokenVerifier.php',
+        'Kreait\\Firebase\\AppCheck\\DecodedAppCheckToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/AppCheck/DecodedAppCheckToken.php',
+        'Kreait\\Firebase\\AppCheck\\VerifyAppCheckTokenResponse' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/AppCheck/VerifyAppCheckTokenResponse.php',
+        'Kreait\\Firebase\\Auth' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth.php',
+        'Kreait\\Firebase\\Auth\\ActionCodeSettings' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/ActionCodeSettings.php',
+        'Kreait\\Firebase\\Auth\\ActionCodeSettings\\ValidatedActionCodeSettings' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/ActionCodeSettings/ValidatedActionCodeSettings.php',
+        'Kreait\\Firebase\\Auth\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/ApiClient.php',
+        'Kreait\\Firebase\\Auth\\AuthResourceUrlBuilder' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/AuthResourceUrlBuilder.php',
+        'Kreait\\Firebase\\Auth\\CreateActionLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/CreateActionLink.php',
+        'Kreait\\Firebase\\Auth\\CreateActionLink\\FailedToCreateActionLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/CreateActionLink/FailedToCreateActionLink.php',
+        'Kreait\\Firebase\\Auth\\CreateActionLink\\GuzzleApiClientHandler' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/CreateActionLink/GuzzleApiClientHandler.php',
+        'Kreait\\Firebase\\Auth\\CreateSessionCookie' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/CreateSessionCookie.php',
+        'Kreait\\Firebase\\Auth\\CreateSessionCookie\\FailedToCreateSessionCookie' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/CreateSessionCookie/FailedToCreateSessionCookie.php',
+        'Kreait\\Firebase\\Auth\\CreateSessionCookie\\GuzzleApiClientHandler' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/CreateSessionCookie/GuzzleApiClientHandler.php',
+        'Kreait\\Firebase\\Auth\\CustomTokenViaGoogleCredentials' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/CustomTokenViaGoogleCredentials.php',
+        'Kreait\\Firebase\\Auth\\DeleteUsersRequest' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/DeleteUsersRequest.php',
+        'Kreait\\Firebase\\Auth\\DeleteUsersResult' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/DeleteUsersResult.php',
+        'Kreait\\Firebase\\Auth\\IsTenantAware' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/IsTenantAware.php',
+        'Kreait\\Firebase\\Auth\\MfaInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/MfaInfo.php',
+        'Kreait\\Firebase\\Auth\\ProjectAwareAuthResourceUrlBuilder' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/ProjectAwareAuthResourceUrlBuilder.php',
+        'Kreait\\Firebase\\Auth\\SendActionLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SendActionLink.php',
+        'Kreait\\Firebase\\Auth\\SendActionLink\\FailedToSendActionLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SendActionLink/FailedToSendActionLink.php',
+        'Kreait\\Firebase\\Auth\\SendActionLink\\GuzzleApiClientHandler' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SendActionLink/GuzzleApiClientHandler.php',
+        'Kreait\\Firebase\\Auth\\SignIn' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignIn.php',
+        'Kreait\\Firebase\\Auth\\SignInAnonymously' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignInAnonymously.php',
+        'Kreait\\Firebase\\Auth\\SignInResult' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignInResult.php',
+        'Kreait\\Firebase\\Auth\\SignInWithCustomToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignInWithCustomToken.php',
+        'Kreait\\Firebase\\Auth\\SignInWithEmailAndOobCode' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignInWithEmailAndOobCode.php',
+        'Kreait\\Firebase\\Auth\\SignInWithEmailAndPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignInWithEmailAndPassword.php',
+        'Kreait\\Firebase\\Auth\\SignInWithIdpCredentials' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignInWithIdpCredentials.php',
+        'Kreait\\Firebase\\Auth\\SignInWithRefreshToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignInWithRefreshToken.php',
+        'Kreait\\Firebase\\Auth\\SignIn\\FailedToSignIn' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignIn/FailedToSignIn.php',
+        'Kreait\\Firebase\\Auth\\SignIn\\GuzzleHandler' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/SignIn/GuzzleHandler.php',
+        'Kreait\\Firebase\\Auth\\TenantAwareAuthResourceUrlBuilder' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/TenantAwareAuthResourceUrlBuilder.php',
+        'Kreait\\Firebase\\Auth\\UserInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/UserInfo.php',
+        'Kreait\\Firebase\\Auth\\UserMetaData' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/UserMetaData.php',
+        'Kreait\\Firebase\\Auth\\UserQuery' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/UserQuery.php',
+        'Kreait\\Firebase\\Auth\\UserRecord' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Auth/UserRecord.php',
+        'Kreait\\Firebase\\Contract\\AppCheck' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/AppCheck.php',
+        'Kreait\\Firebase\\Contract\\Auth' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/Auth.php',
+        'Kreait\\Firebase\\Contract\\Database' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/Database.php',
+        'Kreait\\Firebase\\Contract\\DynamicLinks' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/DynamicLinks.php',
+        'Kreait\\Firebase\\Contract\\Firestore' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/Firestore.php',
+        'Kreait\\Firebase\\Contract\\Messaging' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/Messaging.php',
+        'Kreait\\Firebase\\Contract\\RemoteConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/RemoteConfig.php',
+        'Kreait\\Firebase\\Contract\\Storage' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/Storage.php',
+        'Kreait\\Firebase\\Contract\\Transitional\\FederatedUserFetcher' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Contract/Transitional/FederatedUserFetcher.php',
+        'Kreait\\Firebase\\Database' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database.php',
+        'Kreait\\Firebase\\Database\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/ApiClient.php',
+        'Kreait\\Firebase\\Database\\Query' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter\\EndAt' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter/EndAt.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter\\EndBefore' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter/EndBefore.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter\\EqualTo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter/EqualTo.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter\\LimitToFirst' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter/LimitToFirst.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter\\LimitToLast' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter/LimitToLast.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter\\Shallow' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter/Shallow.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter\\StartAfter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter/StartAfter.php',
+        'Kreait\\Firebase\\Database\\Query\\Filter\\StartAt' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Filter/StartAt.php',
+        'Kreait\\Firebase\\Database\\Query\\Modifier' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Modifier.php',
+        'Kreait\\Firebase\\Database\\Query\\ModifierTrait' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/ModifierTrait.php',
+        'Kreait\\Firebase\\Database\\Query\\Sorter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Sorter.php',
+        'Kreait\\Firebase\\Database\\Query\\Sorter\\OrderByChild' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Sorter/OrderByChild.php',
+        'Kreait\\Firebase\\Database\\Query\\Sorter\\OrderByKey' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Sorter/OrderByKey.php',
+        'Kreait\\Firebase\\Database\\Query\\Sorter\\OrderByValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Query/Sorter/OrderByValue.php',
+        'Kreait\\Firebase\\Database\\Reference' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Reference.php',
+        'Kreait\\Firebase\\Database\\RuleSet' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/RuleSet.php',
+        'Kreait\\Firebase\\Database\\Snapshot' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Snapshot.php',
+        'Kreait\\Firebase\\Database\\Transaction' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/Transaction.php',
+        'Kreait\\Firebase\\Database\\UrlBuilder' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Database/UrlBuilder.php',
+        'Kreait\\Firebase\\DynamicLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink.php',
+        'Kreait\\Firebase\\DynamicLink\\AnalyticsInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/AnalyticsInfo.php',
+        'Kreait\\Firebase\\DynamicLink\\AnalyticsInfo\\GooglePlayAnalytics' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/AnalyticsInfo/GooglePlayAnalytics.php',
+        'Kreait\\Firebase\\DynamicLink\\AnalyticsInfo\\ITunesConnectAnalytics' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/AnalyticsInfo/ITunesConnectAnalytics.php',
+        'Kreait\\Firebase\\DynamicLink\\AndroidInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/AndroidInfo.php',
+        'Kreait\\Firebase\\DynamicLink\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/ApiClient.php',
+        'Kreait\\Firebase\\DynamicLink\\CreateDynamicLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/CreateDynamicLink.php',
+        'Kreait\\Firebase\\DynamicLink\\CreateDynamicLink\\FailedToCreateDynamicLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/CreateDynamicLink/FailedToCreateDynamicLink.php',
+        'Kreait\\Firebase\\DynamicLink\\DynamicLinkStatistics' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/DynamicLinkStatistics.php',
+        'Kreait\\Firebase\\DynamicLink\\EventStatistics' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/EventStatistics.php',
+        'Kreait\\Firebase\\DynamicLink\\GetStatisticsForDynamicLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/GetStatisticsForDynamicLink.php',
+        'Kreait\\Firebase\\DynamicLink\\GetStatisticsForDynamicLink\\FailedToGetStatisticsForDynamicLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/GetStatisticsForDynamicLink/FailedToGetStatisticsForDynamicLink.php',
+        'Kreait\\Firebase\\DynamicLink\\IOSInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/IOSInfo.php',
+        'Kreait\\Firebase\\DynamicLink\\NavigationInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/NavigationInfo.php',
+        'Kreait\\Firebase\\DynamicLink\\ShortenLongDynamicLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/ShortenLongDynamicLink.php',
+        'Kreait\\Firebase\\DynamicLink\\ShortenLongDynamicLink\\FailedToShortenLongDynamicLink' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/ShortenLongDynamicLink/FailedToShortenLongDynamicLink.php',
+        'Kreait\\Firebase\\DynamicLink\\SocialMetaTagInfo' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLink/SocialMetaTagInfo.php',
+        'Kreait\\Firebase\\DynamicLinks' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/DynamicLinks.php',
+        'Kreait\\Firebase\\Exception\\AppCheckApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AppCheckApiExceptionConverter.php',
+        'Kreait\\Firebase\\Exception\\AppCheckException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AppCheckException.php',
+        'Kreait\\Firebase\\Exception\\AppCheck\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AppCheck/ApiConnectionFailed.php',
+        'Kreait\\Firebase\\Exception\\AppCheck\\AppCheckError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AppCheck/AppCheckError.php',
+        'Kreait\\Firebase\\Exception\\AppCheck\\FailedToVerifyAppCheckToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AppCheck/FailedToVerifyAppCheckToken.php',
+        'Kreait\\Firebase\\Exception\\AppCheck\\InvalidAppCheckToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AppCheck/InvalidAppCheckToken.php',
+        'Kreait\\Firebase\\Exception\\AppCheck\\InvalidAppCheckTokenOptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AppCheck/InvalidAppCheckTokenOptions.php',
+        'Kreait\\Firebase\\Exception\\AppCheck\\PermissionDenied' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AppCheck/PermissionDenied.php',
+        'Kreait\\Firebase\\Exception\\AuthApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AuthApiExceptionConverter.php',
+        'Kreait\\Firebase\\Exception\\AuthException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/AuthException.php',
+        'Kreait\\Firebase\\Exception\\Auth\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/ApiConnectionFailed.php',
+        'Kreait\\Firebase\\Exception\\Auth\\AuthError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/AuthError.php',
+        'Kreait\\Firebase\\Exception\\Auth\\CredentialsMismatch' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/CredentialsMismatch.php',
+        'Kreait\\Firebase\\Exception\\Auth\\EmailExists' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/EmailExists.php',
+        'Kreait\\Firebase\\Exception\\Auth\\EmailNotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/EmailNotFound.php',
+        'Kreait\\Firebase\\Exception\\Auth\\ExpiredOobCode' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/ExpiredOobCode.php',
+        'Kreait\\Firebase\\Exception\\Auth\\FailedToVerifySessionCookie' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/FailedToVerifySessionCookie.php',
+        'Kreait\\Firebase\\Exception\\Auth\\FailedToVerifyToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/FailedToVerifyToken.php',
+        'Kreait\\Firebase\\Exception\\Auth\\InvalidCustomToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/InvalidCustomToken.php',
+        'Kreait\\Firebase\\Exception\\Auth\\InvalidOobCode' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/InvalidOobCode.php',
+        'Kreait\\Firebase\\Exception\\Auth\\InvalidPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/InvalidPassword.php',
+        'Kreait\\Firebase\\Exception\\Auth\\MissingPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/MissingPassword.php',
+        'Kreait\\Firebase\\Exception\\Auth\\OperationNotAllowed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/OperationNotAllowed.php',
+        'Kreait\\Firebase\\Exception\\Auth\\PhoneNumberExists' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/PhoneNumberExists.php',
+        'Kreait\\Firebase\\Exception\\Auth\\ProviderLinkFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/ProviderLinkFailed.php',
+        'Kreait\\Firebase\\Exception\\Auth\\RevokedIdToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/RevokedIdToken.php',
+        'Kreait\\Firebase\\Exception\\Auth\\RevokedSessionCookie' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/RevokedSessionCookie.php',
+        'Kreait\\Firebase\\Exception\\Auth\\UserDisabled' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/UserDisabled.php',
+        'Kreait\\Firebase\\Exception\\Auth\\UserNotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/UserNotFound.php',
+        'Kreait\\Firebase\\Exception\\Auth\\WeakPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Auth/WeakPassword.php',
+        'Kreait\\Firebase\\Exception\\DatabaseApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/DatabaseApiExceptionConverter.php',
+        'Kreait\\Firebase\\Exception\\DatabaseException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/DatabaseException.php',
+        'Kreait\\Firebase\\Exception\\Database\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Database/ApiConnectionFailed.php',
+        'Kreait\\Firebase\\Exception\\Database\\DatabaseError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Database/DatabaseError.php',
+        'Kreait\\Firebase\\Exception\\Database\\DatabaseNotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Database/DatabaseNotFound.php',
+        'Kreait\\Firebase\\Exception\\Database\\PermissionDenied' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Database/PermissionDenied.php',
+        'Kreait\\Firebase\\Exception\\Database\\PreconditionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Database/PreconditionFailed.php',
+        'Kreait\\Firebase\\Exception\\Database\\ReferenceHasNotBeenSnapshotted' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Database/ReferenceHasNotBeenSnapshotted.php',
+        'Kreait\\Firebase\\Exception\\Database\\TransactionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Database/TransactionFailed.php',
+        'Kreait\\Firebase\\Exception\\Database\\UnsupportedQuery' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Database/UnsupportedQuery.php',
+        'Kreait\\Firebase\\Exception\\FirebaseException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/FirebaseException.php',
+        'Kreait\\Firebase\\Exception\\HasErrors' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/HasErrors.php',
+        'Kreait\\Firebase\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/InvalidArgumentException.php',
+        'Kreait\\Firebase\\Exception\\LogicException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/LogicException.php',
+        'Kreait\\Firebase\\Exception\\MessagingApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/MessagingApiExceptionConverter.php',
+        'Kreait\\Firebase\\Exception\\MessagingException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/MessagingException.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/ApiConnectionFailed.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\AuthenticationError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/AuthenticationError.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\InvalidArgument' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/InvalidArgument.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\InvalidMessage' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/InvalidMessage.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\MessagingError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/MessagingError.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\NotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/NotFound.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\QuotaExceeded' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/QuotaExceeded.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\ServerError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/ServerError.php',
+        'Kreait\\Firebase\\Exception\\Messaging\\ServerUnavailable' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/Messaging/ServerUnavailable.php',
+        'Kreait\\Firebase\\Exception\\OutOfRangeException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/OutOfRangeException.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfigApiExceptionConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfigApiExceptionConverter.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfigException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfigException.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfig\\ApiConnectionFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfig/ApiConnectionFailed.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfig\\OperationAborted' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfig/OperationAborted.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfig\\PermissionDenied' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfig/PermissionDenied.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfig\\RemoteConfigError' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfig/RemoteConfigError.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfig\\ValidationFailed' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfig/ValidationFailed.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfig\\VersionMismatch' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfig/VersionMismatch.php',
+        'Kreait\\Firebase\\Exception\\RemoteConfig\\VersionNotFound' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RemoteConfig/VersionNotFound.php',
+        'Kreait\\Firebase\\Exception\\RuntimeException' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Exception/RuntimeException.php',
+        'Kreait\\Firebase\\Factory' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Factory.php',
+        'Kreait\\Firebase\\Firestore' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Firestore.php',
+        'Kreait\\Firebase\\Http\\ErrorResponseParser' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Http/ErrorResponseParser.php',
+        'Kreait\\Firebase\\Http\\HttpClientOptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Http/HttpClientOptions.php',
+        'Kreait\\Firebase\\Http\\Middleware' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Http/Middleware.php',
         'Kreait\\Firebase\\JWT\\Action\\CreateCustomToken' => __DIR__ . '/..' . '/kreait/firebase-tokens/src/JWT/Action/CreateCustomToken.php',
         'Kreait\\Firebase\\JWT\\Action\\CreateCustomToken\\Handler' => __DIR__ . '/..' . '/kreait/firebase-tokens/src/JWT/Action/CreateCustomToken/Handler.php',
         'Kreait\\Firebase\\JWT\\Action\\CreateCustomToken\\WithLcobucciJWT' => __DIR__ . '/..' . '/kreait/firebase-tokens/src/JWT/Action/CreateCustomToken/WithLcobucciJWT.php',
@@ -37435,67 +37481,69 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'Kreait\\Firebase\\JWT\\Token\\Parser' => __DIR__ . '/..' . '/kreait/firebase-tokens/src/JWT/Token/Parser.php',
         'Kreait\\Firebase\\JWT\\Util' => __DIR__ . '/..' . '/kreait/firebase-tokens/src/JWT/Util.php',
         'Kreait\\Firebase\\JWT\\Value\\Duration' => __DIR__ . '/..' . '/kreait/firebase-tokens/src/JWT/Value/Duration.php',
-        'Kreait\\Firebase\\Messaging' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging.php',
-        'Kreait\\Firebase\\Messaging\\AndroidConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/AndroidConfig.php',
-        'Kreait\\Firebase\\Messaging\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/ApiClient.php',
-        'Kreait\\Firebase\\Messaging\\ApnsConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/ApnsConfig.php',
-        'Kreait\\Firebase\\Messaging\\AppInstance' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/AppInstance.php',
-        'Kreait\\Firebase\\Messaging\\AppInstanceApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/AppInstanceApiClient.php',
-        'Kreait\\Firebase\\Messaging\\CloudMessage' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/CloudMessage.php',
-        'Kreait\\Firebase\\Messaging\\Condition' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/Condition.php',
-        'Kreait\\Firebase\\Messaging\\FcmOptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/FcmOptions.php',
-        'Kreait\\Firebase\\Messaging\\Message' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/Message.php',
-        'Kreait\\Firebase\\Messaging\\MessageData' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/MessageData.php',
-        'Kreait\\Firebase\\Messaging\\MessageTarget' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/MessageTarget.php',
-        'Kreait\\Firebase\\Messaging\\Messages' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/Messages.php',
-        'Kreait\\Firebase\\Messaging\\MulticastSendReport' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/MulticastSendReport.php',
-        'Kreait\\Firebase\\Messaging\\Notification' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/Notification.php',
-        'Kreait\\Firebase\\Messaging\\Processor\\SetApnsContentAvailableIfNeeded' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/Processor/SetApnsContentAvailableIfNeeded.php',
-        'Kreait\\Firebase\\Messaging\\Processor\\SetApnsPushTypeIfNeeded' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/Processor/SetApnsPushTypeIfNeeded.php',
-        'Kreait\\Firebase\\Messaging\\RawMessageFromArray' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/RawMessageFromArray.php',
-        'Kreait\\Firebase\\Messaging\\RegistrationToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/RegistrationToken.php',
-        'Kreait\\Firebase\\Messaging\\RegistrationTokens' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/RegistrationTokens.php',
-        'Kreait\\Firebase\\Messaging\\RequestFactory' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/RequestFactory.php',
-        'Kreait\\Firebase\\Messaging\\SendReport' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/SendReport.php',
-        'Kreait\\Firebase\\Messaging\\Topic' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/Topic.php',
-        'Kreait\\Firebase\\Messaging\\TopicSubscription' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/TopicSubscription.php',
-        'Kreait\\Firebase\\Messaging\\TopicSubscriptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/TopicSubscriptions.php',
-        'Kreait\\Firebase\\Messaging\\WebPushConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Messaging/WebPushConfig.php',
-        'Kreait\\Firebase\\RemoteConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig.php',
-        'Kreait\\Firebase\\RemoteConfig\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/ApiClient.php',
-        'Kreait\\Firebase\\RemoteConfig\\Condition' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/Condition.php',
-        'Kreait\\Firebase\\RemoteConfig\\ConditionalValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/ConditionalValue.php',
-        'Kreait\\Firebase\\RemoteConfig\\FindVersions' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/FindVersions.php',
-        'Kreait\\Firebase\\RemoteConfig\\Parameter' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/Parameter.php',
-        'Kreait\\Firebase\\RemoteConfig\\ParameterGroup' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/ParameterGroup.php',
-        'Kreait\\Firebase\\RemoteConfig\\ParameterValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/ParameterValue.php',
-        'Kreait\\Firebase\\RemoteConfig\\ParameterValueType' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/ParameterValueType.php',
-        'Kreait\\Firebase\\RemoteConfig\\PersonalizationValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/PersonalizationValue.php',
-        'Kreait\\Firebase\\RemoteConfig\\RolloutValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/RolloutValue.php',
-        'Kreait\\Firebase\\RemoteConfig\\TagColor' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/TagColor.php',
-        'Kreait\\Firebase\\RemoteConfig\\Template' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/Template.php',
-        'Kreait\\Firebase\\RemoteConfig\\UpdateOrigin' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/UpdateOrigin.php',
-        'Kreait\\Firebase\\RemoteConfig\\UpdateType' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/UpdateType.php',
-        'Kreait\\Firebase\\RemoteConfig\\User' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/User.php',
-        'Kreait\\Firebase\\RemoteConfig\\Version' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/Version.php',
-        'Kreait\\Firebase\\RemoteConfig\\VersionNumber' => __DIR__ . '/..' . '/kreait/firebase-php/src/RemoteConfig/VersionNumber.php',
-        'Kreait\\Firebase\\Request\\CreateUser' => __DIR__ . '/..' . '/kreait/firebase-php/src/Request/CreateUser.php',
-        'Kreait\\Firebase\\Request\\EditUserTrait' => __DIR__ . '/..' . '/kreait/firebase-php/src/Request/EditUserTrait.php',
-        'Kreait\\Firebase\\Request\\UpdateUser' => __DIR__ . '/..' . '/kreait/firebase-php/src/Request/UpdateUser.php',
-        'Kreait\\Firebase\\ServiceAccount' => __DIR__ . '/..' . '/kreait/firebase-php/src/ServiceAccount.php',
-        'Kreait\\Firebase\\Storage' => __DIR__ . '/..' . '/kreait/firebase-php/src/Storage.php',
-        'Kreait\\Firebase\\Util' => __DIR__ . '/..' . '/kreait/firebase-php/src/Util.php',
-        'Kreait\\Firebase\\Util\\DT' => __DIR__ . '/..' . '/kreait/firebase-php/src/Util/DT.php',
-        'Kreait\\Firebase\\Valinor\\Converter\\SnakeCaseToCamelCaseConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Valinor/Converter/SnakeCaseToCamelCaseConverter.php',
-        'Kreait\\Firebase\\Valinor\\Converter\\UnwrapIterableByKey' => __DIR__ . '/..' . '/kreait/firebase-php/src/Valinor/Converter/UnwrapIterableByKey.php',
-        'Kreait\\Firebase\\Valinor\\Mapper' => __DIR__ . '/..' . '/kreait/firebase-php/src/Valinor/Mapper.php',
-        'Kreait\\Firebase\\Valinor\\Normalizer' => __DIR__ . '/..' . '/kreait/firebase-php/src/Valinor/Normalizer.php',
-        'Kreait\\Firebase\\Valinor\\Source' => __DIR__ . '/..' . '/kreait/firebase-php/src/Valinor/Source.php',
-        'Kreait\\Firebase\\Valinor\\Transformer\\CamelToSnakeCaseTransformer' => __DIR__ . '/..' . '/kreait/firebase-php/src/Valinor/Transformer/CamelToSnakeCaseTransformer.php',
-        'Kreait\\Firebase\\Value\\ClearTextPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Value/ClearTextPassword.php',
-        'Kreait\\Firebase\\Value\\Email' => __DIR__ . '/..' . '/kreait/firebase-php/src/Value/Email.php',
-        'Kreait\\Firebase\\Value\\Uid' => __DIR__ . '/..' . '/kreait/firebase-php/src/Value/Uid.php',
-        'Kreait\\Firebase\\Value\\Url' => __DIR__ . '/..' . '/kreait/firebase-php/src/Value/Url.php',
+        'Kreait\\Firebase\\Messaging' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging.php',
+        'Kreait\\Firebase\\Messaging\\AndroidConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/AndroidConfig.php',
+        'Kreait\\Firebase\\Messaging\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/ApiClient.php',
+        'Kreait\\Firebase\\Messaging\\ApnsConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/ApnsConfig.php',
+        'Kreait\\Firebase\\Messaging\\AppInstance' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/AppInstance.php',
+        'Kreait\\Firebase\\Messaging\\AppInstanceApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/AppInstanceApiClient.php',
+        'Kreait\\Firebase\\Messaging\\CloudMessage' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/CloudMessage.php',
+        'Kreait\\Firebase\\Messaging\\Condition' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/Condition.php',
+        'Kreait\\Firebase\\Messaging\\FcmOptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/FcmOptions.php',
+        'Kreait\\Firebase\\Messaging\\Message' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/Message.php',
+        'Kreait\\Firebase\\Messaging\\MessageData' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/MessageData.php',
+        'Kreait\\Firebase\\Messaging\\MessageTarget' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/MessageTarget.php',
+        'Kreait\\Firebase\\Messaging\\Messages' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/Messages.php',
+        'Kreait\\Firebase\\Messaging\\MulticastSendReport' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/MulticastSendReport.php',
+        'Kreait\\Firebase\\Messaging\\Notification' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/Notification.php',
+        'Kreait\\Firebase\\Messaging\\Processor\\SetApnsContentAvailableIfNeeded' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/Processor/SetApnsContentAvailableIfNeeded.php',
+        'Kreait\\Firebase\\Messaging\\Processor\\SetApnsPushTypeIfNeeded' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/Processor/SetApnsPushTypeIfNeeded.php',
+        'Kreait\\Firebase\\Messaging\\RawMessageFromArray' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/RawMessageFromArray.php',
+        'Kreait\\Firebase\\Messaging\\RegistrationToken' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/RegistrationToken.php',
+        'Kreait\\Firebase\\Messaging\\RegistrationTokens' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/RegistrationTokens.php',
+        'Kreait\\Firebase\\Messaging\\RequestFactory' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/RequestFactory.php',
+        'Kreait\\Firebase\\Messaging\\SendReport' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/SendReport.php',
+        'Kreait\\Firebase\\Messaging\\Topic' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/Topic.php',
+        'Kreait\\Firebase\\Messaging\\TopicSubscription' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/TopicSubscription.php',
+        'Kreait\\Firebase\\Messaging\\TopicSubscriptions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/TopicSubscriptions.php',
+        'Kreait\\Firebase\\Messaging\\WebPushConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Messaging/WebPushConfig.php',
+        'Kreait\\Firebase\\RemoteConfig' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig.php',
+        'Kreait\\Firebase\\RemoteConfig\\ApiClient' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/ApiClient.php',
+        'Kreait\\Firebase\\RemoteConfig\\Condition' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/Condition.php',
+        'Kreait\\Firebase\\RemoteConfig\\ConditionalValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/ConditionalValue.php',
+        'Kreait\\Firebase\\RemoteConfig\\DefaultValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/DefaultValue.php',
+        'Kreait\\Firebase\\RemoteConfig\\ExplicitValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/ExplicitValue.php',
+        'Kreait\\Firebase\\RemoteConfig\\FindVersions' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/FindVersions.php',
+        'Kreait\\Firebase\\RemoteConfig\\Parameter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/Parameter.php',
+        'Kreait\\Firebase\\RemoteConfig\\ParameterGroup' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/ParameterGroup.php',
+        'Kreait\\Firebase\\RemoteConfig\\ParameterValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/ParameterValue.php',
+        'Kreait\\Firebase\\RemoteConfig\\ParameterValueType' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/ParameterValueType.php',
+        'Kreait\\Firebase\\RemoteConfig\\PersonalizationValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/PersonalizationValue.php',
+        'Kreait\\Firebase\\RemoteConfig\\RolloutValue' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/RolloutValue.php',
+        'Kreait\\Firebase\\RemoteConfig\\TagColor' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/TagColor.php',
+        'Kreait\\Firebase\\RemoteConfig\\Template' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/Template.php',
+        'Kreait\\Firebase\\RemoteConfig\\UpdateOrigin' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/UpdateOrigin.php',
+        'Kreait\\Firebase\\RemoteConfig\\UpdateType' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/UpdateType.php',
+        'Kreait\\Firebase\\RemoteConfig\\User' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/User.php',
+        'Kreait\\Firebase\\RemoteConfig\\Version' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/Version.php',
+        'Kreait\\Firebase\\RemoteConfig\\VersionNumber' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/RemoteConfig/VersionNumber.php',
+        'Kreait\\Firebase\\Request' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Request.php',
+        'Kreait\\Firebase\\Request\\CreateUser' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Request/CreateUser.php',
+        'Kreait\\Firebase\\Request\\EditUserTrait' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Request/EditUserTrait.php',
+        'Kreait\\Firebase\\Request\\UpdateUser' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Request/UpdateUser.php',
+        'Kreait\\Firebase\\ServiceAccount' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/ServiceAccount.php',
+        'Kreait\\Firebase\\Storage' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Storage.php',
+        'Kreait\\Firebase\\Util' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Util.php',
+        'Kreait\\Firebase\\Util\\DT' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Util/DT.php',
+        'Kreait\\Firebase\\Valinor\\Converter\\SnakeCaseToCamelCaseConverter' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Valinor/Converter/SnakeCaseToCamelCaseConverter.php',
+        'Kreait\\Firebase\\Valinor\\Mapper' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Valinor/Mapper.php',
+        'Kreait\\Firebase\\Valinor\\Normalizer' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Valinor/Normalizer.php',
+        'Kreait\\Firebase\\Valinor\\Source' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Valinor/Source.php',
+        'Kreait\\Firebase\\Valinor\\Transformer\\CamelToSnakeCaseTransformer' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Valinor/Transformer/CamelToSnakeCaseTransformer.php',
+        'Kreait\\Firebase\\Value\\ClearTextPassword' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Value/ClearTextPassword.php',
+        'Kreait\\Firebase\\Value\\Email' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Value/Email.php',
+        'Kreait\\Firebase\\Value\\Uid' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Value/Uid.php',
+        'Kreait\\Firebase\\Value\\Url' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase/Value/Url.php',
         'Kreait\\Laravel\\Firebase\\Facades\\Firebase' => __DIR__ . '/..' . '/kreait/laravel-firebase/src/Facades/Firebase.php',
         'Kreait\\Laravel\\Firebase\\FirebaseProject' => __DIR__ . '/..' . '/kreait/laravel-firebase/src/FirebaseProject.php',
         'Kreait\\Laravel\\Firebase\\FirebaseProjectManager' => __DIR__ . '/..' . '/kreait/laravel-firebase/src/FirebaseProjectManager.php',
@@ -41253,7 +41301,9 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'Symfony\\Component\\Cache\\Traits\\RelayClusterProxy' => __DIR__ . '/..' . '/symfony/cache/Traits/RelayClusterProxy.php',
         'Symfony\\Component\\Cache\\Traits\\RelayProxy' => __DIR__ . '/..' . '/symfony/cache/Traits/RelayProxy.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\Relay20Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay20Trait.php',
+        'Symfony\\Component\\Cache\\Traits\\Relay\\Relay21Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay21Trait.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\RelayCluster20Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/RelayCluster20Trait.php',
+        'Symfony\\Component\\Cache\\Traits\\Relay\\RelayCluster21Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/RelayCluster21Trait.php',
         'Symfony\\Component\\Clock\\Clock' => __DIR__ . '/..' . '/symfony/clock/Clock.php',
         'Symfony\\Component\\Clock\\ClockAwareTrait' => __DIR__ . '/..' . '/symfony/clock/ClockAwareTrait.php',
         'Symfony\\Component\\Clock\\ClockInterface' => __DIR__ . '/..' . '/symfony/clock/ClockInterface.php',
@@ -42259,11 +42309,14 @@ class ComposerStaticInitad06d2e7b81207745ef84efff2a0c18f
         'Symfony\\Component\\VarExporter\\Internal\\LazyDecoratorTrait' => __DIR__ . '/..' . '/symfony/var-exporter/Internal/LazyDecoratorTrait.php',
         'Symfony\\Component\\VarExporter\\Internal\\LazyObjectRegistry' => __DIR__ . '/..' . '/symfony/var-exporter/Internal/LazyObjectRegistry.php',
         'Symfony\\Component\\VarExporter\\Internal\\LazyObjectState' => __DIR__ . '/..' . '/symfony/var-exporter/Internal/LazyObjectState.php',
+        'Symfony\\Component\\VarExporter\\Internal\\LazyObjectTrait' => __DIR__ . '/..' . '/symfony/var-exporter/Internal/LazyObjectTrait.php',
         'Symfony\\Component\\VarExporter\\Internal\\NamedClosure' => __DIR__ . '/..' . '/symfony/var-exporter/Internal/NamedClosure.php',
         'Symfony\\Component\\VarExporter\\Internal\\Reference' => __DIR__ . '/..' . '/symfony/var-exporter/Internal/Reference.php',
         'Symfony\\Component\\VarExporter\\Internal\\Registry' => __DIR__ . '/..' . '/symfony/var-exporter/Internal/Registry.php',
         'Symfony\\Component\\VarExporter\\Internal\\Values' => __DIR__ . '/..' . '/symfony/var-exporter/Internal/Values.php',
+        'Symfony\\Component\\VarExporter\\LazyGhostTrait' => __DIR__ . '/..' . '/symfony/var-exporter/LazyGhostTrait.php',
         'Symfony\\Component\\VarExporter\\LazyObjectInterface' => __DIR__ . '/..' . '/symfony/var-exporter/LazyObjectInterface.php',
+        'Symfony\\Component\\VarExporter\\LazyProxyTrait' => __DIR__ . '/..' . '/symfony/var-exporter/LazyProxyTrait.php',
         'Symfony\\Component\\VarExporter\\ProxyHelper' => __DIR__ . '/..' . '/symfony/var-exporter/ProxyHelper.php',
         'Symfony\\Component\\VarExporter\\VarExporter' => __DIR__ . '/..' . '/symfony/var-exporter/VarExporter.php',
         'Symfony\\Component\\Yaml\\Command\\LintCommand' => __DIR__ . '/..' . '/symfony/yaml/Command/LintCommand.php',

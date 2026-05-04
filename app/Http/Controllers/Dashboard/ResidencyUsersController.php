@@ -72,4 +72,19 @@ class ResidencyUsersController extends Controller
         return redirect()->back()->with('success', "User's package updated successfully.");
     }
 
+    public function updatePoints(Request $request, $id): RedirectResponse
+    {
+        $request->validate([
+            'available_points' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $user = ResidencyUser::query()->findOrFail($id);
+        $user->update([
+            'available_points' => $request->get('available_points'),
+            'earned_points'    => $request->get('available_points'),
+        ]);
+
+        return redirect()->back()->with('success', "User's points updated successfully.");
+    }
+
 }

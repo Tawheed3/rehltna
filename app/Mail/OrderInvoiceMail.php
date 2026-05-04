@@ -14,13 +14,12 @@ class OrderInvoiceMail extends Mailable
     use Queueable, SerializesModels;
 
     public Order $order;
+    public int $earnedPoints;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(Order $order)
+    public function __construct(Order $order, int $earnedPoints = 0)
     {
         $this->order = $order;
+        $this->earnedPoints = $earnedPoints;
     }
 
     /**

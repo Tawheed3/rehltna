@@ -9,6 +9,7 @@
             <th>Contact & Package</th>
             <th class="text-center">Trips</th>
             <th class="text-center">Orders</th>
+            <th class="text-center">Points</th>
             <th class="text-center px-4">Actions</th>
         </tr>
         </thead>
@@ -44,8 +45,23 @@
                         {{ $residencyUser->orders_count ?? 0 }}
                     </span>
                 </td>
+                <td class="text-center">
+                    <span class="fw-bold d-block" style="color: #f59e0b; font-size: 13px;">
+                        <i class="las la-star me-1"></i>{{ number_format($residencyUser->available_points, 0) }}
+                    </span>
+                    <span class="text-muted" style="font-size: 11px;">available</span>
+                </td>
                 <td class="text-center px-4">
                     <div class="d-flex justify-content-center gap-2">
+                        <button type="button" class="btn-action shadow-sm edit-points-btn"
+                                style="color: #f59e0b;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editPointsModal"
+                                data-userid="{{ $residencyUser->id }}"
+                                data-username="{{ $residencyUser->name }}"
+                                data-points="{{ $residencyUser->available_points }}">
+                            <i class="las la-star fs-18"></i>
+                        </button>
                         <button type="button" class="btn-action shadow-sm edit-pkg-btn"
                                 style="color: #10b981;"
                                 data-bs-toggle="modal"

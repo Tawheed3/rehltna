@@ -132,7 +132,8 @@ class OrderController extends Controller
 
                 try {
                     $order->load('items.item');
-                    Mail::to($order->email)->send(new OrderInvoiceMail($order));
+                    $earnedPoints = (int) $order->total_amount;
+                    Mail::to($order->email)->send(new OrderInvoiceMail($order, $earnedPoints));
                 } catch (\Exception $e) {
                     Log::error('Mail sending failed: ' . $e->getMessage());
                 }

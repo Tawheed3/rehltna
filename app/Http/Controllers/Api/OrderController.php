@@ -26,7 +26,7 @@ class OrderController extends Controller
 {
     use ResponseTrait;
 
-    private function calculateOrderDetails($itemsRequest, $couponCode = null, $email = null, $usePoints = false): array
+    private function calculateOrderDetails($itemsRequest, $couponCode = null, $email = null, $usePoints = false, $paymentMethod = null): array
     {
         $itemIds = collect($itemsRequest)->pluck('item_id')->toArray();
 
@@ -119,6 +119,12 @@ class OrderController extends Controller
             }
         }
 
+        $tamaraFee = 0;
+        if ($paymentMethod === 'tamara') {
+            $tamaraFee  = round($finalTotal * 0.07, 2);
+            $finalTotal = round($finalTotal + $tamaraFee, 2);
+        }
+
         return [
             'sub_total' => $subTotal,
             'coupon_discount' => $discountAmount,
@@ -126,6 +132,7 @@ class OrderController extends Controller
             'points_used' => $pointsUsed,
             'total_discount' => $discountAmount + $pointsDiscount,
             'coupon_id' => $couponId,
+            'tamara_fee' => $tamaraFee,
             'final_total' => $finalTotal,
             'order_items_data' => $orderItemsData
         ];
@@ -185,7 +192,8 @@ class OrderController extends Controller
             $request->get('items'),
             $request->get('coupon_code'),
             $request->get('email'),
-            $request->boolean('use_points')
+            $request->boolean('use_points'),
+            $paymentCode
         );
 
         DB::beginTransaction();
@@ -251,6 +259,7 @@ class OrderController extends Controller
                 'coupon_discount' => $calculation['coupon_discount'],
                 'points_discount' => $calculation['points_discount'],
                 'total_discount' => $calculation['total_discount'],
+                'tamara_fee' => $calculation['tamara_fee'],
                 'total_amount' => $calculation['final_total'],
                 'status' => 'pending',
             ];
@@ -548,7 +557,8 @@ class OrderController extends Controller
             $request->get('items'),
             $request->get('coupon_code'),
             $request->get('email'),
-            $request->boolean('use_points')
+            $request->boolean('use_points'),
+            $request->get('payment_method_code')
         );
 
         $responsePayload = [
@@ -557,6 +567,7 @@ class OrderController extends Controller
             'points_discount' => $calculation['points_discount'],
             'total_discount' => $calculation['total_discount'],
             'points_used' => $calculation['points_used'],
+            'tamara_fee' => $calculation['tamara_fee'],
             'total_amount' => $calculation['final_total'],
         ];
 
@@ -684,7 +695,8 @@ class OrderController extends Controller
         }
 
         try {
-            Mail::to($order->email)->send(new OrderInvoiceMail($order));
+            $earnedPoints = (int) $order->total_amount;
+            Mail::to($order->email)->send(new OrderInvoiceMail($order, $earnedPoints));
         } catch (\Exception $e) {
             Log::error('Payment Success Mail Error: ' . $e->getMessage());
         }

@@ -220,6 +220,35 @@
         </div>
     </div>
 
+    {{-- Edit Points Modal --}}
+    <div class="modal fade" id="editPointsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0"
+                 style="border-radius: 20px; overflow: visible; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="modal-header bg-light border-0 p-4">
+                    <h5 class="modal-title fw-bold text-dark"><i class="las la-star text-warning me-2"></i>Edit User Points</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editPointsForm" method="POST">
+                    @csrf
+                    <div class="modal-body p-4">
+                        <p class="mb-3">Set available points for <strong id="pointsModalUserName" class="text-primary"></strong>.</p>
+                        <div class="form-group mb-0">
+                            <label class="form-label fw-bold text-muted mb-2">Available Points</label>
+                            <input type="number" name="available_points" id="pointsInput"
+                                   class="form-control form-control-deluxe" min="0" step="1" required
+                                   placeholder="Enter points amount">
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm text-white">Save Points</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @include('pages.models.confirm-delete')
 
 @endsection
@@ -231,6 +260,19 @@
         });
     </script>
     <script>
+        $(document).on('click', '.edit-points-btn', function () {
+            let userId   = $(this).data('userid');
+            let userName = $(this).data('username');
+            let points   = $(this).data('points');
+
+            $('#pointsModalUserName').text(userName);
+            $('#pointsInput').val(Math.round(points));
+
+            let updateUrl = "{{ route('residency-users.update-points', ':id') }}";
+            updateUrl = updateUrl.replace(':id', userId);
+            $('#editPointsForm').attr('action', updateUrl);
+        });
+
         $(document).on('click', '.edit-pkg-btn', function () {
             let userId = $(this).data('userid');
             let userName = $(this).data('username');

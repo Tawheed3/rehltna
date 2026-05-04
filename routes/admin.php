@@ -233,6 +233,7 @@ Route::group([
         Route::delete('/residency-users/destroy/{id}', [ResidencyUsersController::class, 'destroy'])->name('residency-users.destroy'); #-------- Delete Residency Users ---------#
         Route::post('/residency-users/bulk-delete', [ResidencyUsersController::class, 'bulkDelete'])->name('residency-users.bulk-delete'); #-------- Bulk Delete Residency Users ---------#
         Route::post('residency-users/{id}/change-package', [ResidencyUsersController::class, 'changePackage'])->name('residency-users.change-package');
+        Route::post('residency-users/{id}/update-points', [ResidencyUsersController::class, 'updatePoints'])->name('residency-users.update-points');
 
         Route::post('payment-links/create-from-user/{id}', [PaymentLinkController::class, 'storeFromRegisterUser'])->name('payment-links.storeFromRegister');
 

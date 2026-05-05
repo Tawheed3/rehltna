@@ -62,6 +62,22 @@ class Item extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function getResponsibleEmails(): array
+    {
+        $ids = $this->responsible_user_ids ?? [];
+
+        // Backward compat: fall back to the single user_id if no array set yet
+        if (empty($ids) && $this->user_id) {
+            $ids = [$this->user_id];
+        }
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        return User::whereIn('id', $ids)->pluck('email')->toArray();
+    }
+
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(ResidencyUser::class, 'item_residency_users', 'item_id', 'residency_user_id')
@@ -74,7 +90,8 @@ class Item extends Model
     protected $hidden = ['assignedCoupons'];
 
     protected $casts = [
-        'featured_at' => 'datetime',
+        'featured_at'          => 'datetime',
+        'responsible_user_ids' => 'array',
     ];
 
     public function getPriceAfterDiscountAttribute()

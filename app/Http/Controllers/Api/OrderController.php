@@ -10,6 +10,7 @@ use App\Models\Coupon;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\PaymentMethod;
+use App\Models\PointLog;
 use App\Models\ResidencyUser;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -234,10 +235,6 @@ class OrderController extends Controller
 
             foreach ($calculation['order_items_data'] as $item) {
                 $order->items()->create($item);
-            }
-
-            if ($calculation['points_used'] > 0) {
-                $user->decrement('available_points', $calculation['points_used']);
             }
 
             DB::commit();
@@ -518,10 +515,37 @@ class OrderController extends Controller
                 'payment_status' => 'reviewing'
             ]);
 
+            // Notify customer
             try {
                 Mail::to($order->email)->send(new OrderUnderReviewMail($order));
             } catch (\Exception $e) {
                 Log::error('Review Mail Error: ' . $e->getMessage());
+            }
+
+            // Notify admin + all responsible employees for the ordered trips
+            try {
+                $order->load('items.item');
+
+                $responsibleEmails = [];
+                foreach ($order->items as $orderItem) {
+                    if ($orderItem->item) {
+                        foreach ($orderItem->item->getResponsibleEmails() as $email) {
+                            $responsibleEmails[] = $email;
+                        }
+                    }
+                }
+
+                $adminEmail = get_setting('admin_email') ?: config('mail.from.address');
+                $recipients = array_unique(array_filter(array_merge([$adminEmail], $responsibleEmails)));
+
+                Log::info('Order #' . $order->id . ' review notification — sending to: ' . implode(', ', $recipients));
+
+                foreach ($recipients as $email) {
+                    Mail::to($email)->send(new \App\Mail\OrderNeedsReviewMail($order));
+                    Log::info('Review notification sent to: ' . $email);
+                }
+            } catch (\Exception $e) {
+                Log::error('Employee Review Notification Error: ' . $e->getMessage());
             }
 
             return $this->responseMessage(200, 'Receipt uploaded successfully. Waiting for admin approval.', $order->load('items.item.itemType'));
@@ -594,9 +618,7 @@ class OrderController extends Controller
             if ($request->has('status') && strtolower($request->get('status')) !== 'paid') {
                 if ($order->payment_status !== 'failed' && $order->payment_status !== 'canceled') {
                     $order->update(['payment_status' => 'failed']);
-                    if ($order->used_points > 0 && $order->user) {
-                        $order->user->increment('available_points', $order->used_points);
-                    }
+                    $this->refundPointsIfDeducted($order, 'Points refunded — payment failed');
                 }
                 return redirect()->away($payment_failed_url . '?' . http_build_query(['order_id' => $order->id]));
             }
@@ -630,9 +652,7 @@ class OrderController extends Controller
         }
         if ($order->payment_status !== 'canceled' && $order->payment_status !== 'failed') {
             $order->update(['payment_status' => 'canceled']);
-            if ($order->used_points > 0 && $order->user) {
-                $order->user->increment('available_points', $order->used_points);
-            }
+            $this->refundPointsIfDeducted($order, 'Points refunded — payment cancelled');
         }
 
         return redirect()->away(
@@ -646,6 +666,33 @@ class OrderController extends Controller
     {
         $order = Order::query()->with('items.item.itemType', 'items.item.itineraries.city')->findOrFail($id);
         return $this->responseMessage(200, 'Order Found', $order);
+    }
+
+    private function refundPointsIfDeducted(Order $order, string $reason): void
+    {
+        if ($order->used_points <= 0 || !$order->user) {
+            return;
+        }
+
+        $wasDeducted = PointLog::where('order_id', $order->id)->where('type', 'trip_used')->exists();
+        if (!$wasDeducted) {
+            return;
+        }
+
+        $user = $order->user;
+        $balanceBefore = (int) $user->available_points;
+        $user->increment('available_points', $order->used_points);
+
+        PointLog::create([
+            'residency_user_id' => $user->id,
+            'type'              => 'employee_adjusted',
+            'points'            => (int) $order->used_points,
+            'balance_before'    => $balanceBefore,
+            'balance_after'     => $balanceBefore + (int) $order->used_points,
+            'order_id'          => $order->id,
+            'reason'            => $reason . ' — Order #' . $order->id,
+            'employee_name'     => 'System',
+        ]);
     }
 
     private function handleOrderSuccess(Order $order): void
@@ -683,11 +730,39 @@ class OrderController extends Controller
                     }
                 }
 
+                $tripName = optional($order->items->first()?->item)->title_en ?? 'Trip #' . $order->id;
+
+                // Deduct used points now that payment is confirmed (not at checkout)
+                if ($order->used_points > 0) {
+                    $balanceBefore = (int) $user->available_points;
+                    $user->decrement('available_points', $order->used_points);
+                    PointLog::create([
+                        'residency_user_id' => $user->id,
+                        'type'              => 'trip_used',
+                        'points'            => -(int) $order->used_points,
+                        'balance_before'    => $balanceBefore,
+                        'balance_after'     => $balanceBefore - (int) $order->used_points,
+                        'order_id'          => $order->id,
+                        'trip_name'         => $tripName,
+                    ]);
+                }
+
                 // 1 SAR spent = 1 point earned (based on final amount paid after all discounts)
                 $earnedPoints = (int) $order->total_amount;
                 if ($earnedPoints > 0) {
+                    $balanceBefore = (int) $user->available_points;
                     $user->increment('earned_points', $earnedPoints);
                     $user->increment('available_points', $earnedPoints);
+
+                    PointLog::create([
+                        'residency_user_id' => $user->id,
+                        'type'              => 'trip_earned',
+                        'points'            => $earnedPoints,
+                        'balance_before'    => $balanceBefore,
+                        'balance_after'     => $balanceBefore + $earnedPoints,
+                        'order_id'          => $order->id,
+                        'trip_name'         => $tripName,
+                    ]);
                 }
             }
         } catch (\Exception $e) {

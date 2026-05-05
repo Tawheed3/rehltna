@@ -222,29 +222,152 @@
 
     {{-- Edit Points Modal --}}
     <div class="modal fade" id="editPointsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0"
-                 style="border-radius: 20px; overflow: visible; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                <div class="modal-header bg-light border-0 p-4">
-                    <h5 class="modal-title fw-bold text-dark"><i class="las la-star text-warning me-2"></i>Edit User Points</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-dialog modal-dialog-centered" style="max-width:480px;">
+            <div class="modal-content border-0" style="border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.12);">
+
+                <div class="modal-header border-0 p-4 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">
+                        <i class="las la-star text-warning me-2"></i>
+                        Manage Points — <span id="pointsModalUserName" class="text-primary"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="editPointsForm" method="POST">
-                    @csrf
-                    <div class="modal-body p-4">
-                        <p class="mb-3">Set available points for <strong id="pointsModalUserName" class="text-primary"></strong>.</p>
-                        <div class="form-group mb-0">
-                            <label class="form-label fw-bold text-muted mb-2">Available Points</label>
-                            <input type="number" name="available_points" id="pointsInput"
-                                   class="form-control form-control-deluxe" min="0" step="1" required
-                                   placeholder="Enter points amount">
+
+                <div class="modal-body p-4">
+
+                    {{-- Tabs --}}
+                    <ul class="nav nav-pills mb-4 gap-2" id="pointsTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold px-4" id="tab-balance-btn"
+                                    data-bs-toggle="pill" data-bs-target="#tab-balance"
+                                    type="button" style="border-radius:12px;">
+                                <i class="las la-wallet me-1"></i> Balance
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold px-4" id="tab-add-btn"
+                                    data-bs-toggle="pill" data-bs-target="#tab-add"
+                                    type="button" style="border-radius:12px;">
+                                <i class="las la-plus-circle me-1"></i> Add
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold px-4" id="tab-deduct-btn"
+                                    data-bs-toggle="pill" data-bs-target="#tab-deduct"
+                                    type="button" style="border-radius:12px;">
+                                <i class="las la-minus-circle me-1"></i> Deduct
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+
+                        {{-- Tab 1: Current Balance --}}
+                        <div class="tab-pane fade show active" id="tab-balance" role="tabpanel">
+                            <div class="text-center py-3">
+                                <div style="font-size:13px;color:#64748b;font-weight:600;margin-bottom:10px;">
+                                    Current Available Points
+                                </div>
+                                <div id="balanceDisplay"
+                                     style="font-size:52px;font-weight:900;color:#f59e0b;line-height:1;">
+                                    0
+                                </div>
+                                <div style="font-size:12px;color:#94a3b8;margin-top:6px;">points</div>
+
+                                <div class="mt-4 d-flex justify-content-center gap-3">
+                                    <div style="background:#f0fdf4;border:2px solid #10b981;border-radius:12px;padding:12px 20px;min-width:120px;">
+                                        <div style="font-size:10px;color:#065f46;font-weight:700;margin-bottom:4px;">TOTAL EARNED</div>
+                                        <div id="totalEarnedDisplay" style="font-size:18px;font-weight:800;color:#10b981;">—</div>
+                                    </div>
+                                    <div style="background:#fef2f2;border:2px solid #ef4444;border-radius:12px;padding:12px 20px;min-width:120px;">
+                                        <div style="font-size:10px;color:#991b1b;font-weight:700;margin-bottom:4px;">TOTAL EARNED (HIST.)</div>
+                                        <div id="totalEarnedHistDisplay" style="font-size:18px;font-weight:800;color:#ef4444;">—</div>
+                                    </div>
+                                </div>
+
+                                <p class="text-muted small mt-4 mb-0">
+                                    Use the <strong>Add</strong> or <strong>Deduct</strong> tabs to adjust this balance.
+                                </p>
+                            </div>
                         </div>
+
+                        {{-- Tab 2: Add Points --}}
+                        <div class="tab-pane fade" id="tab-add" role="tabpanel">
+                            <form id="addPointsForm" method="POST">
+                                @csrf
+                                <input type="hidden" name="action" value="add">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-muted mb-2">
+                                        Points to Add <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="number" name="points" id="addPointsInput"
+                                           class="form-control form-control-deluxe" min="1" step="1" required
+                                           placeholder="e.g. 500">
+                                    <div class="mt-2 text-muted small" id="addPreview"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-muted mb-2">
+                                        Reason <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea name="reason" class="form-control form-control-deluxe" required
+                                              rows="3" placeholder="e.g. Bonus, Compensation, Reward..."
+                                              style="resize:none;"></textarea>
+                                    <div class="mt-2 d-flex align-items-center gap-2"
+                                         style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px 12px;">
+                                        <i class="las la-info-circle text-warning fs-16"></i>
+                                        <span style="font-size:12px;font-weight:600;color:#92400e;direction:rtl;">
+                                            رجاء كتابة السبب بالتفصيل
+                                        </span>
+                                    </div>
+                                </div>
+                                <button type="submit"
+                                        class="btn btn-success rounded-pill px-5 fw-bold shadow-sm w-100"
+                                        style="height:46px;">
+                                    <i class="las la-plus-circle me-2"></i> Add Points
+                                </button>
+                            </form>
+                        </div>
+
+                        {{-- Tab 3: Deduct Points --}}
+                        <div class="tab-pane fade" id="tab-deduct" role="tabpanel">
+                            <form id="deductPointsForm" method="POST">
+                                @csrf
+                                <input type="hidden" name="action" value="deduct">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-muted mb-2">
+                                        Points to Deduct <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="number" name="points" id="deductPointsInput"
+                                           class="form-control form-control-deluxe" min="1" step="1" required
+                                           placeholder="e.g. 200">
+                                    <div class="mt-2 text-muted small" id="deductPreview"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-muted mb-2">
+                                        Reason <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea name="reason" class="form-control form-control-deluxe" required
+                                              rows="3" placeholder="e.g. Correction, Penalty..."
+                                              style="resize:none;"></textarea>
+                                    <div class="mt-2 d-flex align-items-center gap-2"
+                                         style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px 12px;">
+                                        <i class="las la-info-circle text-warning fs-16"></i>
+                                        <span style="font-size:12px;font-weight:600;color:#92400e;direction:rtl;">
+                                            رجاء كتابة السبب بالتفصيل
+                                        </span>
+                                    </div>
+                                </div>
+                                <button type="submit"
+                                        class="btn btn-danger rounded-pill px-5 fw-bold shadow-sm w-100"
+                                        style="height:46px;">
+                                    <i class="las la-minus-circle me-2"></i> Deduct Points
+                                </button>
+                            </form>
+                        </div>
+
                     </div>
-                    <div class="modal-footer border-0 p-4 pt-0">
-                        <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm text-white">Save Points</button>
-                    </div>
-                </form>
+                </div>
+
             </div>
         </div>
     </div>
@@ -261,16 +384,53 @@
     </script>
     <script>
         $(document).on('click', '.edit-points-btn', function () {
-            let userId   = $(this).data('userid');
-            let userName = $(this).data('username');
-            let points   = $(this).data('points');
+            let userId        = $(this).data('userid');
+            let userName      = $(this).data('username');
+            let points        = Math.round($(this).data('points'));
+            let earnedPoints  = Math.round($(this).data('earned') || 0);
 
             $('#pointsModalUserName').text(userName);
-            $('#pointsInput').val(Math.round(points));
+            $('#balanceDisplay').text(points.toLocaleString());
+            $('#totalEarnedDisplay').text(points.toLocaleString());
+            $('#totalEarnedHistDisplay').text(earnedPoints.toLocaleString());
+
+            // Reset inputs & go to first tab
+            $('#addPointsInput, #deductPointsInput').val('');
+            $('#addPreview, #deductPreview').text('');
+            $('#tab-balance-btn').tab('show');
 
             let updateUrl = "{{ route('residency-users.update-points', ':id') }}";
             updateUrl = updateUrl.replace(':id', userId);
-            $('#editPointsForm').attr('action', updateUrl);
+            $('#addPointsForm, #deductPointsForm').attr('action', updateUrl);
+
+            // Live preview for add
+            $('#addPointsInput').off('input').on('input', function () {
+                let v = parseInt($(this).val()) || 0;
+                if (v > 0) {
+                    $('#addPreview').html(
+                        '<span class="text-success fw-bold">' + points.toLocaleString() +
+                        ' + ' + v.toLocaleString() +
+                        ' = ' + (points + v).toLocaleString() + ' pts</span>'
+                    );
+                } else {
+                    $('#addPreview').text('');
+                }
+            });
+
+            // Live preview for deduct
+            $('#deductPointsInput').off('input').on('input', function () {
+                let v = parseInt($(this).val()) || 0;
+                if (v > 0) {
+                    let result = Math.max(0, points - v);
+                    $('#deductPreview').html(
+                        '<span class="text-danger fw-bold">' + points.toLocaleString() +
+                        ' − ' + v.toLocaleString() +
+                        ' = ' + result.toLocaleString() + ' pts</span>'
+                    );
+                } else {
+                    $('#deductPreview').text('');
+                }
+            });
         });
 
         $(document).on('click', '.edit-pkg-btn', function () {

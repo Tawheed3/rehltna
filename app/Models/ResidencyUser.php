@@ -55,6 +55,11 @@ class ResidencyUser extends Authenticatable
         return $this->hasMany(Order::class, 'residency_user_id');
     }
 
+    public function pointLogs(): HasMany
+    {
+        return $this->hasMany(PointLog::class, 'residency_user_id');
+    }
+
     protected function casts(): array
     {
         return [

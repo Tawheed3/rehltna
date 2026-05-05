@@ -18,6 +18,7 @@ use App\Http\Controllers\Dashboard\{AiController,
     EventController,
     EventGalleryController,
     GalleryController,
+    PointLogsController,
     ItemController,
     ItemTypeController,
     LeadController,
@@ -234,6 +235,10 @@ Route::group([
         Route::post('/residency-users/bulk-delete', [ResidencyUsersController::class, 'bulkDelete'])->name('residency-users.bulk-delete'); #-------- Bulk Delete Residency Users ---------#
         Route::post('residency-users/{id}/change-package', [ResidencyUsersController::class, 'changePackage'])->name('residency-users.change-package');
         Route::post('residency-users/{id}/update-points', [ResidencyUsersController::class, 'updatePoints'])->name('residency-users.update-points');
+
+        Route::get('/point-logs', [PointLogsController::class, 'index'])->name('point-logs.index');
+        Route::get('/point-logs/{id}/view-pdf', [PointLogsController::class, 'viewPdf'])->name('point-logs.view-pdf');
+        Route::get('/point-logs/{id}/pdf', [PointLogsController::class, 'downloadPdf'])->name('point-logs.pdf');
 
         Route::post('payment-links/create-from-user/{id}', [PaymentLinkController::class, 'storeFromRegisterUser'])->name('payment-links.storeFromRegister');
 

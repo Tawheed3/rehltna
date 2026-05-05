@@ -67,10 +67,13 @@ class ItemController extends Controller
 
             $data = $request->except($fieldsToExclude);
             if (checkIfAdmin()) {
-                $request->validate(['user_id' => 'required|exists:users,id']);
-                $data['user_id'] = $request->input('user_id');
+                $request->validate(['responsible_user_ids' => 'required|array|min:1']);
+                $ids = $request->input('responsible_user_ids');
+                $data['responsible_user_ids'] = $ids;
+                $data['user_id'] = $ids[0];
             } else {
                 $data['user_id'] = auth()->id();
+                $data['responsible_user_ids'] = [auth()->id()];
             }
 
 
@@ -310,7 +313,9 @@ class ItemController extends Controller
             $data = $request->except($fieldsToExclude);
 
             if (checkIfAdmin()) {
-                $data['user_id'] = $request->input('user_id');
+                $ids = $request->input('responsible_user_ids', []);
+                $data['responsible_user_ids'] = $ids;
+                $data['user_id'] = $ids[0] ?? $item->user_id;
             } else {
                 unset($data['user_id']);
             }

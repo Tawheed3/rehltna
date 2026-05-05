@@ -283,15 +283,25 @@
                                             <option value="{{ $i }}">{{ $i }}</option>
                                         @endfor</select></div>
                                 @if(checkIfAdmin())
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">Responsible Employee <span
-                                                class="text-danger">*</span></label>
-                                        <select name="user_id" class="form-select" required>
-                                            <option value="" disabled selected>-- Select Employee --</option>
+                                    <div class="col-md-5 mb-3">
+                                        <label class="form-label fw-bold">
+                                            Responsible Employees <span class="text-danger">*</span>
+                                        </label>
+                                        <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 16px;background:#f8fafc;max-height:180px;overflow-y:auto;">
                                             @foreach($employees as $employee)
-                                                <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input responsible-check"
+                                                           type="checkbox"
+                                                           name="responsible_user_ids[]"
+                                                           value="{{ $employee->id }}"
+                                                           id="emp_c_{{ $employee->id }}">
+                                                    <label class="form-check-label fw-medium" for="emp_c_{{ $employee->id }}">
+                                                        {{ $employee->name }}
+                                                    </label>
+                                                </div>
                                             @endforeach
-                                        </select>
+                                        </div>
+                                        <div class="invalid-feedback d-block text-danger small mt-1" id="resp-error-create" style="display:none!important;"></div>
                                     </div>
                                 @endif
                             </div>
@@ -1414,6 +1424,18 @@
                 `;
             $(`#${targetPreviewId}`).append(itemHtml);
         };
+
+        // Validate at least one responsible employee is checked before submit
+        document.getElementById('submitBtn').closest('form').addEventListener('submit', function (e) {
+            const checked = document.querySelectorAll('.responsible-check:checked').length;
+            if (checked === 0) {
+                e.preventDefault();
+                const err = document.getElementById('resp-error-create');
+                err.textContent = 'Please select at least one responsible employee.';
+                err.style.display = 'block';
+                err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
 
     </script>
 @endsection

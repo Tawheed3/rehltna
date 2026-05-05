@@ -62,10 +62,13 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('api-token')->plainTextToken;
-        $user->acssess_token = $token;
-        $user->token_type = 'Bearer';
 
-        return $this->responseMessage(201, 'Registered successfully', $user->load('package'));
+        $data = $user->load('package')->toArray();
+        $data['acssess_token'] = $token;
+        $data['access_token']  = $token;
+        $data['token_type']    = 'Bearer';
+
+        return $this->responseMessage(201, 'Registered successfully', $data);
     }
 
     public function login(Request $request): JsonResponse
@@ -83,10 +86,13 @@ class AuthController extends Controller
 
         $user->tokens()->delete();
         $token = $user->createToken('api-token')->plainTextToken;
-        $user->acssess_token = $token;
-        $user->token_type = 'Bearer';
 
-        return $this->responseMessage(200, 'Logged Successfully', $user->load('package'));
+        $data = $user->load('package')->toArray();
+        $data['acssess_token'] = $token;
+        $data['access_token']  = $token;
+        $data['token_type']    = 'Bearer';
+
+        return $this->responseMessage(200, 'Logged Successfully', $data);
 
     }
 

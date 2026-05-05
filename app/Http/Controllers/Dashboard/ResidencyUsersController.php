@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendRegisterUserReplyJob;
 use App\Models\Package;
+use App\Models\PointLog;
 use App\Models\RegisterUsers;
 use App\Models\ResidencyUser;
 use App\Models\Tenant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -75,13 +77,38 @@ class ResidencyUsersController extends Controller
     public function updatePoints(Request $request, $id): RedirectResponse
     {
         $request->validate([
-            'available_points' => ['required', 'numeric', 'min:0'],
+            'action' => ['required', 'in:add,deduct'],
+            'points' => ['required', 'integer', 'min:1'],
+            'reason' => ['required', 'string', 'min:10', 'max:500'],
         ]);
 
-        $user = ResidencyUser::query()->findOrFail($id);
+        $user          = ResidencyUser::query()->findOrFail($id);
+        $balanceBefore = (int) $user->available_points;
+        $amount        = (int) $request->get('points');
+        $action        = $request->get('action');
+
+        if ($action === 'add') {
+            $newBalance = $balanceBefore + $amount;
+            $diff       = $amount;
+        } else {
+            $newBalance = max(0, $balanceBefore - $amount);
+            $diff       = -($balanceBefore - $newBalance);
+        }
+
         $user->update([
-            'available_points' => $request->get('available_points'),
-            'earned_points'    => $request->get('available_points'),
+            'available_points' => $newBalance,
+            'earned_points'    => $action === 'add' ? $user->earned_points + $amount : $user->earned_points,
+        ]);
+
+        PointLog::create([
+            'residency_user_id' => $user->id,
+            'type'              => 'employee_adjusted',
+            'points'            => $diff,
+            'balance_before'    => $balanceBefore,
+            'balance_after'     => $newBalance,
+            'reason'            => $request->get('reason'),
+            'employee_id'       => Auth::id(),
+            'employee_name'     => Auth::user()->name ?? Auth::user()->username ?? 'Admin',
         ]);
 
         return redirect()->back()->with('success', "User's points updated successfully.");

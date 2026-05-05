@@ -5,7 +5,24 @@
       "Bash(composer require *)",
       "Bash(php artisan *)",
       "Bash(curl -s http://127.0.0.1:8000 -o /dev/null -w \"%{http_code}\")",
-      "Bash(pkill -f \"php artisan serve\")"
+      "Bash(pkill -f \"php artisan serve\")",
+      "Bash(xargs ls *)",
+      "Bash(awk '{print $1}')",
+      "Bash(ssh -p 21098 rehltwoz@premium54.web-hosting.com \"find ~/admin.rehltna.com/storage/logs -name '*.log' 2>/dev/null\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(composer show *)",
+      "Bash(php -l app/Http/Controllers/Api/OrderController.php)",
+      "Bash(php -l app/Http/Controllers/Dashboard/OrderController.php)",
+      "Bash(php -r \"require 'vendor/autoload.php'; echo 'Blade syntax OK';\")",
+      "Bash(php -l app/Http/Controllers/Dashboard/ItemController.php)",
+      "Bash(php -l app/Models/Item.php)",
+      "Bash(php -l app/Mail/OrderNeedsReviewMail.php)",
+      "Bash(xargs cat)",
+      "Bash(php -r ' *)"
+    ],
+    "additionalDirectories": [
+      "/home/crc-user/Downloads/Private/rehltna-web/Rehltna-travel"
     ]
   }
 }

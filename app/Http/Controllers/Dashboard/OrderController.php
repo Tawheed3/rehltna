@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\OrderInvoiceMail;
 use App\Mail\OrderRejectedMail;
 use App\Models\Order;
+use App\Models\PointLog;
 use App\Models\ResidencyUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -70,6 +71,8 @@ class OrderController extends Controller
 
             $order = Order::query()->with('items')->findOrFail($id);
 
+            $previousStatus = $order->payment_status;
+
             $order->update([
                 'payment_status' => $request->get('payment_status')
             ]);
@@ -80,7 +83,8 @@ class OrderController extends Controller
                 ]);
             }
 
-            if ($request->get('payment_status') === 'paid') {
+            // Guard against processing an already-paid order twice
+            if ($request->get('payment_status') === 'paid' && $previousStatus !== 'paid') {
                 try {
                     $order->load(['items', 'user']);
 
@@ -117,11 +121,40 @@ class OrderController extends Controller
                             }
                         }
 
+                        $tripName = optional($order->items->first()?->item)->title_en ?? 'Trip #' . $order->id;
+
+                        // Deduct used points now (bank transfer orders: points held at checkout, deducted on admin approval)
+                        $alreadyDeducted = PointLog::where('order_id', $order->id)->where('type', 'trip_used')->exists();
+                        if (!$alreadyDeducted && $order->used_points > 0) {
+                            $balanceBefore = (int) $user->available_points;
+                            $user->decrement('available_points', $order->used_points);
+                            PointLog::create([
+                                'residency_user_id' => $user->id,
+                                'type'              => 'trip_used',
+                                'points'            => -(int) $order->used_points,
+                                'balance_before'    => $balanceBefore,
+                                'balance_after'     => $balanceBefore - (int) $order->used_points,
+                                'order_id'          => $order->id,
+                                'trip_name'         => $tripName,
+                            ]);
+                        }
+
                         // 1 SAR spent = 1 point earned (based on final amount paid after all discounts)
                         $earnedPoints = (int) $order->total_amount;
                         if ($earnedPoints > 0) {
+                            $balanceBefore = (int) $user->available_points;
                             $user->increment('earned_points', $earnedPoints);
                             $user->increment('available_points', $earnedPoints);
+
+                            PointLog::create([
+                                'residency_user_id' => $user->id,
+                                'type'              => 'trip_earned',
+                                'points'            => $earnedPoints,
+                                'balance_before'    => $balanceBefore,
+                                'balance_after'     => $balanceBefore + $earnedPoints,
+                                'order_id'          => $order->id,
+                                'trip_name'         => $tripName,
+                            ]);
                         }
 
                     }
@@ -139,6 +172,28 @@ class OrderController extends Controller
                 }
 
             } elseif ($request->get('payment_status') === 'rejected') {
+
+                // Refund points if they were already deducted (handles orders placed before this fix)
+                $order->load('user');
+                $user = $order->user;
+                if ($user && $order->used_points > 0) {
+                    $wasDeducted = PointLog::where('order_id', $order->id)->where('type', 'trip_used')->exists();
+                    if ($wasDeducted) {
+                        $balanceBefore = (int) $user->available_points;
+                        $user->increment('available_points', $order->used_points);
+                        PointLog::create([
+                            'residency_user_id' => $user->id,
+                            'type'              => 'employee_adjusted',
+                            'points'            => (int) $order->used_points,
+                            'balance_before'    => $balanceBefore,
+                            'balance_after'     => $balanceBefore + (int) $order->used_points,
+                            'order_id'          => $order->id,
+                            'reason'            => 'Points refunded — Order #' . $order->id . ' rejected',
+                            'employee_name'     => auth()->user()->name ?? 'Admin',
+                        ]);
+                    }
+                }
+
                 try {
                     Mail::to($order->email)->send(new OrderRejectedMail($order));
                 } catch (\Exception $e) {

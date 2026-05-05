@@ -59,7 +59,8 @@
                                 data-bs-target="#editPointsModal"
                                 data-userid="{{ $residencyUser->id }}"
                                 data-username="{{ $residencyUser->name }}"
-                                data-points="{{ $residencyUser->available_points }}">
+                                data-points="{{ $residencyUser->available_points }}"
+                                data-earned="{{ $residencyUser->earned_points }}">
                             <i class="las la-star fs-18"></i>
                         </button>
                         <button type="button" class="btn-action shadow-sm edit-pkg-btn"

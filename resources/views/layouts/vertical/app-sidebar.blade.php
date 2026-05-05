@@ -141,6 +141,8 @@
                     @if(in_array('residency_users', $tenantOptions))
                         <li><a class="slide-item" href="{{ route('residency-users.index') }}"><span>Users</span></a>
                         </li>
+                        <li><a class="slide-item" href="{{ route('point-logs.index') }}"><span>Points Logs</span></a>
+                        </li>
                     @endif
                     @if(in_array('register_users', $tenantOptions))
                         <li><a class="slide-item" href="{{ route('register-users.index') }}"><span>Register Users</span></a>
@@ -204,7 +206,17 @@
                         <li><a class="slide-item" href="{{ route('coupons.index') }}"><span>Coupons</span></a></li>
                     @endif
                     @if(in_array('orders', $tenantOptions))
-                        <li><a class="slide-item" href="{{ route('orders.index') }}"><span>Orders</span></a></li>
+                        @php $reviewingCount = \App\Models\Order::where('payment_status','reviewing')->count(); @endphp
+                        <li>
+                            <a class="slide-item" href="{{ route('orders.index') }}">
+                                <span>Orders</span>
+                                @if($reviewingCount > 0)
+                                    <span style="display:inline-block;background:#ef4444;color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;margin-left:6px;line-height:1.6;">
+                                        {{ $reviewingCount }}
+                                    </span>
+                                @endif
+                            </a>
+                        </li>
                     @endif
                     @if(in_array('payment_links', $tenantOptions))
                         <li><a class="slide-item"

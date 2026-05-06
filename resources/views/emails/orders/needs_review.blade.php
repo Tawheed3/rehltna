@@ -69,14 +69,28 @@
                 <td>
                     @foreach($order->items as $orderItem)
                         @php $trip = $orderItem->item; @endphp
-                        <div style="margin-bottom:6px;">
-                            <span style="font-weight:700;">{{ $trip?->title_en ?? 'Trip #' . $orderItem->item_id }}</span>
+                        <div style="margin-bottom:10px;padding:10px 12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;direction:rtl;text-align:right;">
+                            <div style="font-weight:800;font-size:14px;color:#1e293b;margin-bottom:4px;">
+                                {{ $trip?->title_ar ?? $trip?->title_en ?? 'رحلة #' . $orderItem->item_id }}
+                            </div>
+                            @if($trip?->start_date || $trip?->end_date)
+                                <div style="font-size:12px;color:#64748b;margin-bottom:4px;">
+                                    📅
+                                    @if($trip->start_date)
+                                        {{ \Carbon\Carbon::parse($trip->start_date)->format('d M Y') }}
+                                        @if($trip->start_date_hijri) ({{ $trip->start_date_hijri }}) @endif
+                                    @endif
+                                    @if($trip->end_date)
+                                        — {{ \Carbon\Carbon::parse($trip->end_date)->format('d M Y') }}
+                                        @if($trip->end_date_hijri) ({{ $trip->end_date_hijri }}) @endif
+                                    @endif
+                                </div>
+                            @endif
                             @if($trip?->whatsapp)
                                 @php
                                     $wa = preg_replace('/\D/', '', $trip->whatsapp);
                                     if (substr($wa, 0, 2) !== '96') $wa = '966' . ltrim($wa, '0');
                                 @endphp
-                                &nbsp;
                                 <a href="https://wa.me/{{ $wa }}"
                                    style="display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">
                                     &#128222; WhatsApp

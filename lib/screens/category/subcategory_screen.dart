@@ -1,0 +1,176 @@
+import 'dart:developer' as developer;
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../core/constants/app_colors.dart';
+import '../../core/localization/app_localizations.dart';
+import '../../data/models/item_model.dart';
+import '../../data/providers/items_provider.dart';
+import '../../data/services/settings_service.dart';
+import '../posts/item_details_screen.dart';
+
+class SubcategoryScreen extends StatefulWidget {
+  final int categoryId;
+  final String title;
+  final Color color;
+
+  const SubcategoryScreen({
+    Key? key,
+    required this.categoryId,
+    required this.title,
+    required this.color,
+  }) : super(key: key);
+
+  @override
+  State<SubcategoryScreen> createState() => _SubcategoryScreenState();
+}
+
+class _SubcategoryScreenState extends State<SubcategoryScreen> {
+  List<ItemModel> _items = [];
+  bool _isLoading = false;
+  String? _errorMessage;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // ✅ آمن: بعد ما البناء يخلص
+    Future.microtask(() => _loadFromCache());
+  }
+
+  void _loadFromCache() {
+    if (!mounted) return;
+
+    final itemsProvider = Provider.of<ItemsProvider>(context, listen: false);
+    _items = itemsProvider.getItemsForSubcategory(widget.categoryId);
+
+    developer.log('[SubcategoryScreen] Cache: ${_items.length} items for ${widget.title}', name: 'Response-output');
+
+    if (mounted) {
+      setState(() {
+        _initialized = true;
+        // لو مفيش بيانات، نحمل من API بعد الماونت
+        if (_items.isEmpty) {
+          Future.microtask(() => _loadItemsFromAPI());
+        }
+      });
+    }
+  }
+
+  Future<void> _loadItemsFromAPI() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final itemsProvider = Provider.of<ItemsProvider>(context, listen: false);
+      _items = await itemsProvider.fetchItemsByCategory(widget.categoryId);
+      developer.log('[SubcategoryScreen] API: ${_items.length} items for ${widget.title}', name: 'Response-output');
+    } catch (e) {
+      developer.log('[SubcategoryScreen] Error: $e', name: 'Response-output', level: 1000);
+      if (mounted) setState(() => _errorMessage = 'حدث خطأ: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _refreshItems() async {
+    await _loadItemsFromAPI();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final settingsService = Provider.of<SettingsService>(context);
+
+    // ✅ لو لسه ما اتهيأش، نعرض تحميل
+    if (!_initialized) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)), backgroundColor: widget.color, elevation: 0, centerTitle: true,
+          leading: Container(margin: const EdgeInsets.all(8), decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), shape: BoxShape.circle), child: IconButton(icon: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.white), onPressed: () => Navigator.pop(context))),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        backgroundColor: widget.color, elevation: 0, centerTitle: true,
+        leading: Container(margin: const EdgeInsets.all(8), decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), shape: BoxShape.circle), child: IconButton(icon: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.white), onPressed: () => Navigator.pop(context))),
+      ),
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _errorMessage != null
+            ? _buildErrorState(isDark)
+            : _items.isEmpty
+            ? _buildEmptyState(isDark)
+            : RefreshIndicator(
+          onRefresh: _refreshItems,
+          color: widget.color,
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: _items.length,
+            itemBuilder: (context, index) {
+              final item = _items[index];
+              return _buildItemCard(item, settingsService, isDark);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItemCard(ItemModel item, SettingsService settingsService, bool isDark) {
+    final banner = item.getBanner(settingsService.languageCode);
+
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(itemId: item.id, categoryColor: widget.color))),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(color: isDark ? Colors.grey.shade900 : Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: widget.color.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))]),
+        child: Row(children: [
+          ClipRRect(borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)), child: Container(width: 100, height: 100, color: Colors.grey.shade200, child: banner.isNotEmpty ? Image.network(banner, width: 100, height: 100, fit: BoxFit.cover, errorBuilder: (c, e, s) => Container(color: Colors.grey.shade200, child: const Icon(Icons.broken_image, color: Colors.grey, size: 40))) : Container(color: Colors.grey.shade200, child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 40)))),
+          const SizedBox(width: 12),
+          Expanded(child: Padding(padding: const EdgeInsets.all(12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(item.getTitle(settingsService.languageCode), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87), maxLines: 2, overflow: TextOverflow.ellipsis),
+            const SizedBox(height: 4),
+            Row(children: [Icon(Icons.location_on, size: 14, color: widget.color), const SizedBox(width: 4), Expanded(child: Text(item.itemType.getTitle(settingsService.languageCode), style: TextStyle(fontSize: 12, color: isDark ? Colors.white70 : Colors.grey[600]), maxLines: 1, overflow: TextOverflow.ellipsis))]),
+            const SizedBox(height: 8),
+            Wrap(spacing: 8, runSpacing: 4, children: [
+              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: widget.color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Text('${item.priceAfterDiscount.toStringAsFixed(0)} ريال', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: widget.color))),
+              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Text('${item.totalNights} ليالي', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green))),
+            ]),
+          ]))),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(bool isDark) {
+    return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Icon(Icons.inbox, size: 80, color: isDark ? Colors.white24 : Colors.grey.shade300),
+      const SizedBox(height: 16),
+      Text('لا توجد رحلات في هذا القسم', style: TextStyle(fontSize: 18, color: isDark ? Colors.white70 : Colors.grey.shade600)),
+      const SizedBox(height: 8),
+      Text('سيتم إضافة رحلات جديدة قريباً', style: TextStyle(fontSize: 14, color: isDark ? Colors.white54 : Colors.grey.shade500)),
+      const SizedBox(height: 24),
+      ElevatedButton.icon(onPressed: _loadItemsFromAPI, icon: const Icon(Icons.refresh), label: const Text('تحديث'), style: ElevatedButton.styleFrom(backgroundColor: widget.color, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+    ]));
+  }
+
+  Widget _buildErrorState(bool isDark) {
+    return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Container(padding: const EdgeInsets.all(30), decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), shape: BoxShape.circle), child: const Icon(Icons.error_outline, size: 80, color: Colors.red)),
+      const SizedBox(height: 24),
+      Text(_errorMessage ?? 'حدث خطأ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
+      const SizedBox(height: 24),
+      ElevatedButton.icon(onPressed: _loadItemsFromAPI, icon: const Icon(Icons.refresh), label: const Text('إعادة المحاولة'), style: ElevatedButton.styleFrom(backgroundColor: widget.color, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+    ]));
+  }
+}

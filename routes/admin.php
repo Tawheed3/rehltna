@@ -252,6 +252,13 @@ Route::group([
         Route::delete('/notification-templates/{id}', [NotificationTemplateController::class, 'destroy'])->name('notification-templates.destroy');
         Route::put('/notification-templates/{id}', [NotificationTemplateController::class, 'update'])->name('notification-templates.update');
 
+        #---------------------------- Reviews ---------------------------#
+        Route::get('/reviews', [\App\Http\Controllers\Dashboard\ReviewController::class, 'index'])->name('reviews.index');
+        Route::post('/reviews', [\App\Http\Controllers\Dashboard\ReviewController::class, 'store'])->name('reviews.store');
+        Route::patch('/reviews/{id}/approve', [\App\Http\Controllers\Dashboard\ReviewController::class, 'approve'])->name('reviews.approve');
+        Route::patch('/reviews/{id}/reject', [\App\Http\Controllers\Dashboard\ReviewController::class, 'reject'])->name('reviews.reject');
+        Route::delete('/reviews/{id}', [\App\Http\Controllers\Dashboard\ReviewController::class, 'destroy'])->name('reviews.destroy');
+
         Route::resource('employees', EmployeeController::class);
         Route::resource('roles', RoleController::class);
 

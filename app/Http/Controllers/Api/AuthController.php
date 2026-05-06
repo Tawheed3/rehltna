@@ -165,6 +165,22 @@ class AuthController extends Controller
         $user = auth()->user();
         return $this->responseMessage(200, 'Profile', $user->load('package', 'orders', 'items.privateGalleries'));
     }
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+        ]);
+
+        $user = $request->user();
+        $user->update([
+            'name'  => $request->name,
+            'phone' => $request->phone,
+        ]);
+
+        return $this->responseMessage(200, 'Profile updated successfully.', $user->fresh()->load('package'));
+    }
+
     public function updateFcmToken(Request $request): JsonResponse
     {
         $request->validate([

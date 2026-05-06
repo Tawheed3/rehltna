@@ -35,7 +35,8 @@ use App\Http\Controllers\Api\{ApplyJobController,
     TenantController,
     TestimonialController,
     TypeOfferController,
-    UserController
+    UserController,
+    ReviewController
 };
 
 use App\Http\Middleware\{ApiKeyMiddleware, ForceJsonResponseMiddleware, IdentifyTenant};
@@ -186,12 +187,17 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
             Route::get('/cities/{stateId}', 'getCitiesByStateId'); // Get all active cities by state ID
         });
 
+        #---------------------------- Reviews ---------------------------#
+        Route::get('/items/{id}/reviews', [ReviewController::class, 'index']); #--------- Get Approved Reviews ---------#
+
         #---------------------------- Auth Routes ---------------------------#
         Route::middleware('auth:sanctum')->group(function () {
 
             Route::get('/profile', [AuthController::class, 'profile']); #--------- Profile ---------#
+            Route::put('/profile', [AuthController::class, 'updateProfile']); #--------- Update Profile ---------#
             Route::post('/logout', [AuthController::class, 'logout']);  #--------- Logout ---------#
             Route::post('/update-fcm-token', [AuthController::class, 'updateFcmToken']);
+            Route::post('/reviews', [ReviewController::class, 'store']); #--------- Submit Review ---------#
 
             #---------------------------- Residencies Programs ---------------------------#
             Route::get('/residencies-programs', [ResidencyProgramController::class, 'getResidenciesPrograms']); #--------- Get Residencies Programs ---------#

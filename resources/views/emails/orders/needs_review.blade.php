@@ -56,7 +56,23 @@
                 <td>{{ $order->phone }}</td>
             </tr>
             <tr>
-                <td>Amount</td>
+                <td>Sub Total</td>
+                <td>{{ number_format($order->sub_total, 2) }} SAR</td>
+            </tr>
+            @if($order->used_points > 0)
+            <tr>
+                <td>Points Used</td>
+                <td>{{ number_format($order->used_points) }} pts → -{{ number_format($order->used_points / 50, 2) }} SAR</td>
+            </tr>
+            @endif
+            @if($order->coupon_id && $order->coupon)
+            <tr>
+                <td>Coupon</td>
+                <td>{{ $order->coupon->code }} → -{{ number_format($order->discount_amount - ($order->used_points / 50), 2) }} SAR</td>
+            </tr>
+            @endif
+            <tr>
+                <td>Total Amount</td>
                 <td>{{ number_format($order->total_amount, 2) }} SAR</td>
             </tr>
             <tr>
@@ -86,6 +102,13 @@
                                     @endif
                                 </div>
                             @endif
+                            <div style="font-size:12px;color:#475569;margin-bottom:6px;">
+                                <strong>الحضور:</strong>
+                                {{ $orderItem->variation_title_ar ?: $orderItem->variation_title_en ?: '#'.$orderItem->item_price_id }}
+                                — {{ $orderItem->attendees_count }} شخص
+                                ({{ number_format($orderItem->price_per_unit, 2) }} SAR × {{ $orderItem->attendees_count }}
+                                = {{ number_format($orderItem->total, 2) }} SAR)
+                            </div>
                             @if($trip?->whatsapp)
                                 @php
                                     $wa = preg_replace('/\D/', '', $trip->whatsapp);

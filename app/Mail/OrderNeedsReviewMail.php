@@ -17,7 +17,7 @@ class OrderNeedsReviewMail extends Mailable
 
     public function __construct(Order $order)
     {
-        $this->order = $order->loadMissing('items.item');
+        $this->order = $order->loadMissing('items.item', 'coupon');
     }
 
     public function envelope(): Envelope

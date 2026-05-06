@@ -22,7 +22,7 @@ class ReviewController extends Controller
         }
 
         $reviews = $query->paginate(20)->withQueryString();
-        $items   = Item::select('id', 'title_ar', 'title_en')->orderBy('title_ar')->get();
+        $items   = Item::select('id', 'title_ar', 'title_en', 'season')->orderBy('title_ar')->get();
 
         return view('pages.reviews.index', compact('reviews', 'items'));
     }

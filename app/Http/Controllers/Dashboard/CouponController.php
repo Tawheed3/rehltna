@@ -26,7 +26,7 @@ class CouponController extends Controller
      */
     public function create(): View
     {
-        $items = Item::query()->get();
+        $items = Item::select('id', 'title_ar', 'title_en', 'season')->orderBy('title_ar')->get();
 
         return view('pages.coupons.create', compact('items'));
     }
@@ -66,7 +66,7 @@ class CouponController extends Controller
     public function edit($id): View
     {
         $coupon = Coupon::with('items')->findOrFail(decrypt($id));
-        $items = Item::query()->get();
+        $items = Item::select('id', 'title_ar', 'title_en', 'season')->orderBy('title_ar')->get();
         $selectedItems = $coupon->items->pluck('id')->toArray();
         return view('pages.coupons.edit', compact('coupon', 'items', 'selectedItems'));
     }

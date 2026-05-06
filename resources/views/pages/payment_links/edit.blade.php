@@ -104,7 +104,7 @@
                                                         <option value="">Choose Course/Item</option>
                                                         @foreach($items as $item)
                                                             <option value="{{ $item->id }}" {{ (isset($savedItem['item_id']) && $savedItem['item_id'] == $item->id) ? 'selected' : '' }}>
-                                                                {{ $item->title_en ?? $item->name }} ({{ $item->price }} $)
+                                                                {{ $item->title_ar ?: ($item->title_en ?? $item->name) }}@if($item->season) — {{ $item->season }}@endif ({{ $item->price }} $)
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -129,7 +129,7 @@
                                                 <select name="items[0][item_id]" class="form-control select2-items" required>
                                                     <option value="">Choose Course/Item</option>
                                                     @foreach($items as $item)
-                                                        <option value="{{ $item->id }}">{{ $item->title_en ?? $item->name }} ({{ $item->price }} $)</option>
+                                                        <option value="{{ $item->id }}">{{ $item->title_ar ?: ($item->title_en ?? $item->name) }}@if($item->season) — {{ $item->season }}@endif ({{ $item->price }} $)</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -212,7 +212,7 @@
                                 <select name="items[${itemIndex}][item_id]" class="form-control select2-dynamic" required>
                                     <option value="">Choose Course/Item</option>
                                     @foreach($items as $item)
-                <option value="{{ $item->id }}">{{ $item->title_en ?? $item->name }} ({{ $item->price }} $)</option>
+                <option value="{{ $item->id }}">{{ $item->title_ar ?: ($item->title_en ?? $item->name) }}@if($item->season) — {{ $item->season }}@endif ({{ $item->price }} $)</option>
                                     @endforeach
                 </select>
             </div>

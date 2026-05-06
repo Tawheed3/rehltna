@@ -80,7 +80,7 @@
                                     @foreach($items as $item)
                                         <option value="{{ $item->id }}"
                                             {{ (in_array($item->id, old('items', $selectedItems ?? []))) ? 'selected' : '' }}>
-                                            {{ $item->title_en ?? $item->name ?? $item->id }}
+                                            {{ $item->title_ar ?: $item->title_en }}@if($item->season) — {{ $item->season }}@endif
                                         </option>
                                     @endforeach
                                 </select>

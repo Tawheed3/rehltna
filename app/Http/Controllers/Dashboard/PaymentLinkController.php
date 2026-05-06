@@ -23,7 +23,7 @@ class PaymentLinkController extends Controller
 
     public function create(): View
     {
-        $items = Item::query()->where('status', 1)->get();
+        $items = Item::select('id', 'title_ar', 'title_en', 'season', 'price', 'name')->where('status', 1)->orderBy('title_ar')->get();
         return view('pages.payment_links.create', compact('items'));
     }
 
@@ -94,7 +94,7 @@ class PaymentLinkController extends Controller
             abort(403, 'Cannot edit a reviewing link.');
         }
 
-        $items = Item::query()->where('status', 1)->get();
+        $items = Item::select('id', 'title_ar', 'title_en', 'season', 'price', 'name')->where('status', 1)->orderBy('title_ar')->get();
 
         return view('pages.payment_links.edit', compact('link', 'items'));
     }

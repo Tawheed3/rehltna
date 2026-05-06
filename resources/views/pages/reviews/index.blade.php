@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+<style>
+.select2-container .select2-selection--single { height: 38px !important; border: 1px solid #ced4da; display: flex; align-items: center; border-radius: 6px; }
+.select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px !important; }
+.select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 36px !important; padding-left: 12px; }
+</style>
+@endpush
+
 @section('content')
 <div class="container-fluid">
 
@@ -157,10 +166,13 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Trip <span class="text-danger">*</span></label>
-                        <select name="item_id" class="form-select" required>
+                        <select name="item_id" id="tripSelect" class="form-select" required style="width:100%">
                             <option value="">-- Select Trip --</option>
                             @foreach($items as $item)
-                                <option value="{{ $item->id }}">{{ $item->title_ar ?: $item->title_en }}</option>
+                                <option value="{{ $item->id }}">
+                                    {{ $item->title_ar ?: $item->title_en }}
+                                    @if($item->season) — {{ $item->season }} @endif
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -193,3 +205,17 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#tripSelect').select2({
+            dropdownParent: $('#createReviewModal'),
+            placeholder: '-- ابحث عن رحلة --',
+            allowClear: true,
+            width: '100%',
+        });
+    });
+</script>
+@endpush

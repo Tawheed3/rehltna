@@ -70,7 +70,7 @@ class EtisalatyController extends Controller
 
         foreach ($request->contacts as $item) {
             $phone = trim($item['phone_number']);
-            $name  = trim($item['contact_name']);
+            $name  = trim($item['contact_name']) . ' (' . $user->name . ')';
 
             $contact = EtisalatyContact::where('phone_number', $phone)->first();
 

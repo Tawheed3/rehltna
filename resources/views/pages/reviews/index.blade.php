@@ -114,9 +114,14 @@
                             <td class="text-muted small">{{ $review->created_at->format('d M Y') }}</td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <button class="btn btn-sm btn-primary"
+                                    <button class="btn btn-sm btn-primary btn-edit-review"
                                         title="Edit"
-                                        onclick="openEditModal({{ $review->id }}, {{ $review->item_id ?? 'null' }}, '{{ addslashes($review->reviewer_name) }}', {{ $review->rating }}, '{{ addslashes($review->comment ?? '') }}', '{{ $review->status }}')">
+                                        data-id="{{ $review->id }}"
+                                        data-item-id="{{ $review->item_id ?? '' }}"
+                                        data-name="{{ $review->reviewer_name }}"
+                                        data-rating="{{ $review->rating }}"
+                                        data-comment="{{ $review->comment ?? '' }}"
+                                        data-status="{{ $review->status }}">
                                         <i class="fe fe-edit"></i>
                                     </button>
                                     @if($review->status !== 'approved')
@@ -287,19 +292,23 @@
         });
     });
 
-    function openEditModal(id, itemId, reviewerName, rating, comment, status) {
-        const form = document.getElementById('editReviewForm');
-        form.action = '/admin/reviews/' + id;
+    $(document).on('click', '.btn-edit-review', function () {
+        const btn = $(this);
+        const id       = btn.data('id');
+        const itemId   = btn.data('item-id');
+        const name     = btn.data('name');
+        const rating   = btn.data('rating');
+        const comment  = btn.data('comment');
+        const status   = btn.data('status');
 
-        document.getElementById('editReviewerName').value = reviewerName;
-        document.getElementById('editRating').value = rating;
-        document.getElementById('editComment').value = comment;
-        document.getElementById('editStatus').value = status;
-
-        const select = $('#editTripSelect');
-        select.val(itemId || '').trigger('change');
+        $('#editReviewForm').attr('action', '/admin/reviews/' + id);
+        $('#editReviewerName').val(name);
+        $('#editRating').val(rating);
+        $('#editComment').val(comment);
+        $('#editStatus').val(status);
+        $('#editTripSelect').val(itemId || '').trigger('change');
 
         new bootstrap.Modal(document.getElementById('editReviewModal')).show();
-    }
+    });
 </script>
 @endpush

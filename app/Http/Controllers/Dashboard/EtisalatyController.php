@@ -47,4 +47,18 @@ class EtisalatyController extends Controller
         EtisalatyContact::findOrFail($id)->delete();
         return back()->with('success', 'Contact deleted.');
     }
+
+    public function destroyByEmployee(int $employeeId)
+    {
+        $employee = User::findOrFail($employeeId);
+
+        // Get all contact IDs linked to this employee
+        $contactIds = EtisalatyEmployeeContact::where('employee_id', $employeeId)
+            ->pluck('contact_id');
+
+        // Delete the contacts themselves (cascade deletes the employee_contacts links)
+        $deleted = EtisalatyContact::whereIn('id', $contactIds)->delete();
+
+        return back()->with('success', "Deleted {$deleted} contacts uploaded by {$employee->name}.");
+    }
 }

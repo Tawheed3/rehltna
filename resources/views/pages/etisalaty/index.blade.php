@@ -146,17 +146,32 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
-                        @foreach(\App\Models\User::whereNotNull('etisalaty_role')->get() as $emp)
-                        <li class="list-group-item d-flex align-items-center justify-content-between px-4 py-2">
-                            <div>
-                                <div class="fw-semibold small">{{ $emp->name }}</div>
-                                <div class="text-muted" style="font-size:11px;">{{ $emp->email }}</div>
+                        @foreach(\App\Models\User::whereNotNull('etisalaty_role')->withCount(['etisalatyUploads as uploads_count'])->get() as $emp)
+                        <li class="list-group-item px-4 py-3">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <div>
+                                    <div class="fw-semibold small">{{ $emp->name }}</div>
+                                    <div class="text-muted" style="font-size:11px;">{{ $emp->email }}</div>
+                                </div>
+                                @if($emp->etisalaty_role === 'security')
+                                    <span class="badge bg-danger">Security</span>
+                                @else
+                                    <span class="badge bg-secondary">Employee</span>
+                                @endif
                             </div>
-                            @if($emp->etisalaty_role === 'security')
-                                <span class="badge bg-danger">Security</span>
-                            @else
-                                <span class="badge bg-secondary">Employee</span>
-                            @endif
+                            <div class="d-flex align-items-center justify-content-between mt-2">
+                                <small class="text-muted">{{ number_format($emp->uploads_count) }} contacts uploaded</small>
+                                @if($emp->uploads_count > 0)
+                                <form method="POST"
+                                      action="{{ route('etisalaty.destroy-by-employee', $emp->id) }}"
+                                      onsubmit="return confirm('Delete ALL {{ $emp->uploads_count }} contacts uploaded by {{ $emp->name }}?')">
+                                    @csrf @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="fe fe-trash-2 me-1"></i> Delete All
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
                         </li>
                         @endforeach
                     </ul>

@@ -8,6 +8,7 @@ use App\Mail\NewReviewMail;
 use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
@@ -37,14 +38,15 @@ class ReviewController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        // Resolve authenticated user from Bearer token even without auth:sanctum middleware
+        $user = Auth::guard('sanctum')->user();
+
         $request->validate([
             'item_id'       => 'nullable|integer|exists:items,id',
             'rating'        => 'required|integer|min:1|max:5',
             'comment'       => 'nullable|string|max:1000',
-            'reviewer_name' => [Rule::requiredIf(fn () => !$request->user()), 'nullable', 'string', 'max:255'],
+            'reviewer_name' => [Rule::requiredIf(fn () => !$user), 'nullable', 'string', 'max:255'],
         ]);
-
-        $user = $request->user();
 
         if ($user && $request->filled('item_id')) {
             $exists = Review::where('user_id', $user->id)

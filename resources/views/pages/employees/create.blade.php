@@ -181,6 +181,14 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        <div class="col-md-6 mb-4">
+                                            <label class="form-label">Etisalaty App Role</label>
+                                            <select name="etisalaty_role" class="form-select form-select-lg">
+                                                <option value="">-- No Etisalaty Access --</option>
+                                                <option value="employee">Employee (Upload only)</option>
+                                                <option value="security">Security (Upload + Download)</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

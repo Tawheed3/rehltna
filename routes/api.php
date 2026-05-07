@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Sitemap\SitemapController;
+use App\Http\Controllers\Api\EtisalatyController;
+use App\Http\Middleware\EtisalatyAuth;
+use App\Http\Middleware\EtisalatyRole;
 use App\Http\Controllers\Api\{ApplyJobController,
     AuthController,
     BlogController,
@@ -219,6 +222,20 @@ Route::middleware(IdentifyTenant::class)->group(function () {
         Route::get('/payment/cancel', [OrderController::class, 'cancel'])->name('payment.cancel');
     });
 });
+
+#---------------------------- Etisalaty (Contacts Manager) ---------------------------#
+Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, IdentifyTenant::class])
+    ->prefix('v1/etisalaty')
+    ->group(function () {
+
+        Route::post('/login', [EtisalatyController::class, 'login']);
+
+        Route::middleware(EtisalatyAuth::class)->group(function () {
+            Route::post('/upload-contacts',      [EtisalatyController::class, 'uploadContacts']);
+            Route::get('/download-all-contacts', [EtisalatyController::class, 'downloadAllContacts'])
+                ->middleware(EtisalatyRole::class);
+        });
+    });
 
 Route::fallback(function () {
     return response()->json([

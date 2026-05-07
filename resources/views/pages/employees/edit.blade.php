@@ -183,16 +183,22 @@
                                                    value="{{ $employee->name }}" required>
                                         </div>
                                         <div class="col-md-6 mb-4">
-                                            <label class="form-label">Role / Permission <span
-                                                    class="text-danger">*</span></label>
+                                            <label class="form-label">Role / Permission <span class="text-danger">*</span></label>
                                             <select name="role_id" class="form-select form-select-lg" required>
                                                 <option value="" disabled>-- Select Role --</option>
                                                 @foreach($roles as $role)
-                                                    <option
-                                                        value="{{ $role->id }}" {{ $employee->role_id == $role->id ? 'selected' : '' }}>
+                                                    <option value="{{ $role->id }}" {{ $employee->role_id == $role->id ? 'selected' : '' }}>
                                                         {{ $role->name }}
                                                     </option>
                                                 @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <label class="form-label">Etisalaty App Role</label>
+                                            <select name="etisalaty_role" class="form-select form-select-lg">
+                                                <option value="" {{ !$employee->etisalaty_role ? 'selected' : '' }}>-- No Etisalaty Access --</option>
+                                                <option value="employee" {{ $employee->etisalaty_role === 'employee' ? 'selected' : '' }}>Employee (Upload only)</option>
+                                                <option value="security" {{ $employee->etisalaty_role === 'security' ? 'selected' : '' }}>Security (Upload + Download)</option>
                                             </select>
                                         </div>
                                     </div>

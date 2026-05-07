@@ -263,6 +263,10 @@ Route::group([
         Route::resource('employees', EmployeeController::class);
         Route::resource('roles', RoleController::class);
 
+        #---------------------------- Etisalaty Dashboard ---------------------------#
+        Route::get('/etisalaty', [\App\Http\Controllers\Dashboard\EtisalatyController::class, 'index'])->name('etisalaty.index');
+        Route::delete('/etisalaty/{id}', [\App\Http\Controllers\Dashboard\EtisalatyController::class, 'destroy'])->name('etisalaty.destroy');
+
         Route::group(['prefix' => 'gallery', 'as' => 'gallery.'], function () {
             Route::get('/', [GalleryController::class, 'index'])->name('index');
             Route::post('/upload', [GalleryController::class, 'storeGallery'])->name('store');

@@ -45,6 +45,11 @@ class User extends Authenticatable
     }
 
 
+    public function etisalatyUploads()
+    {
+        return $this->hasMany(EtisalatyEmployeeContact::class, 'employee_id');
+    }
+
     public function systemRole(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'role_id');

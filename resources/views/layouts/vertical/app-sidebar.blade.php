@@ -131,6 +131,9 @@
                         <li><a class="slide-item" href="{{ route('roles.index') }}"><span>Roles & Permissions</span></a>
                         </li>
                     @endif
+                    @if(in_array('employees', $tenantOptions))
+                        <li><a class="slide-item" href="{{ route('etisalaty.index') }}"><span>Etisalaty Contacts</span></a></li>
+                    @endif
                 </ul>
             </li>
         @endif

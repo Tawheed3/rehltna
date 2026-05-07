@@ -67,10 +67,17 @@ class EtisalatyController extends Controller
         $newContactsAdded     = 0;
         $alreadyExists        = 0;
         $duplicatesByEmployee = 0;
+        $skippedNonSaudi      = 0;
 
         foreach ($request->contacts as $item) {
             $phone = $this->normalizePhone(trim($item['phone_number']));
-            $name  = trim($item['contact_name']) . ' (' . $user->name . ')';
+
+            if (!$this->isSaudiNumber($phone)) {
+                $skippedNonSaudi++;
+                continue;
+            }
+
+            $name = trim($item['contact_name']) . ' (' . $user->name . ')';
 
             $contact = EtisalatyContact::where('phone_number', $phone)->first();
 
@@ -107,41 +114,37 @@ class EtisalatyController extends Controller
             'new_contacts_added'     => $newContactsAdded,
             'already_exists'         => $alreadyExists,
             'duplicates_by_employee' => $duplicatesByEmployee,
+            'skipped_non_saudi'      => $skippedNonSaudi,
         ]);
     }
 
     private function normalizePhone(string $phone): string
     {
-        // Remove spaces, dashes, parentheses
+        // Remove spaces, dashes, parentheses, dots
         $phone = preg_replace('/[\s\-\(\)\.]+/', '', $phone);
 
-        // Already in E.164 format
-        if (str_starts_with($phone, '+')) {
+        // Already E.164 with +966
+        if (preg_match('/^\+9665[0-9]{8}$/', $phone)) {
             return $phone;
         }
 
-        // Egyptian: 01xxxxxxxxx → +201xxxxxxxxx
-        if (preg_match('/^01[0-9]{9}$/', $phone)) {
-            return '+20' . $phone;
-        }
-
-        // Egyptian without leading zero: 201xxxxxxxxx → +201xxxxxxxxx
-        if (preg_match('/^201[0-9]{9}$/', $phone)) {
-            return '+' . $phone;
-        }
-
-        // Saudi: 05xxxxxxxxx → +96605xxxxxxxxx
-        if (preg_match('/^05[0-9]{8}$/', $phone)) {
-            return '+966' . $phone;
-        }
-
-        // Saudi without leading zero: 9665xxxxxxxx → +9665xxxxxxxx
+        // 9665xxxxxxxx → +9665xxxxxxxx
         if (preg_match('/^9665[0-9]{8}$/', $phone)) {
             return '+' . $phone;
         }
 
-        // Return as-is — Flutter should send E.164 for other countries
-        return $phone;
+        // 05xxxxxxxx → +96605xxxxxxxx
+        if (preg_match('/^05[0-9]{8}$/', $phone)) {
+            return '+966' . $phone;
+        }
+
+        // Not a Saudi number
+        return '';
+    }
+
+    private function isSaudiNumber(string $normalized): bool
+    {
+        return preg_match('/^\+9665[0-9]{8}$/', $normalized) === 1;
     }
 
     /**

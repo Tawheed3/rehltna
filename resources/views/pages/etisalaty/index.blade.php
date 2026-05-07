@@ -21,27 +21,19 @@
 
     {{-- Stats Cards --}}
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card border-0 shadow-sm text-center py-4">
                 <div class="card-body">
                     <div class="fs-1 fw-bold text-primary">{{ number_format($totalContacts) }}</div>
-                    <div class="text-muted mt-1">Total Unique Contacts</div>
+                    <div class="text-muted mt-1">Total Unique Saudi Contacts</div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card border-0 shadow-sm text-center py-4">
                 <div class="card-body">
                     <div class="fs-1 fw-bold text-success">{{ number_format($totalEmployees) }}</div>
                     <div class="text-muted mt-1">Employees with App Access</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm text-center py-4">
-                <div class="card-body">
-                    <div class="fs-1 fw-bold text-warning">{{ number_format($totalUploads) }}</div>
-                    <div class="text-muted mt-1">Total Upload Records</div>
                 </div>
             </div>
         </div>

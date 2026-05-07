@@ -33,20 +33,21 @@ class UserModel {
     this.fcmToken,
   });
 
+  /// ✅ تحويل آمن من JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? 'مستخدم',
-      email: json['email'] ?? '',
+      id: _parseInt(json['id']),
+      name: json['name']?.toString() ?? 'مستخدم',
+      email: json['email']?.toString() ?? '',
       phone: json['phone']?.toString(),
-      avatarUrl: json['avatar_url'] ?? json['avatar'],
+      avatarUrl: json['avatar_url']?.toString() ?? json['avatar']?.toString(),
       isVerified: json['email_verified_at'] != null,
-      createdAt: DateTime.tryParse(json['created_at']?.toString() ?? '') ?? DateTime.now(),
-      updatedAt: DateTime.tryParse(json['updated_at']?.toString() ?? ''),
-      package: json['package'] is Map ? json['package']['name'] : json['package'],
-      earnedPoints: double.tryParse(json['earned_points']?.toString() ?? '0') ?? 0,
-      availablePoints: double.tryParse(json['available_points']?.toString() ?? '0') ?? 0,
-      usedPoints: double.tryParse(json['used_points']?.toString() ?? '0') ?? 0,
+      createdAt: _parseDate(json['created_at']),
+      updatedAt: _parseNullableDate(json['updated_at']),
+      package: _parsePackage(json['package']),
+      earnedPoints: _parseDouble(json['earned_points']),
+      availablePoints: _parseDouble(json['available_points']),
+      usedPoints: _parseDouble(json['used_points']),
       orders: json['orders'] ?? [],
       fcmToken: json['fcm_token']?.toString(),
     );
@@ -54,12 +55,20 @@ class UserModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id, 'name': name, 'email': email, 'phone': phone,
-      'avatar_url': avatarUrl, 'is_verified': isVerified,
-      'created_at': createdAt.toIso8601String(), 'updated_at': updatedAt?.toIso8601String(),
-      'package': package, 'earned_points': earnedPoints,
-      'available_points': availablePoints, 'used_points': usedPoints,
-      'orders': orders, 'fcm_token': fcmToken,
+      'id': id,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'avatar_url': avatarUrl,
+      'is_verified': isVerified,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
+      'package': package,
+      'earned_points': earnedPoints,
+      'available_points': availablePoints,
+      'used_points': usedPoints,
+      'orders': orders,
+      'fcm_token': fcmToken,
     };
   }
 
@@ -70,7 +79,6 @@ class UserModel {
     return name[0].toUpperCase();
   }
 
-  // ✅ Getters للباقة
   Color get packageColor {
     switch (package?.toLowerCase()) {
       case 'silver': return const Color(0xFFC0C0C0);
@@ -96,5 +104,44 @@ class UserModel {
       case 'diamond': return 'ألماسي';
       default: return package ?? 'عادي';
     }
+  }
+
+  // ==================== دوال مساعدة آمنة ====================
+
+  static int _parseInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    return int.tryParse(value.toString()) ?? 0;
+  }
+
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    return double.tryParse(value.toString()) ?? 0;
+  }
+
+  static DateTime _parseDate(dynamic date) {
+    if (date == null) return DateTime.now();
+    try {
+      return DateTime.parse(date.toString());
+    } catch (e) {
+      return DateTime.now();
+    }
+  }
+
+  static DateTime? _parseNullableDate(dynamic date) {
+    if (date == null) return null;
+    try {
+      return DateTime.parse(date.toString());
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static String? _parsePackage(dynamic package) {
+    if (package == null) return null;
+    if (package is Map) return package['name']?.toString();
+    return package.toString();
   }
 }

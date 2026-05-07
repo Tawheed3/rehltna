@@ -6,11 +6,18 @@ import 'features_provider.dart';
 import 'base_provider.dart';
 
 class SearchProvider extends BaseProvider {
-  // استخدام ItemModel بدلاً من PostModel
+  final ItemsProvider _itemsProvider;
+  final FeaturesProvider _featuresProvider;
+
+  SearchProvider({
+    required ItemsProvider itemsProvider,
+    required FeaturesProvider featuresProvider,
+  })  : _itemsProvider = itemsProvider,
+        _featuresProvider = featuresProvider;
+
   List<ItemModel> _allItems = [];
   List<ItemModel> _searchResults = [];
 
-  // للإقتراحات
   List<String> _suggestedTitles = [];
   List<String> _suggestedCities = [];
   List<String> _suggestedSeasons = [];
@@ -18,7 +25,6 @@ class SearchProvider extends BaseProvider {
   String _lastSearchQuery = '';
   String _selectedFilter = 'الكل';
 
-  // Getters
   List<ItemModel> get searchResults => _searchResults;
   List<String> get suggestedTitles => _suggestedTitles;
   List<String> get suggestedCities => _suggestedCities;
@@ -37,20 +43,25 @@ class SearchProvider extends BaseProvider {
     'الإجازة المدرسية',
   ];
 
-  // تحميل جميع العناصر من API
+  /// Uses already-loaded provider data — no duplicate API calls.
   Future<void> loadAllItems() async {
     startLoading();
-
     try {
-      // نجيب البيانات من ItemsProvider
-      final itemsProvider = ItemsProvider();
-      await itemsProvider.fetchItems();
-      _allItems = itemsProvider.items;
+      // Use cached items; fetch only if empty
+      if (_itemsProvider.items.isNotEmpty) {
+        _allItems = List.from(_itemsProvider.items);
+      } else {
+        await _itemsProvider.fetchItems();
+        _allItems = List.from(_itemsProvider.items);
+      }
 
-      // نجيب البيانات من FeaturesProvider
-      final featuresProvider = FeaturesProvider();
-      await featuresProvider.fetchFeatures();
-      _allItems.addAll(featuresProvider.features);
+      // Same for features
+      if (_featuresProvider.features.isNotEmpty) {
+        _allItems.addAll(_featuresProvider.features);
+      } else {
+        await _featuresProvider.fetchFeatures();
+        _allItems.addAll(_featuresProvider.features);
+      }
 
       _extractSuggestions();
       developer.log('Search index ready: ${_allItems.length} items', name: BaseProvider.logTag);
@@ -62,7 +73,6 @@ class SearchProvider extends BaseProvider {
     }
   }
 
-  // استخراج الإقتراحات من العناصر
   void _extractSuggestions() {
     final Set<String> titles = {};
     final Set<String> cities = {};
@@ -71,11 +81,8 @@ class SearchProvider extends BaseProvider {
     for (var item in _allItems) {
       if (item.getTitle('ar').isNotEmpty) titles.add(item.getTitle('ar'));
       if (item.getTitle('en').isNotEmpty) titles.add(item.getTitle('en'));
-
-      // نضيف اسم القسم كمدينة (لأنه ممكن يكون مقصد)
       cities.add(item.itemType.getTitle('ar'));
       cities.add(item.itemType.getTitle('en'));
-
       if (item.season.isNotEmpty) seasons.add(item.season);
     }
 
@@ -86,7 +93,6 @@ class SearchProvider extends BaseProvider {
     _suggestedSeasons = seasons.toList()..sort();
   }
 
-  // دالة البحث
   void search(String query, BuildContext context) {
     _lastSearchQuery = query;
 
@@ -101,19 +107,18 @@ class SearchProvider extends BaseProvider {
     _searchResults = _allItems.where((item) {
       switch (_selectedFilter) {
         case 'الرحلات':
-          return _matchesTitle(item, lowercaseQuery) ||
-              _matchesDescription(item, lowercaseQuery, context);
+          return _matchesTitle(item, lowercaseQuery) || _matchesDescription(item, lowercaseQuery);
         case 'المدن':
-          return _matchesCity(item, lowercaseQuery, context);
+          return _matchesCity(item, lowercaseQuery);
         case 'المواسم':
-          return _matchesSeason(item, lowercaseQuery, context);
+          return _matchesSeason(item, lowercaseQuery);
         case 'التواريخ':
           return _matchesDate(item, lowercaseQuery);
-        default: // الكل
+        default:
           return _matchesTitle(item, lowercaseQuery) ||
-              _matchesDescription(item, lowercaseQuery, context) ||
-              _matchesCity(item, lowercaseQuery, context) ||
-              _matchesSeason(item, lowercaseQuery, context) ||
+              _matchesDescription(item, lowercaseQuery) ||
+              _matchesCity(item, lowercaseQuery) ||
+              _matchesSeason(item, lowercaseQuery) ||
               _matchesDate(item, lowercaseQuery);
       }
     }).toList();
@@ -121,83 +126,56 @@ class SearchProvider extends BaseProvider {
     notifyListeners();
   }
 
-  bool _matchesTitle(ItemModel item, String query) {
-    return item.getTitle('ar').toLowerCase().contains(query) ||
-        item.getTitle('en').toLowerCase().contains(query);
-  }
+  bool _matchesTitle(ItemModel item, String query) =>
+      item.getTitle('ar').toLowerCase().contains(query) ||
+      item.getTitle('en').toLowerCase().contains(query);
 
-  bool _matchesDescription(ItemModel item, String query, BuildContext context) {
-    return item.getDescription('ar').toLowerCase().contains(query) ||
-        item.getDescription('en').toLowerCase().contains(query) ||
-        item.getShortDescription('ar').toLowerCase().contains(query) ||
-        item.getShortDescription('en').toLowerCase().contains(query);
-  }
+  bool _matchesDescription(ItemModel item, String query) =>
+      item.getDescription('ar').toLowerCase().contains(query) ||
+      item.getDescription('en').toLowerCase().contains(query) ||
+      item.getShortDescription('ar').toLowerCase().contains(query) ||
+      item.getShortDescription('en').toLowerCase().contains(query);
 
-  bool _matchesCity(ItemModel item, String query, BuildContext context) {
-    return item.itemType.getTitle('ar').toLowerCase().contains(query) ||
-        item.itemType.getTitle('en').toLowerCase().contains(query);
-  }
+  bool _matchesCity(ItemModel item, String query) =>
+      item.itemType.getTitle('ar').toLowerCase().contains(query) ||
+      item.itemType.getTitle('en').toLowerCase().contains(query);
 
-  bool _matchesSeason(ItemModel item, String query, BuildContext context) {
-    return item.season.toLowerCase().contains(query);
-  }
+  bool _matchesSeason(ItemModel item, String query) =>
+      item.season.toLowerCase().contains(query);
 
-  bool _matchesDate(ItemModel item, String query) {
-    return item.startDate.toLowerCase().contains(query) ||
-        item.endDate.toLowerCase().contains(query);
-  }
+  bool _matchesDate(ItemModel item, String query) =>
+      item.startDate.toLowerCase().contains(query) ||
+      item.endDate.toLowerCase().contains(query);
 
   void setFilter(String filter, BuildContext context) {
     _selectedFilter = filter;
-    if (_lastSearchQuery.isNotEmpty) {
-      search(_lastSearchQuery, context);
-    }
+    if (_lastSearchQuery.isNotEmpty) search(_lastSearchQuery, context);
   }
 
   List<String> getSuggestionsForCurrentFilter(String query, BuildContext context) {
     if (query.isEmpty) return [];
-
-    final lowercaseQuery = query.toLowerCase();
+    final lq = query.toLowerCase();
 
     switch (_selectedFilter) {
       case 'الرحلات':
-        return _suggestedTitles
-            .where((title) => title.toLowerCase().contains(lowercaseQuery))
-            .take(5)
-            .toList();
+        return _suggestedTitles.where((t) => t.toLowerCase().contains(lq)).take(5).toList();
       case 'المدن':
-        return _suggestedCities
-            .where((city) => city.toLowerCase().contains(lowercaseQuery))
-            .take(5)
-            .toList();
+        return _suggestedCities.where((c) => c.toLowerCase().contains(lq)).take(5).toList();
       case 'المواسم':
-        final suggestions = <String>{};
-        suggestions.addAll(
-            _suggestedSeasons
-                .where((season) => season.toLowerCase().contains(lowercaseQuery))
-                .take(3));
-        suggestions.addAll(
-            predefinedSeasons
-                .where((season) => season.toLowerCase().contains(lowercaseQuery))
-                .take(2));
-        return suggestions.toList().take(5).toList();
+        final s = <String>{
+          ..._suggestedSeasons.where((s) => s.toLowerCase().contains(lq)).take(3),
+          ...predefinedSeasons.where((s) => s.toLowerCase().contains(lq)).take(2),
+        };
+        return s.take(5).toList();
       case 'التواريخ':
         return [];
-      default: // الكل
-        final suggestions = <String>{};
-        suggestions.addAll(
-            _suggestedTitles
-                .where((title) => title.toLowerCase().contains(lowercaseQuery))
-                .take(3));
-        suggestions.addAll(
-            _suggestedCities
-                .where((city) => city.toLowerCase().contains(lowercaseQuery))
-                .take(3));
-        suggestions.addAll(
-            _suggestedSeasons
-                .where((season) => season.toLowerCase().contains(lowercaseQuery))
-                .take(2));
-        return suggestions.toList().take(5).toList();
+      default:
+        final all = <String>{
+          ..._suggestedTitles.where((t) => t.toLowerCase().contains(lq)).take(3),
+          ..._suggestedCities.where((c) => c.toLowerCase().contains(lq)).take(3),
+          ..._suggestedSeasons.where((s) => s.toLowerCase().contains(lq)).take(2),
+        };
+        return all.take(5).toList();
     }
   }
 }

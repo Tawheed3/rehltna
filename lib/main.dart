@@ -46,7 +46,12 @@ void main() async {
         ChangeNotifierProvider(create: (context) => FeaturesProvider()),
         ChangeNotifierProvider(create: (context) => SliderProvider()),
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
-        ChangeNotifierProvider(create: (context) => SearchProvider()),
+        ChangeNotifierProvider(
+          create: (context) => SearchProvider(
+            itemsProvider: context.read<ItemsProvider>(),
+            featuresProvider: context.read<FeaturesProvider>(),
+          ),
+        ),
         ChangeNotifierProvider(create: (context) => PaymentMethodsProvider()),
         ChangeNotifierProvider(create: (context) => PixelProvider()),
       ],

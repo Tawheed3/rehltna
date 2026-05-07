@@ -61,6 +61,12 @@ dependencies:
   permission_handler: ^11.0.1
 
 
+  # للخطوط
+  google_fonts: ^6.2.0
+
+  # للشيمر (skeleton loading)
+  shimmer: ^3.0.0
+
   # للترجمة
   flutter_localizations:
     sdk: flutter

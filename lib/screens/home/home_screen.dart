@@ -17,6 +17,8 @@ import '../../data/providers/auth_provider.dart';
 import '../../data/providers/features_provider.dart';
 import '../../data/services/settings_service.dart';
 import '../../widgets/animations/pulse_animation.dart';
+import '../../widgets/app_error_widget.dart';
+import '../../widgets/shimmer/home_shimmer.dart';
 import '../category/category_screen.dart';
 import '../posts/item_details_screen.dart';
 
@@ -209,10 +211,17 @@ class _HomeScreenState extends State<HomeScreen> {
     if ((ip.isLoading && ip.itemTypes.isEmpty) ||
         (slp.isLoading && slp.sliders.isEmpty) ||
         (sp.isLoading && sp.settings == null)) {
-      return const Center(child: CircularProgressIndicator());
+      return const HomeShimmer();
     }
     if (ip.errorMessage != null && ip.itemTypes.isEmpty) {
-      return _buildErrorState(ip.errorMessage!);
+      return AppErrorWidget.server(
+        message: ip.errorMessage,
+        onRetry: () {
+          ip.loadAllItemsIntoCategories();
+          slp.fetchSliders();
+          sp.fetchSettings();
+        },
+      );
     }
 
     return RefreshIndicator(
@@ -745,44 +754,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==================== حالة الخطأ ====================
-
-  Widget _buildErrorState(String error) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(30),
-            decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), shape: BoxShape.circle),
-            child: const Icon(Icons.error_outline, size: 80, color: Colors.red),
-          ),
-          const SizedBox(height: 24),
-          Text('حدث خطأ في تحميل البيانات', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(error, style: TextStyle(fontSize: 14, color: isDark ? Colors.white54 : Colors.grey), textAlign: TextAlign.center),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {
-              Provider.of<ItemsProvider>(context, listen: false).loadAllItemsIntoCategories();
-              Provider.of<SliderProvider>(context, listen: false).fetchSliders();
-              Provider.of<SettingsProvider>(context, listen: false).fetchSettings();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary, foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            ),
-            child: const Text('إعادة المحاولة'),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 // ==================== الشريط المتحرك ====================

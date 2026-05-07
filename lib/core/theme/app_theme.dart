@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
 
 class AppTheme {
+  static TextTheme _cairoTextTheme(TextTheme base) =>
+      GoogleFonts.cairoTextTheme(base);
+
   // الثيم الفاتح
   static ThemeData get lightTheme {
-    return ThemeData(
+    final base = ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: const Color(0xFFF8FAFC), // لون خلفية فاتح
+      scaffoldBackgroundColor: const Color(0xFFF8FAFC),
       cardColor: Colors.white,
-
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.secondary,
@@ -23,30 +26,35 @@ class AppTheme {
         onBackground: Color(0xFF0F172A),
         onError: Colors.white,
       ),
-
       appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.transparent,
         foregroundColor: Color(0xFF0F172A),
       ),
+    );
 
-      textTheme: const TextTheme(
-        bodyLarge: TextStyle(color: Color(0xFF0F172A)),
-        bodyMedium: TextStyle(color: Color(0xFF475569)),
+    return base.copyWith(
+      textTheme: _cairoTextTheme(base.textTheme).copyWith(
+        bodyLarge: GoogleFonts.cairo(color: AppColors.textPrimary, fontSize: 16),
+        bodyMedium: GoogleFonts.cairo(color: AppColors.textSecondary, fontSize: 14),
+        bodySmall: GoogleFonts.cairo(color: AppColors.textLight, fontSize: 12),
+        titleLarge: GoogleFonts.cairo(color: AppColors.textPrimary, fontSize: 22, fontWeight: FontWeight.w700),
+        titleMedium: GoogleFonts.cairo(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w600),
+        titleSmall: GoogleFonts.cairo(color: AppColors.textPrimary, fontSize: 15, fontWeight: FontWeight.w600),
+        labelLarge: GoogleFonts.cairo(fontWeight: FontWeight.w600, fontSize: 14),
       ),
     );
   }
 
   // الثيم الداكن
   static ThemeData get darkTheme {
-    return ThemeData(
+    final base = ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: const Color(0xFF121212), // أسود داكن جداً
-      cardColor: const Color(0xFF1E1E1E), // رمادي داكن
-
+      scaffoldBackgroundColor: const Color(0xFF121212),
+      cardColor: const Color(0xFF1E1E1E),
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
         secondary: AppColors.secondary,
@@ -59,17 +67,23 @@ class AppTheme {
         onBackground: Colors.white,
         onError: Colors.white,
       ),
-
       appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
       ),
+    );
 
-      textTheme: const TextTheme(
-        bodyLarge: TextStyle(color: Colors.white),
-        bodyMedium: TextStyle(color: Colors.white70),
+    return base.copyWith(
+      textTheme: _cairoTextTheme(base.textTheme).copyWith(
+        bodyLarge: GoogleFonts.cairo(color: Colors.white, fontSize: 16),
+        bodyMedium: GoogleFonts.cairo(color: Colors.white70, fontSize: 14),
+        bodySmall: GoogleFonts.cairo(color: Colors.white54, fontSize: 12),
+        titleLarge: GoogleFonts.cairo(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+        titleMedium: GoogleFonts.cairo(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+        titleSmall: GoogleFonts.cairo(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+        labelLarge: GoogleFonts.cairo(fontWeight: FontWeight.w600, fontSize: 14),
       ),
     );
   }

@@ -23,4 +23,10 @@ class AppColors {
   // ألوان الخلفية
   static const Color backgroundLight = Color(0xFFF8FAFC);
   static const Color backgroundDark = Color(0xFF121212);
+
+  // ألوان الشيمر (skeleton loading)
+  static const Color shimmerBase = Color(0xFFE2E8F0);
+  static const Color shimmerHighlight = Color(0xFFF8FAFC);
+  static const Color shimmerBaseDark = Color(0xFF2A2A2A);
+  static const Color shimmerHighlightDark = Color(0xFF3A3A3A);
 }

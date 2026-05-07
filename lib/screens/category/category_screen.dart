@@ -2,6 +2,8 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
+import '../../widgets/app_error_widget.dart';
+import '../../widgets/shimmer/item_card_shimmer.dart';
 import '../../core/localization/app_localizations.dart';
 import '../../data/models/item_model.dart';
 import '../../data/models/subcategory_item.dart';
@@ -128,9 +130,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
       ),
       body: SafeArea(
         child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const ItemListShimmer()
             : (_subcategories.isEmpty && _directItems.isEmpty)
-            ? _buildEmptyState(isDark)
+            ? AppErrorWidget.empty(message: 'لا توجد رحلات في هذا القسم')
             : RefreshIndicator(
           onRefresh: _loadData,
           color: widget.color,
@@ -554,36 +556,4 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  // ==================== حالة فارغة ====================
-
-  Widget _buildEmptyState(bool isDark) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.inbox,
-            size: 80,
-            color: isDark ? Colors.white24 : Colors.grey.shade300,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'لا توجد رحلات في هذا القسم',
-            style: TextStyle(
-              fontSize: 18,
-              color: isDark ? Colors.white70 : Colors.grey.shade600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'سيتم إضافة رحلات جديدة قريباً',
-            style: TextStyle(
-              fontSize: 14,
-              color: isDark ? Colors.white54 : Colors.grey.shade500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

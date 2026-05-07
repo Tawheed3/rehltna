@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/auth_provider.dart';
 import '../providers/base_provider.dart';
 
@@ -10,8 +11,7 @@ class NotificationService {
   NotificationService._internal();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications =
-  FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
 
   String? _fcmToken;
   bool _isInitialized = false;
@@ -38,17 +38,25 @@ class NotificationService {
       _fcmToken = await _firebaseMessaging.getToken();
       developer.log('[Notifications] FCM Token: $_fcmToken', name: BaseProvider.logTag);
 
-      _firebaseMessaging.onTokenRefresh.listen((newToken) {
+      // ✅ حفظ الـ FCM Token محلياً
+      if (_fcmToken != null) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('fcm_token', _fcmToken!);
+      }
+
+      _firebaseMessaging.onTokenRefresh.listen((newToken) async {
         developer.log('[Notifications] FCM Token refreshed: $newToken', name: BaseProvider.logTag);
         _fcmToken = newToken;
+        // ✅ حفظ الـ token الجديد
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('fcm_token', newToken);
       });
 
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
       FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
       FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
 
-      RemoteMessage? initialMessage =
-      await _firebaseMessaging.getInitialMessage();
+      RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
       if (initialMessage != null) {
         _handleMessageOpenedApp(initialMessage);
       }
@@ -61,10 +69,8 @@ class NotificationService {
   }
 
   Future<void> _initLocalNotifications() async {
-    const AndroidInitializationSettings androidSettings =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosSettings =
-    DarwinInitializationSettings();
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings();
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
@@ -78,8 +84,7 @@ class NotificationService {
     );
   }
 
-  static Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     developer.log('[Notifications] Background message: ${message.messageId}', name: BaseProvider.logTag);
   }
 
@@ -89,8 +94,7 @@ class NotificationService {
   }
 
   Future<void> _showLocalNotification(RemoteMessage message) async {
-    final AndroidNotificationDetails androidDetails =
-    AndroidNotificationDetails(
+    final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'rehlatna_channel',
       'إشعارات رحلتنا',
       channelDescription: 'إشعارات التطبيق',
@@ -126,8 +130,7 @@ class NotificationService {
     required String body,
     String? payload,
   }) async {
-    final AndroidNotificationDetails androidDetails =
-    AndroidNotificationDetails(
+    final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'rehlatna_channel',
       'إشعارات رحلتنا',
       channelDescription: 'إشعارات التطبيق',
@@ -160,7 +163,14 @@ class NotificationService {
   }
 
   Future<String?> getToken() async {
-    _fcmToken ??= await _firebaseMessaging.getToken();
+    if (_fcmToken == null) {
+      _fcmToken = await _firebaseMessaging.getToken();
+      // ✅ حفظ الـ token عند استرجاعه
+      if (_fcmToken != null) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('fcm_token', _fcmToken!);
+      }
+    }
     return _fcmToken;
   }
 }

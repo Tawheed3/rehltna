@@ -43,25 +43,40 @@ class _LoginScreenState extends State<LoginScreen> {
     final success = await authProvider.login(_emailController.text, _passwordController.text);
 
     if (success && mounted) {
-      developer.log('[Login] Success — updating FCM token', name: 'Response-output');
-      try {
-        final fcmToken = await _notificationService.getToken();
-        if (fcmToken != null && fcmToken.isNotEmpty) {
-          await authProvider.updateFcmToken(fcmToken);
-        }
-      } catch (e) {
-        developer.log('[Login] FCM update error: $e', name: 'Response-output', level: 900);
-      }
+      developer.log('[Login] Success', name: 'Response-output');
+
+      // ✅ تحديث FCM في الخلفية (لا ننتظر النتيجة)
+      _updateFcmTokenInBackground(authProvider);
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم تسجيل الدخول بنجاح'), backgroundColor: Colors.green, duration: Duration(seconds: 1)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تم تسجيل الدخول بنجاح'), backgroundColor: Colors.green, duration: Duration(seconds: 1))
+      );
       await Future.delayed(const Duration(milliseconds: 300));
       if (mounted) context.go(AppRoutes.home);
     }
   }
 
+  /// ✅ تحديث FCM Token في الخلفية بدون انتظار
+  void _updateFcmTokenInBackground(AuthProvider authProvider) async {
+    try {
+      final fcmToken = await _notificationService.getToken();
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        // ✅ استخدام الدالة الجديدة التي لا تنتظر
+        authProvider.updateFcmTokenInBackground(fcmToken);
+      }
+    } catch (e) {
+      developer.log('[Login] FCM update error: $e', name: 'Response-output', level: 900);
+    }
+  }
+
   Color _getRoleColor(String colorName) {
-    switch (colorName) { case 'red': return Colors.red; case 'blue': return Colors.blue; case 'green': return Colors.green; default: return AppColors.primary; }
+    switch (colorName) {
+      case 'red': return Colors.red;
+      case 'blue': return Colors.blue;
+      case 'green': return Colors.green;
+      default: return AppColors.primary;
+    }
   }
 
   @override

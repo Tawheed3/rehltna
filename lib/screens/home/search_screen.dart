@@ -6,6 +6,8 @@ import '../../core/localization/app_localizations.dart';
 import '../../data/models/item_model.dart';
 import '../../data/providers/search_provider.dart';
 import '../../data/services/settings_service.dart';
+import '../../widgets/app_error_widget.dart';
+import '../../widgets/shimmer/search_shimmer.dart';
 import '../posts/item_details_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -186,7 +188,13 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
       SafeArea(child:  Consumer<SearchProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading && provider.searchResults.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return const SearchShimmer();
+          }
+
+          if (provider.errorMessage != null && provider.searchResults.isEmpty) {
+            return AppErrorWidget.network(
+              onRetry: () => provider.loadAllItems(),
+            );
           }
 
           return TabBarView(

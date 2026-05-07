@@ -6,6 +6,8 @@ import '../../core/localization/app_localizations.dart';
 import '../../data/models/item_model.dart';
 import '../../data/providers/items_provider.dart';
 import '../../data/services/settings_service.dart';
+import '../../widgets/app_error_widget.dart';
+import '../../widgets/shimmer/item_card_shimmer.dart';
 import '../posts/item_details_screen.dart';
 
 class SubcategoryScreen extends StatefulWidget {
@@ -85,43 +87,47 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final settingsService = Provider.of<SettingsService>(context);
 
-    // ✅ لو لسه ما اتهيأش، نعرض تحميل
-    if (!_initialized) {
+    final appBar = AppBar(
+      title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+      backgroundColor: widget.color,
+      elevation: 0,
+      centerTitle: true,
+      leading: Container(
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), shape: BoxShape.circle),
+        child: IconButton(icon: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.white), onPressed: () => Navigator.pop(context)),
+      ),
+    );
+
+    if (!_initialized || _isLoading) {
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: AppBar(title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)), backgroundColor: widget.color, elevation: 0, centerTitle: true,
-          leading: Container(margin: const EdgeInsets.all(8), decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), shape: BoxShape.circle), child: IconButton(icon: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.white), onPressed: () => Navigator.pop(context))),
-        ),
-        body: const Center(child: CircularProgressIndicator()),
+        appBar: appBar,
+        body: const ItemListShimmer(),
       );
     }
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: widget.color, elevation: 0, centerTitle: true,
-        leading: Container(margin: const EdgeInsets.all(8), decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), shape: BoxShape.circle), child: IconButton(icon: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.white), onPressed: () => Navigator.pop(context))),
-      ),
+      appBar: appBar,
       body: SafeArea(
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _errorMessage != null
-            ? _buildErrorState(isDark)
+        child: _errorMessage != null
+            ? AppErrorWidget.server(
+                message: _errorMessage,
+                onRetry: _loadItemsFromAPI,
+              )
             : _items.isEmpty
-            ? _buildEmptyState(isDark)
+            ? AppErrorWidget.empty(message: 'لا توجد رحلات في هذا القسم')
             : RefreshIndicator(
-          onRefresh: _refreshItems,
-          color: widget.color,
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: _items.length,
-            itemBuilder: (context, index) {
-              final item = _items[index];
-              return _buildItemCard(item, settingsService, isDark);
-            },
-          ),
-        ),
+                onRefresh: _refreshItems,
+                color: widget.color,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _items.length,
+                  itemBuilder: (context, index) =>
+                      _buildItemCard(_items[index], settingsService, isDark),
+                ),
+              ),
       ),
     );
   }
@@ -152,25 +158,4 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
     );
   }
 
-  Widget _buildEmptyState(bool isDark) {
-    return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(Icons.inbox, size: 80, color: isDark ? Colors.white24 : Colors.grey.shade300),
-      const SizedBox(height: 16),
-      Text('لا توجد رحلات في هذا القسم', style: TextStyle(fontSize: 18, color: isDark ? Colors.white70 : Colors.grey.shade600)),
-      const SizedBox(height: 8),
-      Text('سيتم إضافة رحلات جديدة قريباً', style: TextStyle(fontSize: 14, color: isDark ? Colors.white54 : Colors.grey.shade500)),
-      const SizedBox(height: 24),
-      ElevatedButton.icon(onPressed: _loadItemsFromAPI, icon: const Icon(Icons.refresh), label: const Text('تحديث'), style: ElevatedButton.styleFrom(backgroundColor: widget.color, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
-    ]));
-  }
-
-  Widget _buildErrorState(bool isDark) {
-    return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Container(padding: const EdgeInsets.all(30), decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), shape: BoxShape.circle), child: const Icon(Icons.error_outline, size: 80, color: Colors.red)),
-      const SizedBox(height: 24),
-      Text(_errorMessage ?? 'حدث خطأ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
-      const SizedBox(height: 24),
-      ElevatedButton.icon(onPressed: _loadItemsFromAPI, icon: const Icon(Icons.refresh), label: const Text('إعادة المحاولة'), style: ElevatedButton.styleFrom(backgroundColor: widget.color, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
-    ]));
-  }
 }

@@ -107,15 +107,18 @@ class ItemController extends Controller
 
             if ($request->has('gallery')) {
                 foreach ($request->input('gallery') as $imagePath) {
-                    $item->galleries()->create(['image' => $this->cleanPath($imagePath)]);
+                    $cleaned = $this->cleanPath($imagePath);
+                    $item->galleries()->create(['image' => $cleaned, 'media_type' => $this->detectMediaType($cleaned)]);
                 }
             }
 
             if ($request->has('private_gallery')) {
                 foreach ($request->input('private_gallery') as $filePath) {
+                    $cleaned = $this->cleanPath($filePath);
                     $item->privateGalleries()->create([
-                        'image' => $this->cleanPath($filePath),
-                        'type' => 'private'
+                        'image'      => $cleaned,
+                        'type'       => 'private',
+                        'media_type' => $this->detectMediaType($cleaned),
                     ]);
                 }
             }
@@ -346,7 +349,8 @@ class ItemController extends Controller
             if ($request->has('gallery')) {
                 $item->galleries()->delete();
                 foreach ($request->input('gallery') as $imagePath) {
-                    $item->galleries()->create(['image' => $this->cleanPath($imagePath)]);
+                    $cleaned = $this->cleanPath($imagePath);
+                    $item->galleries()->create(['image' => $cleaned, 'media_type' => $this->detectMediaType($cleaned)]);
                 }
             } elseif ($request->has('gallery_cleared')) {
                 $item->galleries()->delete();
@@ -355,9 +359,11 @@ class ItemController extends Controller
             if ($request->has('private_gallery')) {
                 $item->privateGalleries()->delete();
                 foreach ($request->input('private_gallery') as $filePath) {
+                    $cleaned = $this->cleanPath($filePath);
                     $item->privateGalleries()->create([
-                        'image' => $this->cleanPath($filePath),
-                        'type' => 'private'
+                        'image'      => $cleaned,
+                        'type'       => 'private',
+                        'media_type' => $this->detectMediaType($cleaned),
                     ]);
                 }
             } elseif ($request->has('private_gallery_cleared')) {
@@ -515,6 +521,12 @@ class ItemController extends Controller
     private function cleanPath($path): array|string
     {
         return str_replace(url('/'), '', $path);
+    }
+
+    private function detectMediaType(string $path): string
+    {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        return in_array($ext, ['mp4', 'mov', 'avi', 'mkv', 'webm']) ? 'video' : 'image';
     }
 
     public function itemsChangeStatus($id): JsonResponse
@@ -807,11 +819,11 @@ class ItemController extends Controller
             $newItem->save();
 
             foreach ($originalItem->galleries as $gallery) {
-                $newItem->galleries()->create($gallery->only(['image', 'type']));
+                $newItem->galleries()->create($gallery->only(['image', 'type', 'media_type']));
             }
 
             foreach ($originalItem->privateGalleries as $gallery) {
-                $newItem->privateGalleries()->create($gallery->only(['image', 'type']));
+                $newItem->privateGalleries()->create($gallery->only(['image', 'type', 'media_type']));
             }
 
             foreach ($originalItem->prices as $price) {

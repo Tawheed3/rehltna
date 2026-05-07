@@ -25,7 +25,7 @@ class Gallery extends Model
         'id',
         'galleryable_type',
         'galleryable_id',
-        'type'
+        'type',
     ];
 
 }

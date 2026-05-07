@@ -69,7 +69,7 @@ class EtisalatyController extends Controller
         $duplicatesByEmployee = 0;
 
         foreach ($request->contacts as $item) {
-            $phone = trim($item['phone_number']);
+            $phone = $this->normalizePhone(trim($item['phone_number']));
             $name  = trim($item['contact_name']) . ' (' . $user->name . ')';
 
             $contact = EtisalatyContact::where('phone_number', $phone)->first();
@@ -108,6 +108,24 @@ class EtisalatyController extends Controller
             'already_exists'         => $alreadyExists,
             'duplicates_by_employee' => $duplicatesByEmployee,
         ]);
+    }
+
+    private function normalizePhone(string $phone): string
+    {
+        // Remove spaces, dashes, parentheses
+        $phone = preg_replace('/[\s\-\(\)]+/', '', $phone);
+
+        // Egyptian: 01xxxxxxxxx → +201xxxxxxxxx
+        if (preg_match('/^01[0-9]{9}$/', $phone)) {
+            return '+20' . $phone;
+        }
+
+        // Egyptian: 201xxxxxxxxx → +201xxxxxxxxx
+        if (preg_match('/^201[0-9]{9}$/', $phone)) {
+            return '+' . $phone;
+        }
+
+        return $phone;
     }
 
     /**

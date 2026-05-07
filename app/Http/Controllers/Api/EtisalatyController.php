@@ -113,18 +113,34 @@ class EtisalatyController extends Controller
     private function normalizePhone(string $phone): string
     {
         // Remove spaces, dashes, parentheses
-        $phone = preg_replace('/[\s\-\(\)]+/', '', $phone);
+        $phone = preg_replace('/[\s\-\(\)\.]+/', '', $phone);
+
+        // Already in E.164 format
+        if (str_starts_with($phone, '+')) {
+            return $phone;
+        }
 
         // Egyptian: 01xxxxxxxxx → +201xxxxxxxxx
         if (preg_match('/^01[0-9]{9}$/', $phone)) {
             return '+20' . $phone;
         }
 
-        // Egyptian: 201xxxxxxxxx → +201xxxxxxxxx
+        // Egyptian without leading zero: 201xxxxxxxxx → +201xxxxxxxxx
         if (preg_match('/^201[0-9]{9}$/', $phone)) {
             return '+' . $phone;
         }
 
+        // Saudi: 05xxxxxxxxx → +96605xxxxxxxxx
+        if (preg_match('/^05[0-9]{8}$/', $phone)) {
+            return '+966' . $phone;
+        }
+
+        // Saudi without leading zero: 9665xxxxxxxx → +9665xxxxxxxx
+        if (preg_match('/^9665[0-9]{8}$/', $phone)) {
+            return '+' . $phone;
+        }
+
+        // Return as-is — Flutter should send E.164 for other countries
         return $phone;
     }
 

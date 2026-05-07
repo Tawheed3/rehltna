@@ -9,6 +9,7 @@ use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 class ReviewController extends Controller
 {
@@ -40,7 +41,7 @@ class ReviewController extends Controller
             'item_id'       => 'nullable|integer|exists:items,id',
             'rating'        => 'required|integer|min:1|max:5',
             'comment'       => 'nullable|string|max:1000',
-            'reviewer_name' => 'required_without:user|string|max:255',
+            'reviewer_name' => [Rule::requiredIf(fn () => !$request->user()), 'nullable', 'string', 'max:255'],
         ]);
 
         $user = $request->user();

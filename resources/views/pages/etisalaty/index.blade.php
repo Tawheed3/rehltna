@@ -138,7 +138,7 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
-                        @foreach(\App\Models\User::whereNotNull('etisalaty_role')->withCount(['etisalatyUploads as uploads_count'])->get() as $emp)
+                        @foreach(\App\Models\User::whereNotNull('etisalaty_role')->withCount(['etisalatyUploads as uploads_count' => fn($q) => $q->whereHas('contact')])->get() as $emp)
                         <li class="list-group-item px-4 py-3">
                             <div class="d-flex align-items-center justify-content-between mb-1">
                                 <div>

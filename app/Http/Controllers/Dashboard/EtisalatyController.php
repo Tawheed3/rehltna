@@ -30,20 +30,21 @@ class EtisalatyController extends Controller
         $totalEmployees = User::whereNotNull('etisalaty_role')->count();
         $totalUploads   = EtisalatyEmployeeContact::count();
 
-        // Top uploaders
+        // Top uploaders — only count links to contacts that still exist
         $topEmployees = User::whereNotNull('etisalaty_role')
-            ->withCount(['etisalatyUploads as uploads_count'])
+            ->withCount(['etisalatyUploads as uploads_count' => fn($q) => $q->whereHas('contact')])
             ->orderByDesc('uploads_count')
             ->take(5)
             ->get();
 
         return view('pages.etisalaty.index', compact(
-            'contacts', 'totalContacts', 'totalEmployees', 'totalUploads', 'topEmployees'
+            'contacts', 'totalContacts', 'totalEmployees', 'topEmployees'
         ));
     }
 
     public function destroy(int $id)
     {
+        EtisalatyEmployeeContact::where('contact_id', $id)->delete();
         EtisalatyContact::findOrFail($id)->delete();
         return back()->with('success', 'Contact deleted.');
     }
@@ -52,11 +53,12 @@ class EtisalatyController extends Controller
     {
         $employee = User::findOrFail($employeeId);
 
-        // Get all contact IDs linked to this employee
         $contactIds = EtisalatyEmployeeContact::where('employee_id', $employeeId)
             ->pluck('contact_id');
 
-        // Delete the contacts themselves (cascade deletes the employee_contacts links)
+        // Delete all employee_contact links pointing to these contacts (any employee)
+        EtisalatyEmployeeContact::whereIn('contact_id', $contactIds)->delete();
+
         $deleted = EtisalatyContact::whereIn('id', $contactIds)->delete();
 
         return back()->with('success', "Deleted {$deleted} contacts uploaded by {$employee->name}.");

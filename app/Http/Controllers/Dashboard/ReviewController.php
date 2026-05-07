@@ -30,14 +30,14 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'item_id'       => 'required|integer|exists:items,id',
+            'item_id'       => 'nullable|integer|exists:items,id',
             'reviewer_name' => 'required|string|max:255',
             'rating'        => 'required|integer|min:1|max:5',
             'comment'       => 'nullable|string|max:1000',
         ]);
 
         Review::create([
-            'item_id'          => $request->item_id,
+            'item_id'          => $request->item_id ?: null,
             'user_id'          => null,
             'reviewer_name'    => $request->reviewer_name,
             'rating'           => $request->rating,

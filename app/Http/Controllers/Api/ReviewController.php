@@ -14,28 +14,51 @@ class ReviewController extends Controller
 {
     use ResponseTrait;
 
+    public function all(): JsonResponse
+    {
+        $reviews = Review::with('item:id,title_ar,title_en')
+            ->where('status', 'approved')
+            ->orderByDesc('created_at')
+            ->get(['id', 'item_id', 'reviewer_name', 'rating', 'comment', 'created_at']);
+
+        return $this->responseMessage(200, 'Reviews fetched successfully.', $reviews);
+    }
+
+    public function index(int $itemId): JsonResponse
+    {
+        $reviews = Review::where('item_id', $itemId)
+            ->where('status', 'approved')
+            ->orderByDesc('created_at')
+            ->get(['reviewer_name', 'rating', 'comment', 'created_at']);
+
+        return $this->responseMessage(200, 'Reviews fetched successfully.', $reviews);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'item_id' => 'required|integer|exists:items,id',
-            'rating'  => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|max:1000',
+            'item_id'       => 'nullable|integer|exists:items,id',
+            'rating'        => 'required|integer|min:1|max:5',
+            'comment'       => 'nullable|string|max:1000',
+            'reviewer_name' => 'required_without:user|string|max:255',
         ]);
 
         $user = $request->user();
 
-        $exists = Review::where('user_id', $user->id)
-            ->where('item_id', $request->item_id)
-            ->exists();
+        if ($user && $request->filled('item_id')) {
+            $exists = Review::where('user_id', $user->id)
+                ->where('item_id', $request->item_id)
+                ->exists();
 
-        if ($exists) {
-            return $this->responseMessage(422, 'You have already submitted a review for this trip.');
+            if ($exists) {
+                return $this->responseMessage(422, 'You have already submitted a review for this trip.');
+            }
         }
 
         $review = Review::create([
-            'item_id'          => $request->item_id,
-            'user_id'          => $user->id,
-            'reviewer_name'    => $user->name,
+            'item_id'          => $request->item_id ?: null,
+            'user_id'          => $user?->id,
+            'reviewer_name'    => $user ? $user->name : $request->reviewer_name,
             'rating'           => $request->rating,
             'comment'          => $request->comment,
             'status'           => 'pending',
@@ -50,15 +73,5 @@ class ReviewController extends Controller
         }
 
         return $this->responseMessage(201, 'Review submitted successfully. It will appear after approval.', $review);
-    }
-
-    public function index(int $itemId): JsonResponse
-    {
-        $reviews = Review::where('item_id', $itemId)
-            ->where('status', 'approved')
-            ->orderByDesc('created_at')
-            ->get(['reviewer_name', 'rating', 'comment', 'created_at']);
-
-        return $this->responseMessage(200, 'Reviews fetched successfully.', $reviews);
     }
 }

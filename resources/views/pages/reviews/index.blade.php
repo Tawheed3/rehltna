@@ -165,9 +165,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Trip <span class="text-danger">*</span></label>
-                        <select name="item_id" id="tripSelect" class="form-select" required style="width:100%">
-                            <option value="">-- Select Trip --</option>
+                        <label class="form-label fw-semibold">Trip <span class="text-muted small">(optional — leave empty for general review)</span></label>
+                        <select name="item_id" id="tripSelect" class="form-select" style="width:100%">
+                            <option value="">-- General Review (no specific trip) --</option>
                             @foreach($items as $item)
                                 <option value="{{ $item->id }}">
                                     {{ $item->title_ar ?: $item->title_en }}

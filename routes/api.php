@@ -188,7 +188,9 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
         });
 
         #---------------------------- Reviews ---------------------------#
-        Route::get('/items/{id}/reviews', [ReviewController::class, 'index']); #--------- Get Approved Reviews ---------#
+        Route::get('/reviews', [ReviewController::class, 'all']);               #--------- All Approved Reviews (homepage) ---------#
+        Route::get('/items/{id}/reviews', [ReviewController::class, 'index']);  #--------- Trip Reviews ---------#
+        Route::post('/reviews', [ReviewController::class, 'store']);            #--------- Submit Review (public, item_id optional) ---------#
 
         #---------------------------- Auth Routes ---------------------------#
         Route::middleware('auth:sanctum')->group(function () {
@@ -197,7 +199,6 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
             Route::put('/profile', [AuthController::class, 'updateProfile']); #--------- Update Profile ---------#
             Route::post('/logout', [AuthController::class, 'logout']);  #--------- Logout ---------#
             Route::post('/update-fcm-token', [AuthController::class, 'updateFcmToken']);
-            Route::post('/reviews', [ReviewController::class, 'store']); #--------- Submit Review ---------#
 
             #---------------------------- Residencies Programs ---------------------------#
             Route::get('/residencies-programs', [ResidencyProgramController::class, 'getResidenciesPrograms']); #--------- Get Residencies Programs ---------#

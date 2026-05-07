@@ -114,6 +114,11 @@
                             <td class="text-muted small">{{ $review->created_at->format('d M Y') }}</td>
                             <td>
                                 <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-primary"
+                                        title="Edit"
+                                        onclick="openEditModal({{ $review->id }}, {{ $review->item_id ?? 'null' }}, '{{ addslashes($review->reviewer_name) }}', {{ $review->rating }}, '{{ addslashes($review->comment ?? '') }}', '{{ $review->status }}')">
+                                        <i class="fe fe-edit"></i>
+                                    </button>
                                     @if($review->status !== 'approved')
                                         <form method="POST" action="{{ route('reviews.approve', $review->id) }}">
                                             @csrf @method('PATCH')
@@ -204,6 +209,64 @@
         </form>
     </div>
 </div>
+{{-- Edit Review Modal --}}
+<div class="modal fade" id="editReviewModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="POST" id="editReviewForm">
+            @csrf @method('PUT')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Edit Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Trip <span class="text-muted small">(optional)</span></label>
+                        <select name="item_id" id="editTripSelect" class="form-select" style="width:100%">
+                            <option value="">-- General Review (no specific trip) --</option>
+                            @foreach($items as $item)
+                                <option value="{{ $item->id }}">
+                                    {{ $item->title_ar ?: $item->title_en }}
+                                    @if($item->season) — {{ $item->season }} @endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Reviewer Name <span class="text-danger">*</span></label>
+                        <input type="text" name="reviewer_name" id="editReviewerName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Rating <span class="text-danger">*</span></label>
+                        <select name="rating" id="editRating" class="form-select" required>
+                            <option value="5">★★★★★ (5/5)</option>
+                            <option value="4">★★★★☆ (4/5)</option>
+                            <option value="3">★★★☆☆ (3/5)</option>
+                            <option value="2">★★☆☆☆ (2/5)</option>
+                            <option value="1">★☆☆☆☆ (1/5)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                        <select name="status" id="editStatus" class="form-select" required>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Comment</label>
+                        <textarea name="comment" id="editComment" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -216,6 +279,27 @@
             allowClear: true,
             width: '100%',
         });
+        $('#editTripSelect').select2({
+            dropdownParent: $('#editReviewModal'),
+            placeholder: '-- ابحث عن رحلة --',
+            allowClear: true,
+            width: '100%',
+        });
     });
+
+    function openEditModal(id, itemId, reviewerName, rating, comment, status) {
+        const form = document.getElementById('editReviewForm');
+        form.action = '/admin/reviews/' + id;
+
+        document.getElementById('editReviewerName').value = reviewerName;
+        document.getElementById('editRating').value = rating;
+        document.getElementById('editComment').value = comment;
+        document.getElementById('editStatus').value = status;
+
+        const select = $('#editTripSelect');
+        select.val(itemId || '').trigger('change');
+
+        new bootstrap.Modal(document.getElementById('editReviewModal')).show();
+    }
 </script>
 @endpush

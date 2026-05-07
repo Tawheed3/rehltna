@@ -49,6 +49,27 @@ class ReviewController extends Controller
         return redirect()->route('reviews.index')->with('success', 'Review created successfully.');
     }
 
+    public function update(Request $request, int $id)
+    {
+        $request->validate([
+            'item_id'       => 'nullable|integer|exists:items,id',
+            'reviewer_name' => 'required|string|max:255',
+            'rating'        => 'required|integer|min:1|max:5',
+            'comment'       => 'nullable|string|max:1000',
+            'status'        => 'required|in:pending,approved,rejected',
+        ]);
+
+        Review::findOrFail($id)->update([
+            'item_id'       => $request->item_id ?: null,
+            'reviewer_name' => $request->reviewer_name,
+            'rating'        => $request->rating,
+            'comment'       => $request->comment,
+            'status'        => $request->status,
+        ]);
+
+        return redirect()->route('reviews.index')->with('success', 'Review updated successfully.');
+    }
+
     public function approve(int $id)
     {
         Review::findOrFail($id)->update(['status' => 'approved']);

@@ -255,6 +255,7 @@ Route::group([
         #---------------------------- Reviews ---------------------------#
         Route::get('/reviews', [\App\Http\Controllers\Dashboard\ReviewController::class, 'index'])->name('reviews.index');
         Route::post('/reviews', [\App\Http\Controllers\Dashboard\ReviewController::class, 'store'])->name('reviews.store');
+        Route::put('/reviews/{id}', [\App\Http\Controllers\Dashboard\ReviewController::class, 'update'])->name('reviews.update');
         Route::patch('/reviews/{id}/approve', [\App\Http\Controllers\Dashboard\ReviewController::class, 'approve'])->name('reviews.approve');
         Route::patch('/reviews/{id}/reject', [\App\Http\Controllers\Dashboard\ReviewController::class, 'reject'])->name('reviews.reject');
         Route::delete('/reviews/{id}', [\App\Http\Controllers\Dashboard\ReviewController::class, 'destroy'])->name('reviews.destroy');

@@ -11,7 +11,7 @@ class EtisalatyRole
     {
         $user = $request->etisalaty_user;
 
-        if (!$user || $user->role !== $role) {
+        if (!$user || $user->etisalaty_role !== $role) {
             return response()->json([
                 'code'    => 403,
                 'message' => 'Access denied. This action requires the "' . $role . '" role.',

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@push('styles')
+@section('styles')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
 <style>
 .select2-container .select2-selection--single { height: 38px !important; border: 1px solid #ced4da; display: flex; align-items: center; border-radius: 6px; }
 .select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px !important; }
 .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 36px !important; padding-left: 12px; }
 </style>
-@endpush
+@endsection
 
 @section('content')
 <div class="container-fluid">
@@ -274,7 +274,7 @@
 </div>
 @endsection
 
-@push('scripts')
+@section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -311,4 +311,4 @@
         new bootstrap.Modal(document.getElementById('editReviewModal')).show();
     });
 </script>
-@endpush
+@endsection

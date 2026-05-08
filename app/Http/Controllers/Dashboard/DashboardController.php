@@ -15,6 +15,7 @@ use App\Models\Order;
 use App\Models\Portfolio;
 use App\Models\RegisterUsers;
 use App\Models\ResidencyUser;
+use App\Models\Review;
 use App\Models\Slider;
 use App\Models\Subscribe;
 use App\Models\Testimonial;
@@ -107,6 +108,10 @@ class DashboardController extends Controller
             'coupons' => ['count' => Coupon::query()->count()],
         ];
 
+        $user = auth()->user();
+        $pendingOrders  = $user->hasPermission('manage_orders')  ? Order::query()->where('payment_status', 'reviewing')->count()  : null;
+        $pendingReviews = $user->hasPermission('manage_trips')    ? Review::query()->where('status', 'pending')->count()           : null;
+
         return view('pages.dashboard', [
             'stats' => $stats,
             'latestBlogs' => Blog::query()->where('status', 1)->latest()->take(3)->get(),
@@ -117,6 +122,8 @@ class DashboardController extends Controller
             'offersPerMonth' => $offersPerMonth,
             'itemsPerMonth' => $itemsPerMonth,
             'ordersPerMonth' => $ordersPerMonth,
+            'pendingOrders'  => $pendingOrders,
+            'pendingReviews' => $pendingReviews,
         ]);
     }
 }

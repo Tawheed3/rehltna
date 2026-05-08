@@ -173,6 +173,7 @@
                                 <th>Email</th>
                                 <th class="text-center">Role</th>
                                 <th>Joined Date</th>
+                                <th>Last Login</th>
                                 <th class="text-center px-4">Actions</th>
                             </tr>
                             </thead>
@@ -205,6 +206,14 @@
                                         @endif
                                     </td>
                                     <td class="text-muted small">{{ $employee->created_at ? $employee->created_at->format('d M Y') : 'N/A' }}</td>
+                                    <td class="small">
+                                        @if($employee->last_login_at)
+                                            <span class="text-success fw-semibold">{{ \Carbon\Carbon::parse($employee->last_login_at)->diffForHumans() }}</span>
+                                            <br><span class="text-muted" style="font-size:11px;">{{ \Carbon\Carbon::parse($employee->last_login_at)->format('d M Y, H:i') }}</span>
+                                        @else
+                                            <span class="text-muted">Never</span>
+                                        @endif
+                                    </td>
                                     <td class="text-center px-4">
                                         @if($employee->email === 'admin@rehltna-panel.com')
                                             <span class="admin-badge">

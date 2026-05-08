@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Role;
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
@@ -45,7 +46,9 @@ class EmployeeController extends Controller
             $data['role'] = 'user';
             $data['tenant_id'] = Tenant::query()->first()->id;
 
-            User::create($data);
+            $employee = User::create($data);
+
+            ActivityLogger::log('created', "Employee \"{$employee->name}\" ({$employee->email}) was created.", 'Employee', $employee->id);
 
             return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
         } catch (\Exception $e) {
@@ -88,6 +91,8 @@ class EmployeeController extends Controller
 
             $employee->update($data);
 
+            ActivityLogger::log('updated', "Employee \"{$employee->name}\" ({$employee->email}) was updated.", 'Employee', $employee->id);
+
             return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -101,6 +106,7 @@ class EmployeeController extends Controller
             if ($employee->email === 'admin@rehltna-panel.com') {
                 return redirect()->route('employees.index')->with('error', 'Super Admin account cannot be deleted.');
             }
+            ActivityLogger::log('deleted', "Employee \"{$employee->name}\" ({$employee->email}) was deleted.", 'Employee', $id);
             $employee->delete();
             return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
         } catch (\Exception $e) {

@@ -23,6 +23,7 @@ class LoginController extends Controller
         if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::guard('web')->user();
+            $user->update(['last_login_at' => now()]);
 //            if ($user->role == 'admin') {
 //                return redirect()->route('tenants.index')->with('info', 'Login successfully select database to continue');
 //            } else {

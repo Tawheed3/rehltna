@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Dashboard\{AiController,
+use App\Http\Controllers\Dashboard\{ActivityLogController,
+    AiController,
     ApplyJobController,
     BlogController,
     CareerController,
@@ -283,6 +284,7 @@ Route::group([
         Route::middleware('permission:manage_staff')->group(function () {
             Route::resource('employees', EmployeeController::class);
             Route::resource('roles', RoleController::class);
+            Route::get('activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
         });
 
         #--- Settings ---#

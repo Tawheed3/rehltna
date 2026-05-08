@@ -488,6 +488,52 @@
             @endforeach
         </div>
 
+        {{-- Pending Action Items --}}
+        @if($pendingOrders || $pendingReviews)
+            <div class="row g-3 mb-4">
+                @if(!is_null($pendingOrders) && $pendingOrders > 0)
+                    <div class="col-md-6">
+                        <a href="{{ route('orders.index', ['payment_status' => 'reviewing']) }}" class="text-decoration-none">
+                            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #fff3cd, #ffe8a1); border-left: 4px solid #f59e0b !important;">
+                                <div class="card-body d-flex align-items-center gap-3">
+                                    <div style="width:52px;height:52px;border-radius:14px;background:#f59e0b;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                        <i class="fas fa-clock text-white fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark" style="font-size:1.5rem;">{{ $pendingOrders }}</div>
+                                        <div class="text-muted fw-semibold small">Pending Orders — awaiting approval</div>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <i class="fas fa-arrow-right text-muted"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endif
+                @if(!is_null($pendingReviews) && $pendingReviews > 0)
+                    <div class="col-md-6">
+                        <a href="{{ route('reviews.index', ['status' => 'pending']) }}" class="text-decoration-none">
+                            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd); border-left: 4px solid #3b82f6 !important;">
+                                <div class="card-body d-flex align-items-center gap-3">
+                                    <div style="width:52px;height:52px;border-radius:14px;background:#3b82f6;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                        <i class="fas fa-star-half-alt text-white fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark" style="font-size:1.5rem;">{{ $pendingReviews }}</div>
+                                        <div class="text-muted fw-semibold small">Pending Reviews — awaiting moderation</div>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <i class="fas fa-arrow-right text-muted"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endif
+            </div>
+        @endif
+
         @if(in_array('blogs', $tenantOptions) || in_array('offers', $tenantOptions) || in_array('items', $tenantOptions) || in_array('orders', $tenantOptions))
             <!-- Monthly Activity Chart -->
             <div class="card card-hover shadow-sm border-0 chart-container">

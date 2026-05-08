@@ -8,6 +8,7 @@ use App\Mail\OrderRejectedMail;
 use App\Models\Order;
 use App\Models\PointLog;
 use App\Models\ResidencyUser;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -201,6 +202,9 @@ class OrderController extends Controller
                 }
             }
 
+            $statusLabel = $request->get('payment_status') === 'paid' ? 'approved' : 'rejected';
+            ActivityLogger::log($statusLabel, "Order #{$order->id} was {$statusLabel}.", 'Order', $order->id);
+
             return redirect()->back()->with('success', 'Order status updated successfully.');
 
         } catch (\Exception $e) {
@@ -216,6 +220,8 @@ class OrderController extends Controller
             $order = Order::query()->findOrFail($id);
             deleteFiles([$order->payment_proof]);
             $order->delete();
+
+            ActivityLogger::log('deleted', "Order #{$id} was deleted.", 'Order', $id);
 
             return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
         } catch (\Exception $e) {

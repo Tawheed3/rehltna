@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\Review;
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -72,19 +73,25 @@ class ReviewController extends Controller
 
     public function approve(int $id)
     {
-        Review::findOrFail($id)->update(['status' => 'approved']);
+        $review = Review::findOrFail($id);
+        $review->update(['status' => 'approved']);
+        ActivityLogger::log('approved', "Review by \"{$review->reviewer_name}\" was approved.", 'Review', $id);
         return back()->with('success', 'Review approved.');
     }
 
     public function reject(int $id)
     {
-        Review::findOrFail($id)->update(['status' => 'rejected']);
+        $review = Review::findOrFail($id);
+        $review->update(['status' => 'rejected']);
+        ActivityLogger::log('rejected', "Review by \"{$review->reviewer_name}\" was rejected.", 'Review', $id);
         return back()->with('success', 'Review rejected.');
     }
 
     public function destroy(int $id)
     {
-        Review::findOrFail($id)->delete();
+        $review = Review::findOrFail($id);
+        ActivityLogger::log('deleted', "Review by \"{$review->reviewer_name}\" was deleted.", 'Review', $id);
+        $review->delete();
         return back()->with('success', 'Review deleted.');
     }
 }

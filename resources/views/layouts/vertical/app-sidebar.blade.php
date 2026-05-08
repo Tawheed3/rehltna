@@ -134,6 +134,7 @@
                     @if(in_array('employees', $tenantOptions))
                         <li><a class="slide-item" href="{{ route('etisalaty.index') }}"><span>Etisalaty Contacts</span></a></li>
                     @endif
+                    <li><a class="slide-item" href="{{ route('activity-log.index') }}"><span>Activity Log</span></a></li>
                 </ul>
             </li>
         @endif

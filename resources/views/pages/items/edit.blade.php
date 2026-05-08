@@ -2,6 +2,7 @@
 
 @section('styles')
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
     <style>
         /* Wizard & Layout Styles */
         .wizard-steps {
@@ -1119,8 +1120,44 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-hijri@2.1.2/moment-hijri.min.js"></script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap-hijri-datepicker@1.0.2/dist/js/bootstrap-hijri-datetimepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-hijri-datepicker@1.0.2/dist/js/bootstrap-hijri-datetimepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        const ITINERARY_CITIES = [
+            @foreach($cities as $city)
+            { value: "{{ $city->id }}", text: "{{ addslashes(transDB($city, 'title')) }}" },
+            @endforeach
+        ];
+
+        function initCitySelect(el) {
+            if (el.tomselect) return;
+            const preSelected = el.value;
+            new TomSelect(el, {
+                valueField: 'value',
+                labelField: 'text',
+                searchField: 'text',
+                options: ITINERARY_CITIES,
+                items: preSelected ? [preSelected] : [],
+                create: function (input, callback) {
+                    axios.post('{{ route("cities.quick-create") }}', {
+                        name: input,
+                        _token: '{{ csrf_token() }}'
+                    }).then(function (r) {
+                        const opt = { value: String(r.data.id), text: r.data.name };
+                        ITINERARY_CITIES.push(opt);
+                        callback(opt);
+                    }).catch(function () { callback(); });
+                },
+                placeholder: 'Search or type to add...',
+                persist: false,
+                createOnBlur: false,
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('select[name="itinerary_city_id[]"]').forEach(initCitySelect);
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $(".hijri-date-input").hijriDatePicker({
@@ -1422,7 +1459,9 @@
                         </div>
                     </div>
                 `;
-                document.getElementById('itinerary-repeater').insertAdjacentHTML('beforeend', rowHtml);
+                const repeater = document.getElementById('itinerary-repeater');
+                repeater.insertAdjacentHTML('beforeend', rowHtml);
+                initCitySelect(repeater.lastElementChild.querySelector('select[name="itinerary_city_id[]"]'));
             }
 
             window.addPlaceRow = function (btn) {

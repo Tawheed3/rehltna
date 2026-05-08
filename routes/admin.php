@@ -187,6 +187,7 @@ Route::group([
         Route::resource('states', StateController::class); #------------ states => get -> create -> update -> delete -------------#
         Route::post('states/change-status/{id}', [StateController::class, 'stateChangeStatus'])->name('states.change.status'); #-------- states Change Status ---------#
 
+        Route::post('cities/quick-create', [CityController::class, 'quickCreate'])->name('cities.quick-create'); #-------- Quick-create city from itinerary picker ---------#
         Route::resource('cities', CityController::class); #------------ cities => get -> create -> update -> delete -------------#
         Route::post('cities/change-status/{id}', [CityController::class, 'cityChangeStatus'])->name('cities.change.status'); #-------- cities Change Status ---------#
 

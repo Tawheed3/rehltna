@@ -79,6 +79,19 @@ class CityController extends Controller
         }
     }
 
+    public function quickCreate(Request $request): JsonResponse
+    {
+        $request->validate(['name' => 'required|string|max:255']);
+
+        $city = City::create([
+            'title_en' => $request->name,
+            'title_ar' => $request->name,
+            'status'   => true,
+        ]);
+
+        return response()->json(['id' => $city->id, 'name' => $request->name]);
+    }
+
     public function cityChangeStatus($id): JsonResponse
     {
         $city = City::query()->findOrFail($id);

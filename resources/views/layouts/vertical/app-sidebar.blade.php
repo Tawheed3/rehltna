@@ -139,7 +139,8 @@
         @endif
 
         {{-- Customers --}}
-        @if((in_array('residency_users', $tenantOptions) || in_array('register_users', $tenantOptions) || in_array('contact', $tenantOptions) || in_array('subscribes', $tenantOptions) || in_array('packages', $tenantOptions)) && auth()->user()->hasPermission('manage_customers'))
+        @php $showCustomers = auth()->user()->hasAnyPermission(['manage_customers','manage_contact_us','manage_subscribers']); @endphp
+        @if($showCustomers && (in_array('residency_users', $tenantOptions) || in_array('register_users', $tenantOptions) || in_array('contact', $tenantOptions) || in_array('subscribes', $tenantOptions) || in_array('packages', $tenantOptions)))
             <li class="slide">
                 <a class="side-menu__item d-flex align-items-center justify-content-between" data-bs-toggle="slide"
                    href="#">
@@ -150,27 +151,21 @@
                     <i class="angle fe fe-chevron-down"></i>
                 </a>
                 <ul class="slide-menu">
-                    @if(in_array('packages', $tenantOptions))
-                        <li><a class="slide-item" href="{{ route('packages.index') }}"><span>Packages</span></a>
-                        </li>
+                    @if(in_array('packages', $tenantOptions) && auth()->user()->hasPermission('manage_customers'))
+                        <li><a class="slide-item" href="{{ route('packages.index') }}"><span>Packages</span></a></li>
                     @endif
-                    @if(in_array('residency_users', $tenantOptions))
-                        <li><a class="slide-item" href="{{ route('residency-users.index') }}"><span>Users</span></a>
-                        </li>
-                        <li><a class="slide-item" href="{{ route('point-logs.index') }}"><span>Points Logs</span></a>
-                        </li>
+                    @if(in_array('residency_users', $tenantOptions) && auth()->user()->hasPermission('manage_customers'))
+                        <li><a class="slide-item" href="{{ route('residency-users.index') }}"><span>Users</span></a></li>
+                        <li><a class="slide-item" href="{{ route('point-logs.index') }}"><span>Points Logs</span></a></li>
                     @endif
-                    @if(in_array('register_users', $tenantOptions))
-                        <li><a class="slide-item" href="{{ route('register-users.index') }}"><span>Register Users</span></a>
-                        </li>
+                    @if(in_array('register_users', $tenantOptions) && auth()->user()->hasPermission('manage_customers'))
+                        <li><a class="slide-item" href="{{ route('register-users.index') }}"><span>Register Users</span></a></li>
                     @endif
-                    @if(in_array('contact', $tenantOptions))
-                        <li><a class="slide-item" href="{{ route('contact-us.index') }}"><span>Contact Us</span></a>
-                        </li>
+                    @if(in_array('contact', $tenantOptions) && auth()->user()->hasPermission('manage_contact_us'))
+                        <li><a class="slide-item" href="{{ route('contact-us.index') }}"><span>Contact Us</span></a></li>
                     @endif
-                    @if(in_array('subscribes', $tenantOptions))
-                        <li><a class="slide-item" href="{{ route('subscribes.index') }}"><span>Subscribes</span></a>
-                        </li>
+                    @if(in_array('subscribes', $tenantOptions) && auth()->user()->hasPermission('manage_subscribers'))
+                        <li><a class="slide-item" href="{{ route('subscribes.index') }}"><span>Subscribes</span></a></li>
                     @endif
                 </ul>
             </li>
@@ -203,7 +198,8 @@
         @endif
 
         {{-- Payments --}}
-        @if((in_array('payment_methods', $tenantOptions) || in_array('coupons', $tenantOptions) || in_array('orders', $tenantOptions) || in_array('payment_links', $tenantOptions)) && auth()->user()->hasPermission('manage_payments'))
+        @php $showPayments = auth()->user()->hasAnyPermission(['manage_orders','manage_coupons','manage_payment_methods']); @endphp
+        @if($showPayments && (in_array('payment_methods', $tenantOptions) || in_array('coupons', $tenantOptions) || in_array('orders', $tenantOptions) || in_array('payment_links', $tenantOptions)))
             <li class="slide">
                 <a class="side-menu__item d-flex align-items-center justify-content-between" data-bs-toggle="slide"
                    href="#">
@@ -214,14 +210,14 @@
                     <i class="angle fe fe-chevron-down"></i>
                 </a>
                 <ul class="slide-menu">
-                    @if(in_array('payment_methods', $tenantOptions))
-                        <li><a class="slide-item"
-                               href="{{ route('payment-methods.index') }}"><span>Payment Methods</span></a></li>
+                    @if(in_array('payment_methods', $tenantOptions) && auth()->user()->hasPermission('manage_payment_methods'))
+                        <li><a class="slide-item" href="{{ route('payment-methods.index') }}"><span>Payment Methods</span></a></li>
+                        <li><a class="slide-item" href="{{ route('payment-links.index') }}"><span>Payment Links</span></a></li>
                     @endif
-                    @if(in_array('coupons', $tenantOptions))
+                    @if(in_array('coupons', $tenantOptions) && auth()->user()->hasPermission('manage_coupons'))
                         <li><a class="slide-item" href="{{ route('coupons.index') }}"><span>Coupons</span></a></li>
                     @endif
-                    @if(in_array('orders', $tenantOptions))
+                    @if(in_array('orders', $tenantOptions) && auth()->user()->hasPermission('manage_orders'))
                         @php $reviewingCount = \App\Models\Order::where('payment_status','reviewing')->count(); @endphp
                         <li>
                             <a class="slide-item" href="{{ route('orders.index') }}">
@@ -234,16 +230,13 @@
                             </a>
                         </li>
                     @endif
-                    @if(in_array('payment_links', $tenantOptions))
-                        <li><a class="slide-item"
-                               href="{{ route('payment-links.index') }}"><span>Payment Links</span></a></li>
-                    @endif
                 </ul>
             </li>
         @endif
 
         {{-- Website --}}
-        @if((in_array('sliders', $tenantOptions) || in_array('members', $tenantOptions) || in_array('testimonials', $tenantOptions) || in_array('custom_pages', $tenantOptions)) && auth()->user()->hasPermission('manage_website'))
+        @php $showWebsite = auth()->user()->hasAnyPermission(['manage_sliders','manage_testimonials','manage_custom_pages']); @endphp
+        @if($showWebsite && (in_array('sliders', $tenantOptions) || in_array('members', $tenantOptions) || in_array('testimonials', $tenantOptions) || in_array('custom_pages', $tenantOptions)))
             <li class="slide">
                 <a class="side-menu__item d-flex align-items-center justify-content-between" data-bs-toggle="slide"
                    href="#">
@@ -254,19 +247,17 @@
                     <i class="angle fe fe-chevron-down"></i>
                 </a>
                 <ul class="slide-menu">
-                    @if(in_array('sliders', $tenantOptions))
+                    @if(in_array('sliders', $tenantOptions) && auth()->user()->hasPermission('manage_sliders'))
                         <li><a class="slide-item" href="{{ route('sliders.index') }}"><span>Sliders</span></a></li>
                     @endif
-                    @if(in_array('members', $tenantOptions))
+                    @if(in_array('members', $tenantOptions) && auth()->user()->hasPermission('manage_sliders'))
                         <li><a class="slide-item" href="{{ route('members.index') }}"><span>Members</span></a></li>
                     @endif
-                    @if(in_array('testimonials', $tenantOptions))
-                        <li><a class="slide-item" href="{{ route('testimonials.index') }}"><span>Testimonials</span></a>
-                        </li>
+                    @if(in_array('testimonials', $tenantOptions) && auth()->user()->hasPermission('manage_testimonials'))
+                        <li><a class="slide-item" href="{{ route('testimonials.index') }}"><span>Testimonials</span></a></li>
                     @endif
-                    @if(in_array('custom_pages', $tenantOptions))
-                        <li><a class="slide-item" href="{{ route('custom-pages.index') }}"><span>Custom Pages</span></a>
-                        </li>
+                    @if(in_array('custom_pages', $tenantOptions) && auth()->user()->hasPermission('manage_custom_pages'))
+                        <li><a class="slide-item" href="{{ route('custom-pages.index') }}"><span>Custom Pages</span></a></li>
                     @endif
                 </ul>
             </li>

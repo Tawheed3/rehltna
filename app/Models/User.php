@@ -57,8 +57,16 @@ class User extends Authenticatable
 
     public function hasPermission($permission): bool
     {
-//        if ($this->role === 'admin') return true;
+        if ($this->role === 'admin') return true;
         if (!$this->role_id || !$this->systemRole) return false;
         return in_array($permission, $this->systemRole->permissions ?? []);
+    }
+
+    public function hasAnyPermission(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) return true;
+        }
+        return false;
     }
 }

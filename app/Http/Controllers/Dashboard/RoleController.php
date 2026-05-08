@@ -11,16 +11,42 @@ use Illuminate\View\View;
 
 class RoleController extends Controller
 {
-    private array $permissions_list = [
-        'manage_blogs' => 'Blogs System',
-        'manage_trips' => 'Trips System',
-        'manage_locations' => 'Location System',
-        'manage_customers' => 'Customers',
-        'manage_notifications' => 'Notifications',
-        'manage_payments' => 'Payments',
-        'manage_website' => 'Website Content',
-        'manage_settings' => 'Settings',
-        'manage_staff' => 'Staff & Roles',
+    public array $permissions_list = [
+        'Content' => [
+            'manage_blogs'        => 'Blogs',
+            'manage_offers'       => 'Offers',
+            'manage_sliders'      => 'Sliders & Members',
+            'manage_custom_pages' => 'Custom Pages',
+        ],
+        'Trips' => [
+            'manage_trips'        => 'Trips & Trip Types',
+            'manage_testimonials' => 'Reviews & Testimonials',
+        ],
+        'Sales' => [
+            'manage_orders'          => 'Orders',
+            'manage_coupons'         => 'Coupons',
+            'manage_payment_methods' => 'Payment Methods',
+        ],
+        'Customers' => [
+            'manage_customers'   => 'Users & Packages',
+            'manage_contact_us'  => 'Contact Messages',
+            'manage_subscribers' => 'Subscribers',
+            'manage_leads'       => 'Leads',
+        ],
+        'Locations' => [
+            'manage_locations' => 'Countries, States & Cities',
+            'manage_events'    => 'Events & Tourist Attractions',
+            'manage_news'      => 'News',
+        ],
+        'Operations' => [
+            'manage_careers'       => 'Careers & Job Applications',
+            'manage_notifications' => 'Notifications',
+        ],
+        'System' => [
+            'manage_staff'     => 'Staff & Roles',
+            'manage_settings'  => 'Settings & Integrations',
+            'manage_etisalaty' => 'Etisalaty Contacts',
+        ],
     ];
 
     public function index(): View
@@ -37,6 +63,7 @@ class RoleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $validKeys = collect($this->permissions_list)->flatten()->keys()->toArray();
         $request->validate([
             'name' => [
                 'required',
@@ -44,7 +71,8 @@ class RoleController extends Controller
                 'max:255',
                 Rule::unique(Role::class, 'name')
             ],
-            'permissions' => 'nullable|array',
+            'permissions'   => 'nullable|array',
+            'permissions.*' => ['string', Rule::in($validKeys)],
         ]);
 
         Role::query()->create([
@@ -71,6 +99,7 @@ class RoleController extends Controller
         if (strtolower($role->name) === 'admin') {
             return redirect()->route('roles.index')->with('error', 'The Admin role is a system role and cannot be edited.');
         }
+        $validKeys = collect($this->permissions_list)->flatten()->keys()->toArray();
         $request->validate([
             'name' => [
                 'required',
@@ -78,7 +107,8 @@ class RoleController extends Controller
                 'max:255',
                 Rule::unique(Role::class, 'name')->ignore($role->id)
             ],
-            'permissions' => 'nullable|array',
+            'permissions'   => 'nullable|array',
+            'permissions.*' => ['string', Rule::in($validKeys)],
         ]);
 
         $role->update([

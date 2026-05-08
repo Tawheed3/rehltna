@@ -30,6 +30,9 @@ return Application::configure(basePath: dirname(__DIR__))
             IdentifyTenant::class,
             Authenticate::class,
         ]);
+        $middleware->alias([
+            'permission' => \App\Http\Middleware\CheckPermission::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (ValidationException $e, $request) {

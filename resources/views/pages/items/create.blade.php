@@ -1047,14 +1047,13 @@
                 options: ITINERARY_CITIES,
                 items: preSelected ? [preSelected] : [],
                 create: function (input, callback) {
-                    axios.post('{{ route("cities.quick-create") }}', {
-                        name: input,
-                        _token: '{{ csrf_token() }}'
-                    }).then(function (r) {
-                        const opt = { value: String(r.data.id), text: r.data.name };
-                        ITINERARY_CITIES.push(opt);
-                        callback(opt);
-                    }).catch(function () { callback(); });
+                    $.post('{{ route("cities.quick-create") }}', { name: input, _token: '{{ csrf_token() }}' })
+                        .done(function (data) {
+                            const opt = { value: String(data.id), text: data.name };
+                            ITINERARY_CITIES.push(opt);
+                            callback(opt);
+                        })
+                        .fail(function () { callback(); });
                 },
                 placeholder: 'Search or type to add...',
                 persist: false,

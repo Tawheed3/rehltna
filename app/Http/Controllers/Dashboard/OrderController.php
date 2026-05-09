@@ -129,6 +129,7 @@ class OrderController extends Controller
                         if (!$alreadyDeducted && $order->used_points > 0) {
                             $balanceBefore = (int) $user->available_points;
                             $user->decrement('available_points', $order->used_points);
+                            $user->increment('used_points', $order->used_points);
                             PointLog::create([
                                 'residency_user_id' => $user->id,
                                 'type'              => 'trip_used',
@@ -182,6 +183,7 @@ class OrderController extends Controller
                     if ($wasDeducted) {
                         $balanceBefore = (int) $user->available_points;
                         $user->increment('available_points', $order->used_points);
+                        $user->decrement('used_points', $order->used_points);
                         PointLog::create([
                             'residency_user_id' => $user->id,
                             'type'              => 'employee_adjusted',

@@ -55,9 +55,7 @@ class EtisalatyController extends Controller
     public function uploadContacts(Request $request): JsonResponse
     {
         $request->validate([
-            'contacts'                => 'required|array|min:1',
-            'contacts.*.phone_number' => 'required|string|max:20',
-            'contacts.*.contact_name' => 'required|string|max:255',
+            'contacts' => 'required|array|min:1',
         ]);
 
         $user  = $request->etisalaty_user;
@@ -68,8 +66,14 @@ class EtisalatyController extends Controller
         $alreadyExists        = 0;
         $duplicatesByEmployee = 0;
         $skippedNonSaudi      = 0;
+        $skippedInvalid       = 0;
 
         foreach ($request->contacts as $item) {
+            if (empty($item['phone_number'])) {
+                $skippedInvalid++;
+                continue;
+            }
+
             $phone = $this->normalizePhone(trim($item['phone_number']));
 
             if (!$this->isSaudiNumber($phone)) {
@@ -77,7 +81,8 @@ class EtisalatyController extends Controller
                 continue;
             }
 
-            $name = trim($item['contact_name']) . ' (' . $user->name . ')';
+            $name = trim($item['contact_name'] ?? '') ?: 'Unknown';
+            $name = $name . ' (' . $user->name . ')';
 
             $contact = EtisalatyContact::where('phone_number', $phone)->first();
 
@@ -115,6 +120,7 @@ class EtisalatyController extends Controller
             'already_exists'         => $alreadyExists,
             'duplicates_by_employee' => $duplicatesByEmployee,
             'skipped_non_saudi'      => $skippedNonSaudi,
+            'skipped_invalid'        => $skippedInvalid,
         ]);
     }
 

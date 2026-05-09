@@ -84,7 +84,6 @@ class AuthController extends Controller
             return $this->responseMessage(400, 'The provided credentials are incorrect.');
         }
 
-        $user->tokens()->delete();
         $token = $user->createToken('api-token')->plainTextToken;
 
         $data = $user->load('package')->toArray();

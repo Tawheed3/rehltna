@@ -237,6 +237,23 @@ class OrderController extends Controller
                 $order->items()->create($item);
             }
 
+            // Deduct points immediately at checkout to prevent double-spending
+            if ($calculation['points_used'] > 0 && $user) {
+                $balanceBefore = (int) $user->available_points;
+                $user->decrement('available_points', $calculation['points_used']);
+                $user->increment('used_points', $calculation['points_used']);
+                $tripName = collect($calculation['order_items_data'])->first()['item_id'] ?? null;
+                PointLog::create([
+                    'residency_user_id' => $user->id,
+                    'type'              => 'trip_used',
+                    'points'            => -(int) $calculation['points_used'],
+                    'balance_before'    => $balanceBefore,
+                    'balance_after'     => $balanceBefore - (int) $calculation['points_used'],
+                    'order_id'          => $order->id,
+                    'trip_name'         => 'Order #' . $order->id,
+                ]);
+            }
+
             DB::commit();
 
             $paymentBaseUrl = null;
@@ -682,6 +699,7 @@ class OrderController extends Controller
         $user = $order->user;
         $balanceBefore = (int) $user->available_points;
         $user->increment('available_points', $order->used_points);
+        $user->decrement('used_points', $order->used_points);
 
         PointLog::create([
             'residency_user_id' => $user->id,
@@ -731,21 +749,6 @@ class OrderController extends Controller
                 }
 
                 $tripName = optional($order->items->first()?->item)->title_en ?? 'Trip #' . $order->id;
-
-                // Deduct used points now that payment is confirmed (not at checkout)
-                if ($order->used_points > 0) {
-                    $balanceBefore = (int) $user->available_points;
-                    $user->decrement('available_points', $order->used_points);
-                    PointLog::create([
-                        'residency_user_id' => $user->id,
-                        'type'              => 'trip_used',
-                        'points'            => -(int) $order->used_points,
-                        'balance_before'    => $balanceBefore,
-                        'balance_after'     => $balanceBefore - (int) $order->used_points,
-                        'order_id'          => $order->id,
-                        'trip_name'         => $tripName,
-                    ]);
-                }
 
                 // 1 SAR spent = 1 point earned (based on final amount paid after all discounts)
                 $earnedPoints = (int) $order->total_amount;

@@ -298,6 +298,37 @@
                 </div>
             </div>
 
+            {{-- Points Used --}}
+            @if($order->used_points > 0)
+                @php $pointsValueSAR = round($order->used_points / 50, 2); @endphp
+                <div class="card custom-card" style="background-color: #faf5ff; border: 1px solid #9333ea30;">
+                    <div class="card-header"><h6 class="card-title mb-0" style="color:#9333ea;">Points Redeemed</h6></div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted fw-semibold small">Points Used</span>
+                            <span class="fw-bold" style="color:#9333ea;">
+                                <i class="fas fa-coins me-1"></i> {{ number_format($order->used_points) }} pts
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted fw-semibold small">Equivalent Value</span>
+                            <span class="fw-bold text-success">{{ number_format($pointsValueSAR, 2) }} SAR</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted fw-semibold small">Conversion Rate</span>
+                            <span class="text-muted small fw-semibold">50 pts = 1 SAR</span>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="card custom-card" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                    <div class="card-body py-3 d-flex align-items-center gap-2">
+                        <i class="fas fa-coins text-muted"></i>
+                        <span class="text-muted fw-semibold small">No points were used in this order</span>
+                    </div>
+                </div>
+            @endif
+
             @if($order->coupon)
                 <div class="card custom-card" style="background-color: #f0fdf4; border: 1px solid #10b98130;">
                     <div class="card-body py-3 text-center">

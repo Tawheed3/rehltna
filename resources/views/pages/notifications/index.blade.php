@@ -175,7 +175,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-end mt-5">
+                        <hr class="my-4 border-light">
+
+                        <div class="mb-4">
+                            <label class="fw-bold mb-2">
+                                <i class="las la-clock me-1 text-primary"></i>
+                                Schedule (Optional)
+                                <span class="text-muted fw-normal small ms-2">— Leave empty to send immediately</span>
+                            </label>
+                            <input type="datetime-local" name="scheduled_at"
+                                   class="form-control form-control-deluxe"
+                                   min="{{ now('Asia/Riyadh')->addMinutes(5)->format('Y-m-d\TH:i') }}">
+                            <div class="form-text text-muted mt-1">
+                                <i class="las la-map-marker me-1"></i> Saudi Arabia Time (UTC+3)
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-4">
                             <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-bold shadow-sm">
                                 <i class="las la-paper-plane me-2"></i> Send Notification
                             </button>

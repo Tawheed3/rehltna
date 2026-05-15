@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../../core/constants/app_config.dart';
 
 class BaseProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -10,9 +12,9 @@ class BaseProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  static const String baseUrl = "https://admin.rehltna.com/api/v1";
-  static const String XApiKey = "P4OIp8prRKBeO0kogfGViTNzmAT8UnzL";
-  static const int XTenantID = 1;
+  static String get baseUrl => AppConfig.baseUrl;
+  static String get XApiKey => AppConfig.apiKey;
+  static int get XTenantID => AppConfig.tenantId;
 
   // ─── Logcat tag — filter by "Response-output" in Android Studio logcat ───
   static const String logTag = 'Response-output';
@@ -58,20 +60,25 @@ class BaseProvider extends ChangeNotifier {
   };
 
   void setError(String message) {
+    if (_errorMessage == message) return;
     _errorMessage = message;
     notifyListeners();
   }
 
   void startLoading() {
+    if (_isLoading) return; // already loading — don't trigger a redundant rebuild
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
   }
 
   void stopLoading() {
+    if (!_isLoading) return; // already stopped — don't trigger a redundant rebuild
     _isLoading = false;
     notifyListeners();
   }
+
+  static const Duration _requestTimeout = Duration(seconds: 15);
 
   Future<Map<String, dynamic>?> getRequest(String endpoint,
       {String? token}) async {
@@ -82,7 +89,10 @@ class BaseProvider extends ChangeNotifier {
       final response = await http.get(
         Uri.parse(url),
         headers: token != null ? _authHeaders(token) : _publicHeaders,
-      );
+      ).timeout(_requestTimeout, onTimeout: () {
+        logError('GET', url, 'Request timed out after ${_requestTimeout.inSeconds}s');
+        throw TimeoutException('Request timed out', _requestTimeout);
+      });
 
       logResponse('GET', url, response.statusCode, response.body);
 
@@ -96,6 +106,9 @@ class BaseProvider extends ChangeNotifier {
           return null;
         }
       }
+    } on TimeoutException {
+      setError('انتهت مهلة الاتصال، يرجى المحاولة مجدداً');
+      return null;
     } catch (e) {
       logError('GET', url, e);
       setError('حدث خطأ: $e');
@@ -204,7 +217,10 @@ class BaseProvider extends ChangeNotifier {
       final response = await http.get(
         uri,
         headers: token != null ? _authHeaders(token) : _publicHeaders,
-      );
+      ).timeout(_requestTimeout, onTimeout: () {
+        logError('GET-QUERY', uri.toString(), 'Request timed out after ${_requestTimeout.inSeconds}s');
+        throw TimeoutException('Request timed out', _requestTimeout);
+      });
 
       logResponse('GET-QUERY', uri.toString(), response.statusCode, response.body);
 
@@ -218,6 +234,9 @@ class BaseProvider extends ChangeNotifier {
           return null;
         }
       }
+    } on TimeoutException {
+      setError('انتهت مهلة الاتصال، يرجى المحاولة مجدداً');
+      return null;
     } catch (e) {
       logError('GET-QUERY', uri.toString(), e);
       setError('حدث خطأ: $e');

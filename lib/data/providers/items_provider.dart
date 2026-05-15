@@ -2,9 +2,14 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import '../models/item_model.dart';
 import '../models/subcategory_item.dart';
+import '../services/cache_service.dart';
 import 'base_provider.dart';
 
 class ItemsProvider extends BaseProvider {
+  static const String _cacheKeyItems = 'items';
+  static const String _cacheKeyTypes = 'item-types';
+  static const Duration _ttl = Duration(hours: 2);
+
   List<ItemModel> _items = [];
   List<SubcategoryItem> _itemTypes = [];
   bool _hasMoreData = true;
@@ -72,47 +77,111 @@ class ItemsProvider extends BaseProvider {
   }
 
   Future<void> loadAllItemsIntoCategories() async {
+    final cache = CacheService();
+    final cachedItems = cache.getAny(_cacheKeyItems);
+    final cachedTypes = cache.getAny(_cacheKeyTypes);
+
+    if (cachedItems != null && cachedTypes != null) {
+      // Serve cache immediately — no shimmer
+      _applyItemsData(cachedItems);
+      _applyItemTypesData(cachedTypes);
+      _distribute();
+      _hasLoadedOnce = true;
+      notifyListeners();
+
+      final isFresh = !cache.isExpired(_cacheKeyItems, ttl: _ttl) &&
+          !cache.isExpired(_cacheKeyTypes, ttl: _ttl);
+      if (isFresh) return; // Fresh — skip network
+
+      // Stale — refresh silently in background
+      _silentRefreshAll();
+      return;
+    }
+
+    // No cache — show shimmer and fetch
     startLoading();
     try {
-      await fetchItems();
-      await fetchItemTypes();
-
-      for (var type in _itemTypes) {
-        type.items.clear();
-        type.items.addAll(_items
-            .where((item) => item.itemTypeId == type.id && _isTripActive(item)));
-
-        for (var child in type.children) {
-          child.items.clear();
-          child.items.addAll(_items
-              .where((item) => item.itemTypeId == child.id && _isTripActive(item)));
-        }
-      }
-
-      _updateAllRecursiveCounts();
-      developer.log('Distributed ${_items.length} items into categories', name: BaseProvider.logTag);
+      await _fetchAndCacheItems();
+      await _fetchAndCacheTypes();
+      _distribute();
+      _hasLoadedOnce = true;
     } catch (e) {
-      developer.log('Error in loadAllItemsIntoCategories: $e', name: BaseProvider.logTag, level: 1000);
+      developer.log('Error in loadAllItemsIntoCategories: $e',
+          name: BaseProvider.logTag, level: 1000);
     } finally {
       stopLoading();
     }
+  }
+
+  Future<void> _fetchAndCacheItems() async {
+    final data = await getRequest('items');
+    if (data != null && data['code'] == 200 && data['data'] != null) {
+      _applyItemsData(data);
+      CacheService().set(_cacheKeyItems, data);
+    }
+  }
+
+  Future<void> _fetchAndCacheTypes() async {
+    final data = await getRequest('item-types');
+    if (data != null && data['code'] == 200 && data['data'] != null) {
+      _applyItemTypesData(data);
+      CacheService().set(_cacheKeyTypes, data);
+    }
+  }
+
+  void _applyItemsData(Map<String, dynamic> data) {
+    final itemsData = data['data']['items']['data'] as List;
+    _items = itemsData.map((item) => ItemModel.fromJson(item)).toList();
+    _hasMoreData = _items.length >= 20;
+    _currentPage = 1;
+    developer.log('Items applied: ${_items.length}', name: BaseProvider.logTag);
+  }
+
+  void _applyItemTypesData(Map<String, dynamic> data) {
+    final typesData = data['data']['data'] as List;
+    _itemTypes = typesData.map((item) => SubcategoryItem.fromJson(item)).toList();
+    _filterExpiredTripsFromSubcategories();
+    _updateAllRecursiveCounts();
+    developer.log('Item types applied: ${_itemTypes.length}', name: BaseProvider.logTag);
+  }
+
+  void _distribute() {
+    for (var type in _itemTypes) {
+      type.items.clear();
+      type.items.addAll(
+          _items.where((i) => i.itemTypeId == type.id && _isTripActive(i)));
+      for (var child in type.children) {
+        child.items.clear();
+        child.items.addAll(
+            _items.where((i) => i.itemTypeId == child.id && _isTripActive(i)));
+      }
+    }
+    _updateAllRecursiveCounts();
+    developer.log('Distributed ${_items.length} items into categories',
+        name: BaseProvider.logTag);
+  }
+
+  void _silentRefreshAll() {
+    Future.microtask(() async {
+      await _fetchAndCacheItems();
+      await _fetchAndCacheTypes();
+      _distribute();
+      notifyListeners();
+    });
   }
 
   Future<List<ItemModel>> fetchItemsByCategory(int categoryId) async {
     startLoading();
     final List<ItemModel> result = [];
     try {
-      final data = await getRequest('items');
+      final data = await getRequest('item-type-items/$categoryId');
       if (data != null && data['code'] == 200 && data['data'] != null) {
         final itemsData = data['data']['items']['data'] as List;
-        final allFetchedItems =
-        itemsData.map((item) => ItemModel.fromJson(item)).toList();
-        final filteredItems = allFetchedItems
-            .where((item) => item.itemTypeId == categoryId)
-            .where(_isTripActive)
-            .toList();
+        final fetchedItems =
+            itemsData.map((item) => ItemModel.fromJson(item)).toList();
+        final filteredItems = fetchedItems.where(_isTripActive).toList();
         result.addAll(filteredItems);
-        for (var item in allFetchedItems) {
+        for (var item in fetchedItems) {
           final idx = _items.indexWhere((i) => i.id == item.id);
           if (idx >= 0) _items[idx] = item;
           else _items.add(item);
@@ -130,6 +199,7 @@ class ItemsProvider extends BaseProvider {
           }
         }
         _updateAllRecursiveCounts();
+        developer.log('Fetched ${filteredItems.length} items for category $categoryId', name: BaseProvider.logTag);
       }
     } catch (e) {
       developer.log('Error in fetchItemsByCategory: $e', name: BaseProvider.logTag, level: 1000);

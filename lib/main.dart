@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'data/services/cache_service.dart';
 import 'data/services/notification_service.dart';
 import 'data/services/settings_service.dart';
 import 'core/localization/app_localizations.dart';
@@ -23,28 +24,28 @@ void main() async {
   // تهيئة Firebase
   await Firebase.initializeApp();
 
-  // تهيئة الإشعارات
+  // تهيئة المزودين المستقلة بشكل متوازٍ بعد Firebase
   final notificationService = NotificationService();
-  await notificationService.init();
-
   final settingsService = SettingsService();
-  await settingsService.init();
-
   final authProvider = AuthProvider();
-  await authProvider.loadToken();
+
+  await Future.wait([
+    notificationService.init(),
+    settingsService.init(),
+    authProvider.loadToken(),
+    CacheService().init(),
+  ]);
 
   final userProvider = UserProvider(authProvider: authProvider);
 
-  // ✅ إنشاء المزودين الأساسيين للبحث
+  // إنشاء المزودين الأساسيين — البحث سيُحمَّل بعد تحميل الصفحة الرئيسية
   final itemsProvider = ItemsProvider();
   final featuresProvider = FeaturesProvider();
 
-  // ✅ تحميل بيانات البحث في الخلفية
   final searchProvider = SearchProvider(
     itemsProvider: itemsProvider,
     featuresProvider: featuresProvider,
   );
-  searchProvider.loadAllItems();
 
   runApp(
     MultiProvider(

@@ -22,11 +22,6 @@ dependencies:
 
   # لإدارة الحالة
   provider: ^6.1.1
-  riverpod: ^2.5.1
-
-  # للتعامل مع API
-  dio: ^5.4.0
-  retrofit: ^4.0.3
 
   # للتخزين المحلي
   shared_preferences: ^2.2.2

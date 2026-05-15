@@ -125,14 +125,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final itemsProvider = context.watch<ItemsProvider>();
     final settingsProvider = context.watch<SettingsProvider>();
     final settingsService = context.watch<SettingsService>();
-    final authProvider = context.watch<AuthProvider>();
-    final featuresProvider = context.watch<FeaturesProvider>();
 
     final isDark = settingsService.isDarkMode;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final mainCategories = itemsProvider.getMainCategories();
-    final specialOffers = _getActiveSpecialOffers(featuresProvider.features);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -141,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
         settingsService,
         isDark,
         localizations,
-        authProvider,
       ),
       body: SafeArea(
         child: _buildBody(
@@ -153,7 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
           screenWidth,
           localizations,
           mainCategories,
-          specialOffers,
         ),
       ),
     );
@@ -166,7 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
       SettingsService ss,
       bool isDark,
       AppLocalizations loc,
-      AuthProvider ap,
       ) {
     return AppBar(
       title: sp.settings != null
@@ -195,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: isDark ? Colors.white : Colors.black,
       ),
 
-      // ✅ أيقونة البروفايل على اليسار
+      // أيقونة البروفايل على اليسار
       leading: Container(
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -208,26 +202,31 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // ✅ الأيقونات على اليمين
+      // الأيقونات على اليمين
       actions: [
-        // لوحة تحكم الأدمن
-        if (ap.isAdmin)
-          Container(
-            margin: const EdgeInsets.only(right: 4),
-            decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.dashboard, color: Colors.red),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (c) => const AdminDashboardScreen(),
+        // لوحة تحكم الأدمن — Selector: only rebuilds this button when isAdmin changes
+        Selector<AuthProvider, bool>(
+          selector: (_, ap) => ap.isAdmin,
+          builder: (_, isAdmin, __) {
+            if (!isAdmin) return const SizedBox.shrink();
+            return Container(
+              margin: const EdgeInsets.only(right: 4),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.dashboard, color: Colors.red),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (c) => const AdminDashboardScreen(),
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
+        ),
         // زر البحث
         Container(
           margin: const EdgeInsets.only(right: 4),
@@ -272,7 +271,6 @@ class _HomeScreenState extends State<HomeScreen> {
       double sw,
       AppLocalizations loc,
       List<SubcategoryItem> mainCategories,
-      List<ItemModel> specialOffers,
       ) {
     // عرض shimmer أثناء التحميل
     if ((ip.isLoading && ip.itemTypes.isEmpty) ||
@@ -306,21 +304,26 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildTickerBar(isDark),
           const SizedBox(height: 8),
 
-          // العروض الخاصة
-          if (specialOffers.isNotEmpty)
-            _buildSection(
-              context: context,
-              title: loc.translate('special_offers'),
-              items: specialOffers,
-              settingsService: ss,
-              screenHeight: sh,
-              screenWidth: sw,
-              localizations: loc,
-              sectionId: 'special_offers',
-              isSpecial: true,
-              specialHeight: sh * 0.16,
-              specialWidth: sw * 0.75,
-            ),
+          // العروض الخاصة — Selector: only this section rebuilds when features load
+          Selector<FeaturesProvider, List<ItemModel>>(
+            selector: (_, fp) => _getActiveSpecialOffers(fp.features),
+            builder: (_, specialOffers, __) {
+              if (specialOffers.isEmpty) return const SizedBox.shrink();
+              return _buildSection(
+                context: context,
+                title: loc.translate('special_offers'),
+                items: specialOffers,
+                settingsService: ss,
+                screenHeight: sh,
+                screenWidth: sw,
+                localizations: loc,
+                sectionId: 'special_offers',
+                isSpecial: true,
+                specialHeight: sh * 0.16,
+                specialWidth: sw * 0.75,
+              );
+            },
+          ),
           const SizedBox(height: 8),
 
           // الأقسام الرئيسية

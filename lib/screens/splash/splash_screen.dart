@@ -7,7 +7,6 @@ import '../../core/routes/app_routes.dart';
 import '../../data/providers/auth_provider.dart';
 import '../../data/providers/items_provider.dart';
 import '../../data/providers/settings_provider.dart';
-import '../../data/providers/slider_provider.dart';
 import '../../data/providers/features_provider.dart';
 import '../../data/services/settings_service.dart';
 
@@ -57,8 +56,6 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _loadDataInBackground() async {
     try {
       final itemsProvider = Provider.of<ItemsProvider>(context, listen: false);
-      final sliderProvider =
-      Provider.of<SliderProvider>(context, listen: false);
       final settingsProvider =
       Provider.of<SettingsProvider>(context, listen: false);
       final featuresProvider =
@@ -68,7 +65,6 @@ class _SplashScreenState extends State<SplashScreen>
       await Future.wait([
         itemsProvider.fetchItems(),
         itemsProvider.fetchItemTypes(),
-        sliderProvider.fetchSliders(),
         settingsProvider.fetchSettings(),
         featuresProvider.fetchFeatures(),
       ]);

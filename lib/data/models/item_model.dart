@@ -477,23 +477,33 @@ class ItineraryModel {
   }
 }
 
-// ==================== ItemTypeModel ====================
 class ItemTypeModel {
   final int id;
   final String titleAr;
   final String titleEn;
+  final String? bannerAr;
+  final String? bannerEn;
 
-  ItemTypeModel({required this.id, required this.titleAr, required this.titleEn});
+  ItemTypeModel({
+    required this.id,
+    required this.titleAr,
+    required this.titleEn,
+    this.bannerAr,
+    this.bannerEn,
+  });
 
   factory ItemTypeModel.fromJson(Map<String, dynamic> json) {
     return ItemTypeModel(
       id: json['id'] ?? 0,
       titleAr: json['title_ar'] ?? '',
       titleEn: json['title_en'] ?? '',
+      bannerAr: json['banner_ar'],
+      bannerEn: json['banner_en'],
     );
   }
 
   String getTitle(String langCode) => langCode == 'ar' ? titleAr : titleEn;
+  String? getBanner(String langCode) => langCode == 'ar' ? bannerAr : bannerEn;
 }
 
 // ==================== CityModel ====================

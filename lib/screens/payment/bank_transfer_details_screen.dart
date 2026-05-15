@@ -18,6 +18,10 @@ class BankTransferDetailsScreen extends StatefulWidget {
   final int? attendees;
   final List<Map<String, dynamic>>? selectedPrices;
 
+  // ✅ الكوبون والنقاط
+  final String? couponCode;
+  final bool usePoints;
+
   const BankTransferDetailsScreen({
     Key? key,
     required this.method,
@@ -25,6 +29,8 @@ class BankTransferDetailsScreen extends StatefulWidget {
     required this.item,
     this.attendees,
     this.selectedPrices,
+    this.couponCode,
+    this.usePoints = false,
   }) : super(key: key);
 
   @override
@@ -36,7 +42,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
   File? _receiptFile;
   final ImagePicker _picker = ImagePicker();
 
-  // ✅ متحكمات للتعديل
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
@@ -48,7 +53,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.currentUser;
 
-    // ✅ تعبئة البيانات من المستخدم
     _nameController = TextEditingController(text: user?.name ?? '');
     _emailController = TextEditingController(text: user?.email ?? '');
     _phoneController = TextEditingController(text: user?.phone ?? '');
@@ -89,12 +93,14 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // ✅ استخدام البيانات المعدلة
+      // ✅ checkout مع الكوبون والنقاط
       final checkoutResult = await Provider.of<PaymentMethodsProvider>(context, listen: false).checkout(
         name: _nameController.text,
         email: _emailController.text,
         phone: _phoneController.text,
         paymentMethodCode: widget.method.code,
+        couponCode: widget.couponCode,
+        usePoints: widget.usePoints, // ✅ إرسال use_points
         items: _buildItemsForCheckout(),
       );
 
@@ -117,7 +123,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
 
       developer.log('[BankTransfer] Order created: orderId=$orderId, token=$transactionToken', name: 'Response-output');
 
-      // ✅ رفع الإيصال
       final uploadResult = await Provider.of<PaymentMethodsProvider>(context, listen: false).uploadReceipt(
         orderId: int.tryParse(orderId.toString()) ?? 0,
         transactionToken: transactionToken.toString(),
@@ -317,7 +322,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
           : SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // ✅ صورة البنر بعرض الشاشة
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
@@ -375,7 +379,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ✅ المبلغ
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -397,7 +400,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ✅ تفاصيل الحساب البنكي
           Text('تفاصيل الحساب البنكي', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: tc)),
           const SizedBox(height: 16),
           _card(Icons.account_balance, 'اسم البنك', config.bankName, Colors.blue, tc, sc),
@@ -411,7 +413,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
           _card(Icons.location_on, 'عنوان البنك', config.bankAddress, Colors.teal, tc, sc),
           const SizedBox(height: 24),
 
-          // ✅ تعليمات
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -431,7 +432,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ✅ معلومات الرحلة
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -466,7 +466,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ✅ معلومات الحجز (قابلة للتعديل)
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -475,13 +474,11 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
               border: Border.all(color: Colors.grey.withOpacity(0.3)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // ✅ العنوان مع زر التعديل
               Row(children: [
                 const Icon(Icons.person, size: 18, color: AppColors.primary),
                 const SizedBox(width: 8),
                 const Text('معلومات الحجز', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                 const Spacer(),
-                // ✅ زر التعديل
                 GestureDetector(
                   onTap: () {
                     setState(() => _isEditingInfo = !_isEditingInfo);
@@ -514,7 +511,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
               const SizedBox(height: 16),
 
               if (_isEditingInfo) ...[
-                // ✅ وضع التعديل - حقول إدخال
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
@@ -550,7 +546,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
                   ),
                 ),
               ] else ...[
-                // ✅ وضع العرض - نص فقط
                 _row(Icons.person_outline, 'الاسم', _nameController.text, AppColors.primary, tc),
                 const SizedBox(height: 10),
                 _row(Icons.email_outlined, 'البريد', _emailController.text, AppColors.primary, tc),
@@ -561,7 +556,6 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ✅ رفع الإيصال
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(

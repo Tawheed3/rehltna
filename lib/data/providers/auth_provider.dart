@@ -123,7 +123,19 @@ class AuthProvider extends BaseProvider {
         return false;
       }
     } else {
-      setError(data?['message'] ?? 'فشل تسجيل الدخول');
+      // ✅ ترجمة رسالة الخطأ
+      String errorMsg = data?['message'] ?? 'فشل تسجيل الدخول';
+
+      // ترجمة الرسائل المعروفة
+      if (errorMsg.toLowerCase().contains('incorrect')) {
+        errorMsg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+      } else if (errorMsg.toLowerCase().contains('not found')) {
+        errorMsg = 'هذا الحساب غير موجود';
+      } else if (errorMsg.toLowerCase().contains('not verified')) {
+        errorMsg = 'البريد الإلكتروني غير مفعل - الرجاء تفعيله أولاً';
+      }
+
+      setError(errorMsg);
       stopLoading();
       return false;
     }

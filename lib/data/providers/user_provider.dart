@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../models/user_model.dart';
 import 'auth_provider.dart';
 import 'base_provider.dart';
@@ -11,6 +13,8 @@ class UserProvider extends BaseProvider {
   UserModel? get user => _user;
 
   UserProvider({required this.authProvider});
+
+  // ==================== جلب البروفايل ====================
 
   Future<bool> fetchProfile() async {
     final token = authProvider.token;
@@ -31,26 +35,67 @@ class UserProvider extends BaseProvider {
     return success;
   }
 
+  // ==================== تحديث البروفايل ====================
+
   Future<bool> updateProfile(Map<String, dynamic> data) async {
     final token = authProvider.token;
     if (token == null) return false;
 
     startLoading();
 
-    final result = await postRequest('profile/update', data, token: token);
-    bool success = false;
+    // ✅ نستخدم PUT بدل POST مع Raw Request
+    final url = '${BaseProvider.baseUrl}/profile';
 
-    if (result != null && result['code'] == 200) {
-      success = await fetchProfile();
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': BaseProvider.XApiKey,
+          'X-Tenant-ID': BaseProvider.XTenantID.toString(),
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(data),
+      );
+
+      developer.log(
+        '[Profile Update PUT] Status: ${response.statusCode}',
+        name: BaseProvider.logTag,
+      );
+      developer.log(
+        '[Profile Update PUT] Body: ${response.body}',
+        name: BaseProvider.logTag,
+      );
+
+      bool success = false;
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        if (result['code'] == 200) {
+          success = await fetchProfile();
+        } else {
+          setError(result['message'] ?? 'فشل التحديث');
+        }
+      } else {
+        try {
+          final errorBody = jsonDecode(response.body);
+          setError(errorBody['message'] ?? 'خطأ في الخادم: ${response.statusCode}');
+        } catch (_) {
+          setError('خطأ في الخادم: ${response.statusCode}');
+        }
+      }
+
+      stopLoading();
+      return success;
+    } catch (e) {
+      developer.log(
+        '[Profile Update] Error: $e',
+        name: BaseProvider.logTag,
+        level: 1000,
+      );
+      setError('حدث خطأ: $e');
+      stopLoading();
+      return false;
     }
-
-    stopLoading();
-    return success;
-  }
-
-  Future<Map<String, dynamic>?> getRequest(String endpoint, {String? token}) async {
-    final useToken = token ?? authProvider.token;
-    if (useToken == null) return null;
-    return super.getRequest(endpoint, token: useToken);
   }
 }

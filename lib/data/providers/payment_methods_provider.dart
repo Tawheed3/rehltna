@@ -48,6 +48,7 @@ class PaymentMethodsProvider extends BaseProvider {
     required String paymentMethodCode,
     String? applePayToken,
     String? couponCode,
+    bool usePoints = false, // ✅ أضفناها
     required List<Map<String, dynamic>> items,
   }) async {
     startLoading();
@@ -59,6 +60,7 @@ class PaymentMethodsProvider extends BaseProvider {
       "payment_method_code": paymentMethodCode,
       "apple_pay_token": applePayToken,
       "coupon_code": couponCode,
+      "use_points": usePoints, // ✅ إرسال use_points
       "items": items,
     };
     final data = await postRequest('checkout', body);

@@ -1,8 +1,6 @@
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/localization/app_localizations.dart';
 import '../../data/models/item_model.dart';
 import '../../data/providers/items_provider.dart';
 import '../../data/services/settings_service.dart';
@@ -35,7 +33,6 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
   @override
   void initState() {
     super.initState();
-    // ✅ آمن: بعد ما البناء يخلص
     Future.microtask(() => _loadFromCache());
   }
 
@@ -50,7 +47,6 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
     if (mounted) {
       setState(() {
         _initialized = true;
-        // لو مفيش بيانات، نحمل من API بعد الماونت
         if (_items.isEmpty) {
           Future.microtask(() => _loadItemsFromAPI());
         }
@@ -80,6 +76,29 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
 
   Future<void> _refreshItems() async {
     await _loadItemsFromAPI();
+  }
+
+  // ==================== الحصول على السعر المناسب للعرض ====================
+
+  /// ✅ لو فيه أكتر من سعر → يعرض السعر التاني
+  /// ✅ لو فيه سعر واحد فقط → يعرضه عادي
+  String _getDisplayPrice(ItemModel item) {
+    if (item.prices.isEmpty) {
+      // مفيش أسعار متعددة - نعرض السعر العادي
+      return '${item.priceAfterDiscount.toStringAsFixed(0)} ريال';
+    }
+
+    // ترتيب الأسعار تنازلياً (من الأعلى للأقل)
+    final sortedPrices = List<PriceModel>.from(item.prices)
+      ..sort((a, b) => b.effectivePrice.compareTo(a.effectivePrice));
+
+    if (sortedPrices.length == 1) {
+      // سعر واحد فقط - نعرضه
+      return '${sortedPrices[0].effectivePrice.toStringAsFixed(0)} ريال';
+    }
+
+    // فيه أكتر من سعر - نعرض السعر التاني (index = 1)
+    return '${sortedPrices[1].effectivePrice.toStringAsFixed(0)} ريال';
   }
 
   @override
@@ -113,21 +132,21 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
       body: SafeArea(
         child: _errorMessage != null
             ? AppErrorWidget.server(
-                message: _errorMessage,
-                onRetry: _loadItemsFromAPI,
-              )
+          message: _errorMessage,
+          onRetry: _loadItemsFromAPI,
+        )
             : _items.isEmpty
             ? AppErrorWidget.empty(message: 'لا توجد رحلات في هذا القسم')
             : RefreshIndicator(
-                onRefresh: _refreshItems,
-                color: widget.color,
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _items.length,
-                  itemBuilder: (context, index) =>
-                      _buildItemCard(_items[index], settingsService, isDark),
-                ),
-              ),
+          onRefresh: _refreshItems,
+          color: widget.color,
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: _items.length,
+            itemBuilder: (context, index) =>
+                _buildItemCard(_items[index], settingsService, isDark),
+          ),
+        ),
       ),
     );
   }
@@ -139,23 +158,157 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(itemId: item.id, categoryColor: widget.color))),
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(color: isDark ? Colors.grey.shade900 : Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: widget.color.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))]),
-        child: Row(children: [
-          ClipRRect(borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)), child: Container(width: 100, height: 100, color: Colors.grey.shade200, child: banner.isNotEmpty ? Image.network(banner, width: 100, height: 100, fit: BoxFit.cover, errorBuilder: (c, e, s) => Container(color: Colors.grey.shade200, child: const Icon(Icons.broken_image, color: Colors.grey, size: 40))) : Container(color: Colors.grey.shade200, child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 40)))),
-          const SizedBox(width: 12),
-          Expanded(child: Padding(padding: const EdgeInsets.all(12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(item.getTitle(settingsService.languageCode), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87), maxLines: 2, overflow: TextOverflow.ellipsis),
-            const SizedBox(height: 4),
-            Row(children: [Icon(Icons.location_on, size: 14, color: widget.color), const SizedBox(width: 4), Expanded(child: Text(item.itemType.getTitle(settingsService.languageCode), style: TextStyle(fontSize: 12, color: isDark ? Colors.white70 : Colors.grey[600]), maxLines: 1, overflow: TextOverflow.ellipsis))]),
-            const SizedBox(height: 8),
-            Wrap(spacing: 8, runSpacing: 4, children: [
-              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: widget.color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Text('${item.priceAfterDiscount.toStringAsFixed(0)} ريال', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: widget.color))),
-              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Text('${item.totalNights} ليالي', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green))),
-            ]),
-          ]))),
-        ]),
+        decoration: BoxDecoration(
+          color: isDark ? Colors.grey.shade900 : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: widget.color.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // 🖼️ صورة الرحلة
+            ClipRRect(
+              borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+              child: Container(
+                width: 100,
+                height: 100,
+                color: Colors.grey.shade200,
+                child: banner.isNotEmpty
+                    ? Image.network(
+                  banner,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                  errorBuilder: (c, e, s) => Container(
+                    color: Colors.grey.shade200,
+                    child: const Icon(Icons.broken_image, color: Colors.grey, size: 40),
+                  ),
+                )
+                    : Container(
+                  color: Colors.grey.shade200,
+                  child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 40),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // 📝 معلومات الرحلة
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 📛 اسم الرحلة + الموسم
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.getTitle(settingsService.languageCode),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        // ✅ الموسم جنب اسم الرحلة
+                        if (item.season.isNotEmpty) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.orange.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Text(
+                              item.season,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.orange,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, size: 14, color: widget.color),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            item.itemType.getTitle(settingsService.languageCode),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isDark ? Colors.white70 : Colors.grey[600],
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        // 💰 السعر (التاني لو فيه أكتر من سعر، أو السعر الوحيد)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: widget.color.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            _getDisplayPrice(item),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: widget.color,
+                            ),
+                          ),
+                        ),
+                        // 🌙 عدد الليالي
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '${item.totalNights} ليالي',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-
 }

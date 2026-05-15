@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
-import '../../core/localization/app_localizations.dart';
 import '../../data/models/item_model.dart';
 import '../../data/providers/search_provider.dart';
 import '../../data/services/settings_service.dart';
@@ -17,28 +16,34 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderStateMixin {
+class _SearchScreenState extends State<SearchScreen> {
   late final TextEditingController _searchController;
   late final FocusNode _focusNode;
-  late final TabController _tabController;
 
-  final List<String> _filters = ['الكل', 'الرحلات', 'المدن', 'المواسم', 'التواريخ'];
+  final List<String> _filters = [
+    'الكل',
+    'الرحلات',
+    'المدن',
+    'المواسم',
+    'شهر و سنة'  // ✅ تغيير الاسم
+  ];
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
     _focusNode = FocusNode();
-    _tabController = TabController(length: 2, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final searchProvider = context.read<SearchProvider>();
-        searchProvider.loadAllItems().then((_) {
-          if (mounted) {
-            _focusNode.requestFocus();
-          }
-        });
+        if (searchProvider.suggestedTitlesAr.isEmpty) {
+          searchProvider.loadAllItems().then((_) {
+            if (mounted) _focusNode.requestFocus();
+          });
+        } else {
+          _focusNode.requestFocus();
+        }
       }
     });
   }
@@ -47,14 +52,25 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
   void dispose() {
     _searchController.dispose();
     _focusNode.dispose();
-    _tabController.dispose();
     super.dispose();
+  }
+
+  void _selectFilterAndShowAll(String filter) {
+    final searchProvider = context.read<SearchProvider>();
+    final langCode = context.read<SettingsService>().languageCode;
+
+    // ✅ تحويل "شهر و سنة" إلى "التواريخ" عشان الـ provider يفهمها
+    final providerFilter = filter == 'شهر و سنة' ? 'التواريخ' : filter;
+
+    searchProvider.setFilter(providerFilter, context);
+    searchProvider.showAllForFilter(providerFilter, langCode);
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final settingsService = Provider.of<SettingsService>(context);
+    final langCode = settingsService.languageCode;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -99,7 +115,9 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                   controller: _searchController,
                   focusNode: _focusNode,
                   decoration: InputDecoration(
-                    hintText: 'ابحث عن رحلة...',
+                    hintText: langCode == 'ar'
+                        ? 'ابحث عن رحلة، مدينة، موسم...'
+                        : 'Search...',
                     hintStyle: TextStyle(
                       color: isDark ? Colors.white38 : Colors.grey[400],
                     ),
@@ -108,9 +126,8 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                   style: TextStyle(
                     color: isDark ? Colors.white : Colors.black,
                   ),
-                  onChanged: (value) {
-                    context.read<SearchProvider>().search(value, context);
-                  },
+                  onChanged: (value) =>
+                      context.read<SearchProvider>().search(value, context),
                 ),
               ),
               if (_searchController.text.isNotEmpty)
@@ -129,191 +146,399 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(100),
-          child: Column(
-            children: [
-              // أزرار التصفية
-              SizedBox(
-                height: 50,
-                child: Consumer<SearchProvider>(
-                  builder: (context, provider, child) {
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: _filters.length,
-                      itemBuilder: (context, index) {
-                        final filter = _filters[index];
-                        final isSelected = provider.selectedFilter == filter;
+          preferredSize: const Size.fromHeight(50),
+          child: SizedBox(
+            height: 50,
+            child: Consumer<SearchProvider>(
+              builder: (context, provider, child) {
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _filters.length,
+                  itemBuilder: (context, index) {
+                    final filter = _filters[index];
+                    // ✅ مقارنة الفلتر المعروض مع المختار
+                    final providerFilter =
+                    filter == 'شهر و سنة' ? 'التواريخ' : filter;
+                    final isSelected =
+                        provider.selectedFilter == providerFilter;
 
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FilterChip(
-                            label: Text(filter),
-                            selected: isSelected,
-                            onSelected: (_) {
-                              provider.setFilter(filter, context);
-                            },
-                            backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
-                            selectedColor: AppColors.primary,
-                            labelStyle: TextStyle(
-                              color: isSelected
-                                  ? Colors.white
-                                  : (isDark ? Colors.white70 : Colors.black87),
-                            ),
-                            checkmarkColor: Colors.white,
-                          ),
-                        );
-                      },
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: FilterChip(
+                        label: Text(filter),
+                        selected: isSelected,
+                        onSelected: (_) => _selectFilterAndShowAll(filter),
+                        backgroundColor: isDark
+                            ? Colors.grey.shade800
+                            : Colors.grey.shade100,
+                        selectedColor: AppColors.primary,
+                        labelStyle: TextStyle(
+                          color: isSelected
+                              ? Colors.white
+                              : (isDark ? Colors.white70 : Colors.black87),
+                        ),
+                        checkmarkColor: Colors.white,
+                      ),
                     );
                   },
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Consumer<SearchProvider>(
+          builder: (context, provider, child) {
+            if (provider.isLoading) return const SearchShimmer();
+
+            return _buildResultsView(
+              provider,
+              isDark,
+              settingsService,
+              langCode,
+              context,
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // ==================== النتائج ====================
+
+  Widget _buildResultsView(
+      SearchProvider provider,
+      bool isDark,
+      SettingsService ss,
+      String langCode,
+      BuildContext context,
+      ) {
+    // ✅ لو عارض قائمة فلتر
+    if (provider.showFilteredList) {
+      return _buildFilteredListView(provider, isDark, langCode, context);
+    }
+
+    // ✅ لو مفيش نص والفلتر "الكل"
+    if (_searchController.text.isEmpty &&
+        provider.selectedFilter == 'الكل') {
+      return _buildAllFiltersView(provider, isDark, langCode, context);
+    }
+
+    // ✅ لو مفيش نتائج
+    if (provider.searchResults.isEmpty) {
+      return _buildEmptyState(
+        icon: Icons.sentiment_dissatisfied,
+        message: langCode == 'ar' ? 'لا توجد نتائج' : 'No results',
+        isDark: isDark,
+      );
+    }
+
+    // ✅ عرض نتائج البحث (رحلات)
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+          child: Text(
+            langCode == 'ar'
+                ? '${provider.searchResults.length} نتيجة'
+                : '${provider.searchResults.length} results',
+            style: TextStyle(
+              fontSize: 13,
+              color: isDark ? Colors.white54 : Colors.grey[600],
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: provider.searchResults.length,
+            itemBuilder: (context, index) => _buildSearchResultCard(
+              item: provider.searchResults[index],
+              settingsService: ss,
+              isDark: isDark,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ==================== عرض كل الفلاتر ====================
+
+  Widget _buildAllFiltersView(
+      SearchProvider provider,
+      bool isDark,
+      String langCode,
+      BuildContext context,
+      ) {
+    final titles = provider.getSuggestedTitles(langCode);
+    final cities = provider.getSuggestedCities(langCode);
+    final dates = provider.suggestedDates;
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ✅ المواسم
+          if (provider.suggestedSeasons.isNotEmpty)
+            _buildFilterSection(
+              title: langCode == 'ar' ? 'المواسم' : 'Seasons',
+              items: provider.suggestedSeasons,
+              icon: Icons.wb_sunny,
+              iconColor: Colors.orange,
+              isDark: isDark,
+              onTap: (s) {
+                _searchController.text = s;
+                provider.search(s, context);
+              },
+            ),
+
+          // ✅ المدن والأقسام
+          if (cities.isNotEmpty)
+            _buildFilterSection(
+              title:
+              langCode == 'ar' ? 'المدن والأقسام' : 'Cities & Sections',
+              items: cities,
+              icon: Icons.location_city,
+              iconColor: AppColors.primary,
+              isDark: isDark,
+              onTap: (s) {
+                _searchController.text = s;
+                provider.search(s, context);
+              },
+            ),
+
+          // ✅ شهر و سنة
+          if (dates.isNotEmpty)
+            _buildFilterSection(
+              title: langCode == 'ar' ? 'شهر و سنة' : 'Month & Year',
+              items: dates,
+              icon: Icons.calendar_month,
+              iconColor: Colors.teal,
+              isDark: isDark,
+              onTap: (s) {
+                _searchController.text = s;
+                provider.search(s, context);
+              },
+            ),
+
+          // ✅ الرحلات
+          if (titles.isNotEmpty)
+            _buildFilterSection(
+              title: langCode == 'ar' ? 'الرحلات' : 'Trips',
+              items: titles,
+              icon: Icons.flight_takeoff,
+              iconColor: Colors.green,
+              isDark: isDark,
+              onTap: (s) {
+                _searchController.text = s;
+                provider.search(s, context);
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
+  // ==================== قسم فلتر واحد ====================
+
+  Widget _buildFilterSection({
+    required String title,
+    required List<String> items,
+    required IconData icon,
+    required Color iconColor,
+    required bool isDark,
+    required Function(String) onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Row(
+            children: [
+              Container(
+                width: 4,
+                height: 22,
+                decoration: BoxDecoration(
+                  color: iconColor,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
-
-              // Tabs للنتائج والاقتراحات
-              TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Tab(text: 'النتائج'),
-                  Tab(text: 'الاقتراحات'),
-                ],
-                labelColor: AppColors.primary,
-                unselectedLabelColor: isDark ? Colors.white54 : Colors.grey[600],
-                indicatorColor: AppColors.primary,
+              const SizedBox(width: 8),
+              Text(
+                '$title (${items.length})',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
             ],
           ),
         ),
-      ),
-      body:
-      SafeArea(child:  Consumer<SearchProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading && provider.searchResults.isEmpty) {
-            return const SearchShimmer();
-          }
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: items.map((item) {
+              return ActionChip(
+                avatar: Icon(icon, size: 16, color: iconColor),
+                label: Text(
+                  item,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isDark ? Colors.white70 : Colors.black87,
+                  ),
+                ),
+                onPressed: () => onTap(item),
+                backgroundColor:
+                isDark ? Colors.grey.shade800 : Colors.grey.shade100,
+              );
+            }).toList(),
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
 
-          if (provider.errorMessage != null && provider.searchResults.isEmpty) {
-            return AppErrorWidget.network(
-              onRetry: () => provider.loadAllItems(),
-            );
-          }
+  // ==================== قائمة الفلتر ====================
 
-          return TabBarView(
-            controller: _tabController,
+  Widget _buildFilteredListView(
+      SearchProvider provider,
+      bool isDark,
+      String langCode,
+      BuildContext context,
+      ) {
+    final items = provider.filteredList;
+    final title = provider.listTitle;
+
+    IconData icon;
+    switch (provider.selectedFilter) {
+      case 'الرحلات':
+        icon = Icons.flight_takeoff;
+        break;
+      case 'المدن':
+        icon = Icons.location_city;
+        break;
+      case 'المواسم':
+        icon = Icons.wb_sunny;
+        break;
+      case 'التواريخ':
+        icon = Icons.calendar_month;
+        break;
+      default:
+        icon = Icons.search;
+    }
+
+    if (items.isEmpty)
+      return _buildEmptyState(
+          icon: icon, message: 'لا توجد عناصر', isDark: isDark);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+          child: Row(
             children: [
-              // صفحة النتائج
-              _buildResultsView(provider, isDark, settingsService, context),
-
-              // صفحة الاقتراحات
-              _buildSuggestionsView(provider, isDark, settingsService, context),
+              Icon(icon, size: 18, color: AppColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                '$title (${items.length})',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
             ],
-          );
-        },
-      ),
-      )
-    );
-  }
-
-  Widget _buildResultsView(SearchProvider provider, bool isDark, SettingsService settingsService, BuildContext context) {
-    if (_searchController.text.isEmpty) {
-      return _buildEmptyState(
-        icon: Icons.search,
-        message: 'ابحث عن رحلاتك المفضلة',
-        isDark: isDark,
-      );
-    }
-
-    if (provider.searchResults.isEmpty) {
-      return _buildEmptyState(
-        icon: Icons.sentiment_dissatisfied,
-        message: 'لا توجد نتائج للبحث',
-        subtitle: 'جرب كلمات بحث مختلفة',
-        isDark: isDark,
-      );
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: provider.searchResults.length,
-      itemBuilder: (context, index) {
-        final item = provider.searchResults[index];
-        return _buildSearchResultCard(
-          item: item,
-          settingsService: settingsService,
-          isDark: isDark,
-          query: _searchController.text,
-        );
-      },
-    );
-  }
-
-  Widget _buildSuggestionsView(SearchProvider provider, bool isDark, SettingsService settingsService, BuildContext context) {
-    if (_searchController.text.isEmpty) {
-      return _buildPopularSearches(provider, isDark, settingsService, context);
-    }
-
-    final suggestions = provider.getSuggestionsForCurrentFilter(_searchController.text, context);
-
-    if (suggestions.isEmpty) {
-      return _buildEmptyState(
-        icon: Icons.lightbulb_outline,
-        message: 'لا توجد اقتراحات',
-        subtitle: 'اكمل الكتابة أو جرب فلتر آخر',
-        isDark: isDark,
-      );
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final suggestion = suggestions[index];
-        return ListTile(
-          leading: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              _getIconForSuggestion(suggestion),
-              color: AppColors.primary,
-              size: 20,
-            ),
           ),
-          title: Text(
-            suggestion,
-            style: TextStyle(
-              color: isDark ? Colors.white : Colors.black,
-            ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
+              IconData itemIcon = icon;
+              if (item.startsWith('📅')) itemIcon = Icons.calendar_today;
+              if (item.startsWith('🕌')) itemIcon = Icons.mosque;
+              if (item.startsWith('📆')) itemIcon = Icons.date_range;
+              final searchText =
+              item.replaceAll(RegExp(r'[📅🕌📆]\s*'), '');
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.grey.shade800 : Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.grey.shade700
+                        : Colors.grey.shade200,
+                  ),
+                ),
+                child: ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(itemIcon, color: AppColors.primary, size: 22),
+                  ),
+                  title: Text(
+                    item,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: isDark ? Colors.white38 : Colors.grey[400],
+                  ),
+                  onTap: () {
+                    _searchController.text = searchText;
+                    context
+                        .read<SearchProvider>()
+                        .search(searchText, context);
+                  },
+                ),
+              );
+            },
           ),
-          onTap: () {
-            _searchController.text = suggestion;
-            context.read<SearchProvider>().search(suggestion, context);
-            _tabController.animateTo(0);
-          },
-        );
-      },
+        ),
+      ],
     );
   }
+
+  // ==================== كارد نتيجة البحث ====================
 
   Widget _buildSearchResultCard({
     required ItemModel item,
     required SettingsService settingsService,
     required bool isDark,
-    required String query,
   }) {
+    final banner = item.getBanner(settingsService.languageCode);
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ItemDetailsScreen(
-              itemId: item.id,
-              categoryColor: AppColors.primary,
-            ),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ItemDetailsScreen(
+            itemId: item.id,
+            categoryColor: AppColors.primary,
           ),
-        );
-      },
+        ),
+      ),
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
@@ -331,49 +556,102 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
         ),
         child: Row(
           children: [
-            // الصورة
             ClipRRect(
-              borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+              borderRadius:
+              const BorderRadius.horizontal(left: Radius.circular(16)),
               child: Container(
                 width: 100,
                 height: 100,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(item.getBanner(settingsService.languageCode)),
-                    fit: BoxFit.cover,
+                color: Colors.grey.shade200,
+                child: banner.isNotEmpty
+                    ? Image.network(
+                  banner,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                  errorBuilder: (c, e, s) => Container(
+                    color: Colors.grey.shade200,
+                    child: const Icon(
+                      Icons.broken_image,
+                      color: Colors.grey,
+                      size: 40,
+                    ),
+                  ),
+                )
+                    : Container(
+                  color: Colors.grey.shade200,
+                  child: const Icon(
+                    Icons.image_not_supported,
+                    color: Colors.grey,
+                    size: 40,
                   ),
                 ),
               ),
             ),
             const SizedBox(width: 12),
-            // المعلومات
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.getTitle(settingsService.languageCode),
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.getTitle(settingsService.languageCode),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (item.season.isNotEmpty) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.orange.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Text(
+                              item.season,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.location_on, size: 14, color: AppColors.primary),
+                        Icon(
+                          Icons.location_on,
+                          size: 14,
+                          color: AppColors.primary,
+                        ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            item.itemType.getTitle(settingsService.languageCode),
+                            item.itemType
+                                .getTitle(settingsService.languageCode),
                             style: TextStyle(
                               fontSize: 12,
-                              color: isDark ? Colors.white70 : Colors.grey[600],
+                              color: isDark
+                                  ? Colors.white70
+                                  : Colors.grey[600],
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -382,16 +660,19 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Row(
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: AppColors.primary.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            '${item.price.toStringAsFixed(0)} SAR',
+                            '${item.priceAfterDiscount.toStringAsFixed(0)} ريال',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -399,9 +680,9 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.green.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -427,110 +708,11 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildPopularSearches(SearchProvider provider, bool isDark, SettingsService settingsService, BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              'عمليات البحث الشائعة',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-
-          // المواسم الشائعة
-          _buildSuggestionChips(
-            title: 'المواسم',
-            items: SearchProvider.predefinedSeasons,
-            provider: provider,
-            isDark: isDark,
-            context: context,
-            settingsService: settingsService,
-          ),
-
-          // المدن الشائعة (الأقسام)
-          _buildSuggestionChips(
-            title: 'الأقسام',
-            items: provider.suggestedCities.take(8).toList(),
-            provider: provider,
-            isDark: isDark,
-            context: context,
-            settingsService: settingsService,
-          ),
-
-          // الرحلات الشائعة
-          _buildSuggestionChips(
-            title: 'الرحلات',
-            items: provider.suggestedTitles.take(8).toList(),
-            provider: provider,
-            isDark: isDark,
-            context: context,
-            settingsService: settingsService,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSuggestionChips({
-    required String title,
-    required List<String> items,
-    required SearchProvider provider,
-    required bool isDark,
-    required BuildContext context,
-    required SettingsService settingsService,
-  }) {
-    if (items.isEmpty) return const SizedBox();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              color: isDark ? Colors.white70 : Colors.grey[600],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: items.map((item) {
-              return ActionChip(
-                label: Text(item),
-                onPressed: () {
-                  _searchController.text = item;
-                  provider.search(item, context);
-                  _tabController.animateTo(0);
-                },
-                backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
-                labelStyle: TextStyle(
-                  color: isDark ? Colors.white70 : Colors.black87,
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
+  // ==================== حالة فاضية ====================
 
   Widget _buildEmptyState({
     required IconData icon,
     required String message,
-    String? subtitle,
     required bool isDark,
   }) {
     return Center(
@@ -558,37 +740,8 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
               color: isDark ? Colors.white70 : Colors.grey[600],
             ),
           ),
-          if (subtitle != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 14,
-                color: isDark ? Colors.white54 : Colors.grey[500],
-              ),
-            ),
-          ],
         ],
       ),
     );
-  }
-
-  IconData _getIconForSuggestion(String suggestion) {
-    if (SearchProvider.predefinedSeasons.contains(suggestion)) {
-      return Icons.wb_sunny;
-    }
-    if (suggestion.contains('الحج') || suggestion.contains('Hajj')) {
-      return Icons.mosque;
-    }
-    if (suggestion.contains('الفطر') || suggestion.contains('Eid')) {
-      return Icons.celebration;
-    }
-    if (suggestion.contains('شنغن') || suggestion.contains('Visa')) {
-      return Icons.credit_card;
-    }
-    if (suggestion.contains('كروز') || suggestion.contains('Cruise')) {
-      return Icons.directions_boat;
-    }
-    return Icons.search;
   }
 }

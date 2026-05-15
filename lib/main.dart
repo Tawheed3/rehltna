@@ -10,13 +10,13 @@ import 'core/theme/app_theme.dart';
 import 'data/providers/auth_provider.dart';
 import 'data/providers/items_provider.dart';
 import 'data/providers/features_provider.dart';
-import 'data/providers/slider_provider.dart';
 import 'data/providers/settings_provider.dart';
 import 'data/providers/user_provider.dart';
 import 'data/providers/search_provider.dart';
 import 'data/providers/payment_methods_provider.dart';
 import 'data/providers/pixel_provider.dart';
-
+import 'data/providers/reviews_provider.dart';
+import 'data/providers/custom_pages_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -33,8 +33,18 @@ void main() async {
   final authProvider = AuthProvider();
   await authProvider.loadToken();
 
-  // إنشاء UserProvider وتمرير AuthProvider له
   final userProvider = UserProvider(authProvider: authProvider);
+
+  // ✅ إنشاء المزودين الأساسيين للبحث
+  final itemsProvider = ItemsProvider();
+  final featuresProvider = FeaturesProvider();
+
+  // ✅ تحميل بيانات البحث في الخلفية
+  final searchProvider = SearchProvider(
+    itemsProvider: itemsProvider,
+    featuresProvider: featuresProvider,
+  );
+  searchProvider.loadAllItems();
 
   runApp(
     MultiProvider(
@@ -42,18 +52,14 @@ void main() async {
         ChangeNotifierProvider<SettingsService>.value(value: settingsService),
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
         ChangeNotifierProvider<UserProvider>.value(value: userProvider),
-        ChangeNotifierProvider(create: (context) => ItemsProvider()),
-        ChangeNotifierProvider(create: (context) => FeaturesProvider()),
-        ChangeNotifierProvider(create: (context) => SliderProvider()),
+        ChangeNotifierProvider<ItemsProvider>.value(value: itemsProvider),
+        ChangeNotifierProvider<FeaturesProvider>.value(value: featuresProvider),
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
-        ChangeNotifierProvider(
-          create: (context) => SearchProvider(
-            itemsProvider: context.read<ItemsProvider>(),
-            featuresProvider: context.read<FeaturesProvider>(),
-          ),
-        ),
+        ChangeNotifierProvider<SearchProvider>.value(value: searchProvider),
         ChangeNotifierProvider(create: (context) => PaymentMethodsProvider()),
         ChangeNotifierProvider(create: (context) => PixelProvider()),
+        ChangeNotifierProvider(create: (context) => ReviewsProvider()),
+        ChangeNotifierProvider(create: (context) => CustomPagesProvider()),
       ],
       child: MyApp(authProvider: authProvider),
     ),

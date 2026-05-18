@@ -149,7 +149,7 @@
                             <div class="user-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
                             <div class="user-info">
                                 <div class="user-name">{{ $user->name }}</div>
-                                <div class="user-meta">{{ $user->phone ?? $user->email }}</div>
+                                <div class="user-meta">{{ $user->email }}</div>
                             </div>
                         </label>
                         @endforeach

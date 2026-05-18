@@ -213,7 +213,7 @@ class AuthController extends Controller
                         'slug_ar'  => $doc->item?->slug_ar,
                         'slug_en'  => $doc->item?->slug_en,
                     ],
-                    'pdf_url' => $doc->pdf_path ? Storage::url($doc->pdf_path) : null,
+                    'pdf_url' => $doc->pdf_path ? asset(Storage::url($doc->pdf_path)) : null,
                     'details' => $doc->details ?? [],
                 ];
             });

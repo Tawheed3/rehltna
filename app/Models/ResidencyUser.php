@@ -60,6 +60,12 @@ class ResidencyUser extends Authenticatable
         return $this->hasMany(PointLog::class, 'residency_user_id');
     }
 
+    public function tripDocuments(): BelongsToMany
+    {
+        return $this->belongsToMany(TripDocument::class, 'trip_document_residency_users', 'residency_user_id', 'trip_document_id')
+                    ->withTimestamps();
+    }
+
     protected function casts(): array
     {
         return [

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
+use App\Models\ResidencyUser;
 use App\Models\TripDocument;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -25,7 +25,7 @@ class TripDocumentController extends Controller
     public function create(): View
     {
         $trips = Item::orderBy('title_ar')->get(['id', 'title_ar', 'title_en']);
-        $users = User::whereNot('role', 'admin')->whereNull('role_id')->orderBy('name')->get(['id', 'name', 'email']);
+        $users = ResidencyUser::orderBy('name')->get(['id', 'name', 'email']);
 
         return view('pages.trip-documents.create', compact('trips', 'users'));
     }
@@ -39,7 +39,7 @@ class TripDocumentController extends Controller
             'details.*.key'  => 'required_with:details|string|max:255',
             'details.*.value'=> 'required_with:details|string',
             'users'          => 'nullable|array',
-            'users.*'        => 'exists:users,id',
+            'users.*'        => 'exists:residency_users,id',
         ]);
 
         // One document per trip — delete old one if exists
@@ -74,7 +74,7 @@ class TripDocumentController extends Controller
     public function edit(TripDocument $tripDocument): View
     {
         $trips = Item::orderBy('title_ar')->get(['id', 'title_ar', 'title_en']);
-        $users = User::whereNot('role', 'admin')->whereNull('role_id')->orderBy('name')->get(['id', 'name', 'email']);
+        $users = ResidencyUser::orderBy('name')->get(['id', 'name', 'email']);
         $tripDocument->load(['item', 'users']);
 
         return view('pages.trip-documents.edit', compact('tripDocument', 'trips', 'users'));
@@ -89,7 +89,7 @@ class TripDocumentController extends Controller
             'details.*.key'  => 'required_with:details|string|max:255',
             'details.*.value'=> 'required_with:details|string',
             'users'          => 'nullable|array',
-            'users.*'        => 'exists:users,id',
+            'users.*'        => 'exists:residency_users,id',
         ]);
 
         $pdfPath = $tripDocument->pdf_path;

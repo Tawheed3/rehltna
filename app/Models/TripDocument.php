@@ -21,7 +21,7 @@ class TripDocument extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'trip_document_users')
+        return $this->belongsToMany(ResidencyUser::class, 'trip_document_residency_users', 'trip_document_id', 'residency_user_id')
                     ->withTimestamps();
     }
 }

@@ -60,7 +60,7 @@
                         @foreach($trips as $trip)
                             <option value="{{ $trip->id }}"
                                 {{ old('item_id', $tripDocument->item_id) == $trip->id ? 'selected' : '' }}>
-                                {{ $trip->title_ar }} {{ $trip->title_en ? '/ '.$trip->title_en : '' }}
+                                {{ $trip->title_ar }}{{ $trip->season ? ' — '.$trip->season : '' }}{{ $trip->start_date ? ' — '.($trip->start_date instanceof \Carbon\Carbon ? $trip->start_date->format('Y-m-d') : $trip->start_date) : '' }}
                             </option>
                         @endforeach
                     </select>

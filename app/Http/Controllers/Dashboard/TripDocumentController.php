@@ -24,7 +24,7 @@ class TripDocumentController extends Controller
 
     public function create(): View
     {
-        $trips = Item::orderBy('title_ar')->get(['id', 'title_ar', 'title_en']);
+        $trips = Item::orderBy('start_date')->get(['id', 'title_ar', 'season', 'start_date']);
         $users = ResidencyUser::orderBy('name')->get(['id', 'name', 'email']);
 
         return view('pages.trip-documents.create', compact('trips', 'users'));
@@ -73,7 +73,7 @@ class TripDocumentController extends Controller
 
     public function edit(TripDocument $tripDocument): View
     {
-        $trips = Item::orderBy('title_ar')->get(['id', 'title_ar', 'title_en']);
+        $trips = Item::orderBy('start_date')->get(['id', 'title_ar', 'season', 'start_date']);
         $users = ResidencyUser::orderBy('name')->get(['id', 'name', 'email']);
         $tripDocument->load(['item', 'users']);
 

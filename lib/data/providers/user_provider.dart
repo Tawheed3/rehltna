@@ -9,8 +9,10 @@ import 'base_provider.dart';
 class UserProvider extends BaseProvider {
   UserModel? _user;
   final AuthProvider authProvider;
+  List<Map<String, dynamic>> _tripDocuments = [];
 
   UserModel? get user => _user;
+  List<Map<String, dynamic>> get tripDocuments => _tripDocuments;
 
   UserProvider({required this.authProvider});
 
@@ -33,6 +35,20 @@ class UserProvider extends BaseProvider {
 
     stopLoading();
     return success;
+  }
+
+  // ==================== وثائق الرحلات ====================
+
+  Future<void> fetchTripDocuments() async {
+    final token = authProvider.token;
+    if (token == null) return;
+
+    final data = await getRequest('profile/trip-documents', token: token);
+    if (data != null && data['code'] == 200 && data['data'] != null) {
+      _tripDocuments = List<Map<String, dynamic>>.from(data['data']);
+      developer.log('Trip documents loaded: ${_tripDocuments.length}', name: BaseProvider.logTag);
+      notifyListeners();
+    }
   }
 
   // ==================== تحديث البروفايل ====================

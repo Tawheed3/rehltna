@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -63,7 +64,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _refreshProfile() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    await userProvider.fetchProfile();
+    await Future.wait([
+      userProvider.fetchProfile(),
+      userProvider.fetchTripDocuments(),
+    ]);
   }
 
   // ==================== تغيير الصورة ====================
@@ -386,6 +390,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildPointsSection(user, isDark),
                 const SizedBox(height: 20),
                 _buildOrdersSection(user, isDark),
+                const SizedBox(height: 20),
+                _buildTripDocumentsSection(userProvider, isDark),
                 const SizedBox(height: 20),
                 _buildLogoutSection(authProvider, isDark),
                 const SizedBox(height: 30),
@@ -1406,6 +1412,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // ==================== قسم وثائق الرحلات ====================
+
+  Widget _buildTripDocumentsSection(UserProvider userProvider, bool isDark) {
+    final docs = userProvider.tripDocuments;
+    if (docs.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section header
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.folder_special, color: AppColors.primary, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'وثائق رحلاتي',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+
+          // Document cards
+          ...docs.map((doc) => _TripDocumentCard(doc: doc, isDark: isDark)),
+        ],
+      ),
+    );
+  }
+
   // ==================== قسم تسجيل الخروج ====================
 
   Widget _buildLogoutSection(AuthProvider authProvider, bool isDark) {
@@ -1523,4 +1571,216 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String _formatDate(DateTime date) =>
       '${date.year}/${date.month}/${date.day}';
+}
+
+// ==================== كارت وثيقة الرحلة ====================
+
+class _TripDocumentCard extends StatefulWidget {
+  final Map<String, dynamic> doc;
+  final bool isDark;
+
+  const _TripDocumentCard({required this.doc, required this.isDark});
+
+  @override
+  State<_TripDocumentCard> createState() => _TripDocumentCardState();
+}
+
+class _TripDocumentCardState extends State<_TripDocumentCard> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final doc = widget.doc;
+    final isDark = widget.isDark;
+    final trip = doc['trip'] as Map<String, dynamic>? ?? {};
+    final title = trip['title_ar'] ?? trip['title_en'] ?? 'رحلة';
+    final details = (doc['details'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    final pdfUrl = doc['pdf_url'] as String?;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark
+              ? Colors.grey.shade700
+              : AppColors.primary.withOpacity(0.12),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Header — tap to expand
+          InkWell(
+            onTap: () => setState(() => _expanded = !_expanded),
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.luggage, color: AppColors.primary, size: 22),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          '${details.length} محور${pdfUrl != null ? ' · يتضمن PDF' : ''}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isDark ? Colors.white54 : Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AnimatedRotation(
+                    turns: _expanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 250),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.primary,
+                      size: 26,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Expanded content
+          if (_expanded) ...[
+            Divider(
+              height: 1,
+              color: isDark ? Colors.grey.shade700 : Colors.grey.shade100,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Key-value details
+                  ...details.map((row) => _buildDetailRow(
+                        row['key'] ?? '',
+                        row['value'] ?? '',
+                        isDark,
+                      )),
+
+                  // PDF button
+                  if (pdfUrl != null) ...[
+                    const SizedBox(height: 8),
+                    _buildPdfButton(pdfUrl),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String key, String value, bool isDark) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade800 : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            key,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(width: 1, height: 16, color: AppColors.primary.withOpacity(0.3), margin: const EdgeInsets.only(top: 2)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.5,
+                color: isDark ? Colors.white70 : Colors.black87,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPdfButton(String url) {
+    return GestureDetector(
+      onTap: () async {
+        final uri = Uri.tryParse(url);
+        if (uri != null) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.red.shade100),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.picture_as_pdf, color: Colors.red.shade600, size: 24),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'تحميل وثيقة PDF',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.red.shade700,
+                    ),
+                  ),
+                  Text(
+                    'اضغط لفتح الملف',
+                    style: TextStyle(fontSize: 11, color: Colors.red.shade400),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.download, color: Colors.red.shade400, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
 }

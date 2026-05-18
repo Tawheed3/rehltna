@@ -70,4 +70,10 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function tripDocuments()
+    {
+        return $this->belongsToMany(TripDocument::class, 'trip_document_users')
+                    ->withTimestamps();
+    }
 }

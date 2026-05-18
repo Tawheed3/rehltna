@@ -202,6 +202,7 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
             Route::put('/profile', [AuthController::class, 'updateProfile']); #--------- Update Profile ---------#
             Route::post('/logout', [AuthController::class, 'logout']);  #--------- Logout ---------#
             Route::post('/update-fcm-token', [AuthController::class, 'updateFcmToken']);
+            Route::get('/profile/trip-documents', [AuthController::class, 'myTripDocuments']); #--------- My Trip Documents ---------#
 
             #---------------------------- Residencies Programs ---------------------------#
             Route::get('/residencies-programs', [ResidencyProgramController::class, 'getResidenciesPrograms']); #--------- Get Residencies Programs ---------#

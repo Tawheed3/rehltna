@@ -7,6 +7,8 @@ use App\Http\Traits\ResponseTrait;
 use App\Models\Package;
 use App\Models\PasswordResetCode;
 use App\Models\ResidencyUser;
+use App\Models\TripDocument;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -192,6 +194,31 @@ class AuthController extends Controller
         ]);
 
         return $this->responseMessage(200, 'FCM Token updated successfully');
+    }
+
+    public function myTripDocuments(): JsonResponse
+    {
+        $user = auth()->user();
+
+        $documents = $user->tripDocuments()
+            ->with(['item:id,title_ar,title_en,slug_ar,slug_en'])
+            ->get()
+            ->map(function (TripDocument $doc) {
+                return [
+                    'id'      => $doc->id,
+                    'trip'    => [
+                        'id'       => $doc->item?->id,
+                        'title_ar' => $doc->item?->title_ar,
+                        'title_en' => $doc->item?->title_en,
+                        'slug_ar'  => $doc->item?->slug_ar,
+                        'slug_en'  => $doc->item?->slug_en,
+                    ],
+                    'pdf_url' => $doc->pdf_path ? Storage::url($doc->pdf_path) : null,
+                    'details' => $doc->details ?? [],
+                ];
+            });
+
+        return $this->responseMessage(200, 'success', $documents);
     }
 
 }

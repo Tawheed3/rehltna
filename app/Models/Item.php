@@ -57,6 +57,11 @@ class Item extends Model
         return $this->hasMany(ItemItinerary::class);
     }
 
+    public function tripDocument()
+    {
+        return $this->hasOne(TripDocument::class, 'item_id');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

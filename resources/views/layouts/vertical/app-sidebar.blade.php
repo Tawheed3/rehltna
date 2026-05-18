@@ -67,6 +67,9 @@
                         <li><a class="slide-item" href="{{ route('items.index') }}"><span>Trips</span></a></li>
                     @endif
                     @if(in_array('items', $tenantOptions))
+                        <li><a class="slide-item" href="{{ route('trip-documents.index') }}"><span>Trip Documents</span></a></li>
+                    @endif
+                    @if(in_array('items', $tenantOptions))
                         @php $pendingReviews = \App\Models\Review::where('status','pending')->count(); @endphp
                         <li>
                             <a class="slide-item" href="{{ route('reviews.index') }}">

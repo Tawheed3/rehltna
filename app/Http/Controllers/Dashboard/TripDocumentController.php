@@ -25,7 +25,7 @@ class TripDocumentController extends Controller
     public function create(): View
     {
         $trips = Item::orderBy('title_ar')->get(['id', 'title_ar', 'title_en']);
-        $users = User::whereNot('role', 'admin')->orderBy('name')->get(['id', 'name', 'email']);
+        $users = User::whereNot('role', 'admin')->whereNull('role_id')->orderBy('name')->get(['id', 'name', 'email']);
 
         return view('pages.trip-documents.create', compact('trips', 'users'));
     }
@@ -74,7 +74,7 @@ class TripDocumentController extends Controller
     public function edit(TripDocument $tripDocument): View
     {
         $trips = Item::orderBy('title_ar')->get(['id', 'title_ar', 'title_en']);
-        $users = User::whereNot('role', 'admin')->orderBy('name')->get(['id', 'name', 'email']);
+        $users = User::whereNot('role', 'admin')->whereNull('role_id')->orderBy('name')->get(['id', 'name', 'email']);
         $tripDocument->load(['item', 'users']);
 
         return view('pages.trip-documents.edit', compact('tripDocument', 'trips', 'users'));

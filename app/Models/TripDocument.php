@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class TripDocument extends Model
 {
     protected $guarded = [];
-    protected $connection = 'tenant';
 
     protected $casts = [
         'details' => 'array',

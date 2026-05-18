@@ -554,7 +554,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         Expanded(child: ElevatedButton.icon(onPressed: () => _wa(_item!.whatsapp), icon: const Icon(Icons.chat, size: 18), label: const Text('واتساب'), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF25D366), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))))),
       ]),
       const SizedBox(height: 8),
-      SizedBox(width: double.infinity, child: ElevatedButton.icon(onPressed: () => _waMsg(_item!.whatsapp, _item!.getTitle(ss.languageCode)), icon: const Icon(Icons.message, size: 18), label: const Text('استفسار عن الرحلة'), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF128C7E), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))))),
+      SizedBox(width: double.infinity, child: ElevatedButton.icon(onPressed: () => _waMsg(_item!.whatsapp, _item!.getTitle(ss.languageCode)), icon: const Icon(Icons.message, size: 18), label: const Text('استفسار اكثر عن الرحلة'), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF128C7E), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))))),
     ]);
   }
 

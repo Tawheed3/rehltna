@@ -160,6 +160,15 @@ class ItemController extends Controller
         return $this->responseMessage(200, 'success', $Item);
     }
 
+    public function getItemById($id): JsonResponse
+    {
+        $Item = Item::query()->with($this->getOrderedRelations())->find($id);
+        if (!$Item)
+            return $this->responseMessage(404, 'not found');
+
+        return $this->responseMessage(200, 'success', $Item);
+    }
+
     public function getItemsByItemType($id): JsonResponse
     {
         $itemType = ItemType::query()->find($id);

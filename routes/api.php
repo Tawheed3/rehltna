@@ -91,6 +91,7 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
         Route::get('/item-types-features', [ItemTypeController::class, 'getItemTypesFeatures']); #--------- Get Item Types Features ---------#
         Route::get('/items', [ItemController::class, 'getItems']); #--------- Get Items ---------#
         Route::get('/items-features', [ItemController::class, 'getItemsFeatures']); #--------- Get Items Features ---------#
+        Route::get('/items/{id}', [ItemController::class, 'getItemById']); #--------- Get Item By ID ---------#
         Route::get('/item/{slug}', [ItemController::class, 'getItem']); #--------- Get Item By Slug ---------#
         Route::get('/item-type-items/{id}', [ItemController::class, 'getItemsByItemType']); #--------- Get Items By ItemType Id ---------#
 

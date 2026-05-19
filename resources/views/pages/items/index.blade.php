@@ -255,6 +255,18 @@
         </div>
     </div>
 
+    {{-- Filter Tabs --}}
+    <div class="d-flex gap-2 mb-3">
+        <a href="{{ route('items.index', ['filter' => 'active']) }}"
+           class="btn fw-bold px-4 py-2 rounded-pill {{ $filter === 'active' ? 'btn-success' : 'btn-outline-success' }}">
+            <i class="fas fa-plane-departure me-2"></i> الرحلات النشطة
+        </a>
+        <a href="{{ route('items.index', ['filter' => 'ended']) }}"
+           class="btn fw-bold px-4 py-2 rounded-pill {{ $filter === 'ended' ? 'btn-secondary' : 'btn-outline-secondary' }}">
+            <i class="fas fa-history me-2"></i> الرحلات المنتهية
+        </a>
+    </div>
+
     <div class="row">
         <div class="col-xl-12">
             <div class="card custom-card">

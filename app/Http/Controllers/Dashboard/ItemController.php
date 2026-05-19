@@ -28,15 +28,25 @@ class ItemController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): view
+    public function index(\Illuminate\Http\Request $request): view
     {
         $query = Item::query();
         if (!checkIfAdmin()) {
             $query->where('user_id', auth()->id());
         }
-        $items = $query->with('user')->orderByDesc('id')->paginate(10);
+
+        $filter = $request->get('filter', 'active');
+        $today  = now()->toDateString();
+
+        if ($filter === 'ended') {
+            $query->where(fn($q) => $q->where('status', 0)->orWhere('start_date', '<', $today));
+        } else {
+            $query->where('status', 1)->where('start_date', '>=', $today);
+        }
+
+        $items = $query->with('user')->orderByDesc('id')->paginate(10)->withQueryString();
         $templates = NotificationTemplate::all();
-        return view('pages.items.index', compact('items', 'templates'));
+        return view('pages.items.index', compact('items', 'templates', 'filter'));
     }
 
     /**

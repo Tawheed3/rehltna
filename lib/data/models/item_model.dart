@@ -30,6 +30,7 @@ class ItemModel {
   final List<ExcludeModel> excludes;
   final String? map;
 
+  final int status;
   final int? featureId;
   final int? itemId;
 
@@ -62,6 +63,7 @@ class ItemModel {
     this.routes = const [],
     this.excludes = const [],
     this.map,
+    this.status = 1,
     this.featureId,
     this.itemId,
   });
@@ -124,6 +126,7 @@ class ItemModel {
       routes: routesList,
       excludes: excludesList,
       map: json['map'],
+      status: int.tryParse(json['status']?.toString() ?? '1') ?? 1,
       featureId: json['feature_id'],
       itemId: int.tryParse(json['item_id']?.toString() ?? '0'),
     );
@@ -244,21 +247,7 @@ class ItemModel {
     } catch (e) { return 1; }
   }
 
-  bool get isExpired {
-    if (startDate.isEmpty) return false;
-    try {
-      DateTime? start;
-      try { start = DateTime.parse(startDate); } catch (_) {
-        if (startDate.contains('T')) start = DateTime.tryParse(startDate.split('T').first);
-        if (start == null) {
-          final parts = startDate.split('-');
-          if (parts.length == 3) start = DateTime.tryParse('${parts[0]}-${parts[1].padLeft(2, '0')}-${parts[2].padLeft(2, '0')}');
-        }
-      }
-      if (start == null) return false;
-      return DateTime.now().isAfter(start);
-    } catch (_) { return false; }
-  }
+  bool get isExpired => status == 0;
 
   double get minPrice {
     if (prices.isEmpty) return priceAfterDiscount;

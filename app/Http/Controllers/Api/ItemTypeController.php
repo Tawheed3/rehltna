@@ -16,13 +16,14 @@ class ItemTypeController extends Controller
 
     public function getItemTypes(): JsonResponse
     {
+        $today = now()->toDateString();
         $itemTypes = ItemType::query()
             ->whereNull('parent_id')
             ->orderByDesc('id')
-            ->withCount('items')
+            ->withCount(['items' => fn($q) => $q->where('status', 1)->where('start_date', '>=', $today)])
             ->with([
-                'children' => function ($q) {
-                    $q->withCount('items');
+                'children' => function ($q) use ($today) {
+                    $q->withCount(['items' => fn($q2) => $q2->where('status', 1)->where('start_date', '>=', $today)]);
                 },
                 'items.galleries' => function ($query) {
                     $query->orderByDesc('id')->take(3);

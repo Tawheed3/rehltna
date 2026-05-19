@@ -26,27 +26,15 @@ class _PastTripsScreenState extends State<PastTripsScreen> {
   }
 
   Future<void> _loadPastTrips() async {
-    setState(() {
-      _isLoading = true;
-    });
-
+    setState(() => _isLoading = true);
     try {
       final itemsProvider = Provider.of<ItemsProvider>(context, listen: false);
-
-      // جلب الرحلات إذا كانت فارغة
-      if (itemsProvider.items.isEmpty) {
-        await itemsProvider.fetchItems();
-      }
-
-      // استخدام getExpiredItems بدلاً من الفلترة اليدوية
+      await itemsProvider.fetchEndedItems();
       _pastTrips = itemsProvider.getExpiredItems();
-
     } catch (e) {
       developer.log('[PastTrips] Error: $e', name: 'Response-output', level: 1000);
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 

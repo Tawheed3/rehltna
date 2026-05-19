@@ -11,12 +11,14 @@ class ItemsProvider extends BaseProvider {
   static const Duration _ttl = Duration(hours: 2);
 
   List<ItemModel> _items = [];
+  List<ItemModel> _endedItems = [];
   List<SubcategoryItem> _itemTypes = [];
   bool _hasMoreData = true;
   int _currentPage = 1;
   bool _hasLoadedOnce = false;
 
   List<ItemModel> get items => _items;
+  List<ItemModel> get endedItems => _endedItems;
   List<SubcategoryItem> get itemTypes => _itemTypes;
   bool get hasMoreData => _hasMoreData;
   bool get hasLoadedOnce => _hasLoadedOnce;
@@ -303,7 +305,18 @@ class ItemsProvider extends BaseProvider {
 
   // ==================== رحلات ====================
 
-  List<ItemModel> getExpiredItems() => _items.where(_isTripExpired).toList();
+  List<ItemModel> getExpiredItems() => _endedItems;
+
+  Future<void> fetchEndedItems() async {
+    startLoading();
+    final data = await getRequest('items?ended=1&limit=100');
+    if (data != null && data['code'] == 200 && data['data'] != null) {
+      final itemsData = data['data']['items']['data'] as List? ?? [];
+      _endedItems = itemsData.map((item) => ItemModel.fromJson(item)).toList();
+      developer.log('Loaded ${_endedItems.length} ended items', name: BaseProvider.logTag);
+    }
+    stopLoading();
+  }
   List<ItemModel> getItemsByType(int typeId) =>
       _items.where((item) => item.itemTypeId == typeId && _isTripActive(item)).toList();
   List<ItemModel> getGroupTours() => getItemsByType(5);

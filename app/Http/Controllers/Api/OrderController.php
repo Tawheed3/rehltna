@@ -176,6 +176,16 @@ class OrderController extends Controller
             'items.*.selected_prices.*.attendees' => 'required|integer|min:1',
         ]);
 
+        // Block orders for ended trips (status=0 or start_date in the past)
+        $today = now()->toDateString();
+        $itemIds = collect($request->get('items'))->pluck('item_id')->toArray();
+        $endedTrip = Item::whereIn('id', $itemIds)
+            ->where(fn($q) => $q->where('status', 0)->orWhere('start_date', '<', $today))
+            ->first();
+        if ($endedTrip) {
+            return $this->responseMessage(422, 'هذه الرحلة منتهية ولا يمكن الحجز عليها');
+        }
+
         $source = $request->get('source');
         $paymentCode = $request->get('payment_method_code');
         $paymentMethodModel = null;

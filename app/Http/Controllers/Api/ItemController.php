@@ -166,7 +166,8 @@ class ItemController extends Controller
         if (!$itemType)
             return $this->responseMessage(404, 'not found');
 
-        $items = $itemType->items()->where('status', 1)->with($this->getOrderedRelations())->orderByDesc('id')->paginate(10);
+        $today = now()->toDateString();
+        $items = $itemType->items()->where('status', 1)->where('start_date', '>=', $today)->with($this->getOrderedRelations())->orderByDesc('id')->paginate(10);
 
         $data = [
             'itemType' => $itemType,

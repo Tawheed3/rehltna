@@ -9,8 +9,9 @@
     .form-label { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
     .form-control, .form-select { border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 14px; padding: 10px 14px; }
     .form-control:focus, .form-select:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
-    .detail-row { display: flex; gap: 10px; align-items: start; margin-bottom: 12px; }
-    .detail-row .form-control { flex: 1; }
+    .detail-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; background:#f8fafc; border-radius:14px; padding:12px; }
+    .detail-row-inputs { display: flex; gap: 10px; align-items: start; }
+    .detail-row-inputs .form-control { flex: 1; }
     .btn-remove-row { background: #fef2f2; color: #ef4444; border: none; border-radius: 10px; width: 36px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; font-size: 16px; }
     .btn-remove-row:hover { background: #fee2e2; }
     .btn-add-row { background: #eff6ff; color: #2563eb; border: 1.5px dashed #93c5fd; border-radius: 12px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; text-align: center; margin-top: 8px; }
@@ -74,21 +75,42 @@
                         @php $existingDetails = old('details', $tripDocument->details ?? []); @endphp
                         @forelse($existingDetails as $i => $row)
                         <div class="detail-row">
-                            <div style="width:200px; flex-shrink:0;">
-                                <input type="text" name="details[{{ $i }}][key]" class="form-control"
-                                       placeholder="العنوان" value="{{ $row['key'] ?? '' }}">
+                            <div class="detail-row-inputs">
+                                <div style="width:200px; flex-shrink:0;">
+                                    <input type="text" name="details[{{ $i }}][key]" class="form-control"
+                                           placeholder="العنوان (مثال: اسم الفندق)" value="{{ $row['key'] ?? '' }}">
+                                </div>
+                                <textarea name="details[{{ $i }}][value]" class="form-control" rows="2"
+                                          placeholder="القيمة (مثال: كراون بلازا)">{{ $row['value'] ?? '' }}</textarea>
+                                <button type="button" class="btn-remove-row" onclick="removeRow(this)">×</button>
                             </div>
-                            <textarea name="details[{{ $i }}][value]" class="form-control" rows="2"
-                                      placeholder="التفاصيل...">{{ $row['value'] ?? '' }}</textarea>
-                            <button type="button" class="btn-remove-row" onclick="removeRow(this)">×</button>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text" style="border-radius:10px 0 0 10px; background:#eff6ff; border-color:#bfdbfe;">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                </span>
+                                <input type="url" name="details[{{ $i }}][location]" class="form-control"
+                                       placeholder="رابط الموقع على خرائط جوجل (اختياري)"
+                                       value="{{ $row['location'] ?? '' }}"
+                                       style="border-radius:0 10px 10px 0;">
+                            </div>
                         </div>
                         @empty
                         <div class="detail-row">
-                            <div style="width:200px; flex-shrink:0;">
-                                <input type="text" name="details[0][key]" class="form-control" placeholder="العنوان">
+                            <div class="detail-row-inputs">
+                                <div style="width:200px; flex-shrink:0;">
+                                    <input type="text" name="details[0][key]" class="form-control" placeholder="العنوان (مثال: اسم الفندق)">
+                                </div>
+                                <textarea name="details[0][value]" class="form-control" rows="2" placeholder="القيمة (مثال: كراون بلازا)"></textarea>
+                                <button type="button" class="btn-remove-row" onclick="removeRow(this)">×</button>
                             </div>
-                            <textarea name="details[0][value]" class="form-control" rows="2" placeholder="التفاصيل..."></textarea>
-                            <button type="button" class="btn-remove-row" onclick="removeRow(this)">×</button>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text" style="border-radius:10px 0 0 10px; background:#eff6ff; border-color:#bfdbfe;">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                </span>
+                                <input type="url" name="details[0][location]" class="form-control"
+                                       placeholder="رابط الموقع على خرائط جوجل (اختياري)"
+                                       style="border-radius:0 10px 10px 0;">
+                            </div>
                         </div>
                         @endforelse
                     </div>
@@ -177,11 +199,21 @@ function addRow() {
     const div = document.createElement('div');
     div.className = 'detail-row';
     div.innerHTML = `
-        <div style="width:200px;flex-shrink:0;">
-            <input type="text" name="details[${rowIndex}][key]" class="form-control" placeholder="العنوان">
+        <div class="detail-row-inputs">
+            <div style="width:200px;flex-shrink:0;">
+                <input type="text" name="details[${rowIndex}][key]" class="form-control" placeholder="العنوان (مثال: اسم الفندق)">
+            </div>
+            <textarea name="details[${rowIndex}][value]" class="form-control" rows="2" placeholder="القيمة (مثال: كراون بلازا)"></textarea>
+            <button type="button" class="btn-remove-row" onclick="removeRow(this)">×</button>
         </div>
-        <textarea name="details[${rowIndex}][value]" class="form-control" rows="2" placeholder="التفاصيل..."></textarea>
-        <button type="button" class="btn-remove-row" onclick="removeRow(this)">×</button>`;
+        <div class="input-group input-group-sm">
+            <span class="input-group-text" style="border-radius:10px 0 0 10px;background:#eff6ff;border-color:#bfdbfe;">
+                <i class="fas fa-map-marker-alt text-primary"></i>
+            </span>
+            <input type="url" name="details[${rowIndex}][location]" class="form-control"
+                   placeholder="رابط الموقع على خرائط جوجل (اختياري)"
+                   style="border-radius:0 10px 10px 0;">
+        </div>`;
     container.appendChild(div);
     rowIndex++;
 }

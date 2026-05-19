@@ -36,10 +36,11 @@ class TripDocumentController extends Controller
             'item_id'        => 'required|exists:items,id',
             'pdf'            => 'nullable|file|mimes:pdf|max:20480',
             'details'        => 'nullable|array',
-            'details.*.key'  => 'required_with:details|string|max:255',
-            'details.*.value'=> 'required_with:details|string',
-            'users'          => 'nullable|array',
-            'users.*'        => 'exists:residency_users,id',
+            'details.*.key'      => 'required_with:details|string|max:255',
+            'details.*.value'    => 'required_with:details|string',
+            'details.*.location' => 'nullable|url|max:2048',
+            'users'              => 'nullable|array',
+            'users.*'            => 'exists:residency_users,id',
         ]);
 
         // One document per trip — delete old one if exists
@@ -56,6 +57,11 @@ class TripDocumentController extends Controller
 
         $details = collect($request->details ?? [])
             ->filter(fn($row) => !empty($row['key']) && !empty($row['value']))
+            ->map(fn($row) => [
+                'key'      => $row['key'],
+                'value'    => $row['value'],
+                'location' => !empty($row['location']) ? $row['location'] : null,
+            ])
             ->values()
             ->toArray();
 
@@ -86,10 +92,11 @@ class TripDocumentController extends Controller
             'item_id'        => 'required|exists:items,id',
             'pdf'            => 'nullable|file|mimes:pdf|max:20480',
             'details'        => 'nullable|array',
-            'details.*.key'  => 'required_with:details|string|max:255',
-            'details.*.value'=> 'required_with:details|string',
-            'users'          => 'nullable|array',
-            'users.*'        => 'exists:residency_users,id',
+            'details.*.key'      => 'required_with:details|string|max:255',
+            'details.*.value'    => 'required_with:details|string',
+            'details.*.location' => 'nullable|url|max:2048',
+            'users'              => 'nullable|array',
+            'users.*'            => 'exists:residency_users,id',
         ]);
 
         $pdfPath = $tripDocument->pdf_path;
@@ -106,6 +113,11 @@ class TripDocumentController extends Controller
 
         $details = collect($request->details ?? [])
             ->filter(fn($row) => !empty($row['key']) && !empty($row['value']))
+            ->map(fn($row) => [
+                'key'      => $row['key'],
+                'value'    => $row['value'],
+                'location' => !empty($row['location']) ? $row['location'] : null,
+            ])
             ->values()
             ->toArray();
 

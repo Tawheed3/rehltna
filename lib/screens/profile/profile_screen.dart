@@ -1685,6 +1685,7 @@ class _TripDocumentCardState extends State<_TripDocumentCard> {
                   ...details.map((row) => _buildDetailRow(
                         row['key'] ?? '',
                         row['value'] ?? '',
+                        row['location'] as String?,
                         isDark,
                       )),
 
@@ -1702,7 +1703,7 @@ class _TripDocumentCardState extends State<_TripDocumentCard> {
     );
   }
 
-  Widget _buildDetailRow(String key, String value, bool isDark) {
+  Widget _buildDetailRow(String key, String value, String? location, bool isDark) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
@@ -1725,13 +1726,38 @@ class _TripDocumentCardState extends State<_TripDocumentCard> {
           Container(width: 1, height: 16, color: AppColors.primary.withOpacity(0.3), margin: const EdgeInsets.only(top: 2)),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 13,
-                height: 1.5,
-                color: isDark ? Colors.white70 : Colors.black87,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 13,
+                    height: 1.5,
+                    color: isDark ? Colors.white70 : Colors.black87,
+                  ),
+                ),
+                if (location != null && location.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  GestureDetector(
+                    onTap: () async {
+                      final uri = Uri.tryParse(location);
+                      if (uri != null) await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.location_on, size: 13, color: Colors.blue),
+                        SizedBox(width: 4),
+                        Text(
+                          'عرض الموقع على الخريطة',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.blue),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ],

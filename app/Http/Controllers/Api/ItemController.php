@@ -40,8 +40,14 @@ class ItemController extends Controller
     public function getItems(Request $request): JsonResponse
     {
 
-        $status = $request->filled('status') ? (int) $request->get('status') : 1;
-        $query = Item::query()->where('status', $status)->with($this->getOrderedRelations());
+        $ended = $request->get('ended') === '1';
+        $today = now()->toDateString();
+        $query = Item::query()
+            ->when($ended,
+                fn($q) => $q->where(fn($q2) => $q2->where('status', 0)->orWhere('start_date', '<', $today)),
+                fn($q) => $q->where('status', 1)->where('start_date', '>=', $today)
+            )
+            ->with($this->getOrderedRelations());
 
         if ($request->filled('search')) {
             $keyword = trim($request->get('search'));

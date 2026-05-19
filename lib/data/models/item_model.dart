@@ -247,7 +247,23 @@ class ItemModel {
     } catch (e) { return 1; }
   }
 
-  bool get isExpired => status == 0;
+  bool get isExpired {
+    if (status == 0) return true;
+    if (startDate.isEmpty) return false;
+    try {
+      final today = DateTime.now();
+      DateTime? start;
+      try { start = DateTime.parse(startDate); } catch (_) {
+        if (startDate.contains('T')) start = DateTime.tryParse(startDate.split('T').first);
+        if (start == null) {
+          final parts = startDate.split('-');
+          if (parts.length == 3) start = DateTime.tryParse('${parts[0]}-${parts[1].padLeft(2, '0')}-${parts[2].padLeft(2, '0')}');
+        }
+      }
+      if (start == null) return false;
+      return today.isAfter(start);
+    } catch (_) { return false; }
+  }
 
   double get minPrice {
     if (prices.isEmpty) return priceAfterDiscount;

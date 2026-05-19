@@ -562,10 +562,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   Widget _buildBottomBar(SettingsService ss, bool isDark) {
     final hasSelection = _getTotalAttendees() > 0;
+    final isEnded = _item?.isExpired ?? false;
     return Container(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), decoration: BoxDecoration(color: isDark ? Colors.grey.shade900 : Colors.white, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, -2))]), child: SafeArea(child: Row(children: [
       Expanded(child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [Text('الإجمالي', style: TextStyle(fontSize: 11, color: isDark ? Colors.white54 : Colors.grey[600])), const SizedBox(height: 2), Text(_totalPriceDisplay, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: hasSelection ? widget.categoryColor : Colors.grey))])),
       const SizedBox(width: 12),
-      SizedBox(height: 48, child: ElevatedButton(onPressed: hasSelection ? _goPayment : null, style: ElevatedButton.styleFrom(backgroundColor: hasSelection ? widget.categoryColor : Colors.grey.shade400, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 24), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), elevation: hasSelection ? 2 : 0), child: const Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.lock_clock, size: 18), SizedBox(width: 6), Text('احجز الآن', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))]))),
+      if (isEnded)
+        Container(height: 48, padding: const EdgeInsets.symmetric(horizontal: 20), decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(12)), child: const Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.history, size: 18, color: Colors.grey), SizedBox(width: 6), Text('رحلة منتهية', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey))]))
+      else
+        SizedBox(height: 48, child: ElevatedButton(onPressed: hasSelection ? _goPayment : null, style: ElevatedButton.styleFrom(backgroundColor: hasSelection ? widget.categoryColor : Colors.grey.shade400, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 24), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), elevation: hasSelection ? 2 : 0), child: const Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.lock_clock, size: 18), SizedBox(width: 6), Text('احجز الآن', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))]))),
     ])));
   }
 

@@ -244,6 +244,22 @@ class ItemModel {
     } catch (e) { return 1; }
   }
 
+  bool get isExpired {
+    if (endDate.isEmpty) return false;
+    try {
+      DateTime? end;
+      try { end = DateTime.parse(endDate); } catch (_) {
+        if (endDate.contains('T')) end = DateTime.tryParse(endDate.split('T').first);
+        if (end == null) {
+          final parts = endDate.split('-');
+          if (parts.length == 3) end = DateTime.tryParse('${parts[0]}-${parts[1].padLeft(2, '0')}-${parts[2].padLeft(2, '0')}');
+        }
+      }
+      if (end == null) return false;
+      return DateTime.now().isAfter(end);
+    } catch (_) { return false; }
+  }
+
   double get minPrice {
     if (prices.isEmpty) return priceAfterDiscount;
     return prices.map((p) => p.effectivePrice).reduce((a, b) => a < b ? a : b);

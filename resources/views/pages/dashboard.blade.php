@@ -363,10 +363,16 @@
 
             if (auth()->user()->hasPermission('manage_trips')) {
                 $cards['items'] = [
-                     'title' => 'Trips',
+                    'title' => 'الرحلات النشطة',
                     'route' => 'items.index',
-                    'icon'  => 'fas fa-box',
-                    'color' => '#FFC107',
+                    'icon'  => 'fas fa-plane-departure',
+                    'color' => '#28a745',
+                ];
+                $cards['items_ended'] = [
+                    'title' => 'الرحلات السابقة',
+                    'route' => 'items.index',
+                    'icon'  => 'fas fa-history',
+                    'color' => '#6c757d',
                 ];
             }
 

@@ -92,6 +92,13 @@ class DashboardController extends Controller
             'items' => [
                 'count' => Item::query()
                     ->when(!checkIfAdmin(), fn($query) => $query->where('user_id', auth()->id()))
+                    ->where('status', 1)
+                    ->count()
+            ],
+            'items_ended' => [
+                'count' => Item::query()
+                    ->when(!checkIfAdmin(), fn($query) => $query->where('user_id', auth()->id()))
+                    ->where('status', 0)
                     ->count()
             ],
             'jobs' => ['count' => Career::query()->count()],

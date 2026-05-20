@@ -123,7 +123,7 @@
                             <tr>
                                 <th>Description</th>
                                 <th>Variation / Package</th>
-                                <th class="text-center">Attendees</th>
+                                <th class="text-center">Pax</th>
                                 <th>Unit Price</th>
                                 <th>Total</th>
                             </tr>

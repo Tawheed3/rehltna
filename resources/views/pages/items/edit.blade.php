@@ -281,31 +281,29 @@
                                                                                                          >@for($i=1;$i<=5;$i++)
                                             <option value="{{$i}}" {{$item->order==$i?'selected':''}}>{{$i}}</option>
                                         @endfor</select></div>
-                                @if(checkIfAdmin())
-                                    <div class="col-md-5 mb-3">
-                                        <label class="form-label fw-bold">
-                                            Responsible Employees <span class="text-danger">*</span>
-                                        </label>
-                                        @php
-                                            $selectedIds = $item->responsible_user_ids ?? ($item->user_id ? [$item->user_id] : []);
-                                        @endphp
-                                        <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 16px;background:#f8fafc;max-height:180px;overflow-y:auto;">
-                                            @foreach($employees as $employee)
-                                                <div class="form-check mb-2">
-                                                    <input class="form-check-input responsible-check"
-                                                           type="checkbox"
-                                                           name="responsible_user_ids[]"
-                                                           value="{{ $employee->id }}"
-                                                           id="emp_e_{{ $employee->id }}"
-                                                           {{ in_array($employee->id, $selectedIds) ? 'checked' : '' }}>
-                                                    <label class="form-check-label fw-medium" for="emp_e_{{ $employee->id }}">
-                                                        {{ $employee->name }}
-                                                    </label>
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="form-label fw-bold">
+                                        Responsible Employees
+                                    </label>
+                                    @php
+                                        $selectedIds = $item->responsible_user_ids ?? ($item->user_id ? [$item->user_id] : []);
+                                    @endphp
+                                    <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 16px;background:#f8fafc;max-height:180px;overflow-y:auto;">
+                                        @foreach($employees as $employee)
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input responsible-check"
+                                                       type="checkbox"
+                                                       name="responsible_user_ids[]"
+                                                       value="{{ $employee->id }}"
+                                                       id="emp_e_{{ $employee->id }}"
+                                                       {{ in_array($employee->id, $selectedIds) ? 'checked' : '' }}>
+                                                <label class="form-check-label fw-medium" for="emp_e_{{ $employee->id }}">
+                                                    {{ $employee->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                @endif
+                                </div>
                             </div>
                         </div>
 

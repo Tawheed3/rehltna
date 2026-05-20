@@ -217,7 +217,7 @@ class OrderController extends Controller
                 'email' => $request->get('email'),
                 'phone' => $request->get('phone'),
                 'payment_method' => $paymentCode,
-                'payment_status' => 'pending',
+                'payment_status' => $paymentCode === 'tamara' ? 'reviewing' : 'pending',
                 'sub_total' => $calculation['sub_total'],
                 'discount_amount' => $calculation['total_discount'],
                 'used_points' => $calculation['points_used'],
@@ -285,7 +285,7 @@ class OrderController extends Controller
                 'total_discount' => $calculation['total_discount'],
                 'tamara_fee' => $calculation['tamara_fee'],
                 'total_amount' => $calculation['final_total'],
-                'status' => 'pending',
+                'status' => $paymentCode === 'tamara' ? 'reviewing' : 'pending',
             ];
 
             if ($paymentCode === 'moyasar' || $paymentCode === 'apple_pay') {

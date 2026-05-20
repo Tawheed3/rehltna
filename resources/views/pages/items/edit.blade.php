@@ -249,7 +249,7 @@
                                         <label class="form-label">Title ({{ strtoupper($lang) }}) <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" name="title_{{ $lang }}" class="form-control form-control-lg"
-                                               value="{{ old('title_'.$lang, $item->{'title_'.$lang}) }}" required>
+                                               value="{{ old('title_'.$lang, $item->{'title_'.$lang}) }}">
                                     </div>
                                 @endforeach
                                 @foreach(get_active_langs() as $lang)
@@ -262,7 +262,7 @@
                                 <div class="col-md-3 mb-3"><label class="form-label">Type <span
                                             class="text-danger">*</span></label><select name="item_type_id"
                                                                                         class="form-select"
-                                                                                        required>@foreach($itemTypes as $t)
+                                                                                       >@foreach($itemTypes as $t)
                                             <option
                                                 value="{{$t->id}}" {{$item->item_type_id==$t->id?'selected':''}}>{{transDB($t,'title')}}</option>
                                         @endforeach</select></div>
@@ -278,7 +278,7 @@
                                     </select></div>
                                 <div class="col-md-3 mb-3"><label class="form-label">Order</label><select name="order"
                                                                                                           class="form-select"
-                                                                                                          required>@for($i=1;$i<=5;$i++)
+                                                                                                         >@for($i=1;$i<=5;$i++)
                                             <option value="{{$i}}" {{$item->order==$i?'selected':''}}>{{$i}}</option>
                                         @endfor</select></div>
                                 @if(checkIfAdmin())
@@ -489,7 +489,7 @@
                                                     <label class="form-label fw-bold">Title (AR) <span
                                                             class="text-danger">*</span></label>
                                                     <input type="text" name="price_title_ar[]" class="form-control"
-                                                           value="{{ $price->title_ar }}" required>
+                                                           value="{{ $price->title_ar }}">
                                                 </div>
                                                 <div class="col-md-3 mb-2 mb-md-0">
                                                     <label class="form-label fw-bold">Title (EN)</label>
@@ -500,7 +500,7 @@
                                                     <label class="form-label fw-bold">Price (SAR) <span
                                                             class="text-danger">*</span></label>
                                                     <input type="number" name="price_value[]" class="form-control"
-                                                           value="{{ $price->price }}" step="0.01" min="0" required>
+                                                           value="{{ $price->price }}" step="0.01" min="0">
                                                 </div>
                                                 <div class="col-md-3 mb-2 mb-md-0">
                                                     <label class="form-label fw-bold">Discount</label>
@@ -547,7 +547,7 @@
                                                     <label class="form-label fw-bold">Title (AR) <span
                                                             class="text-danger">*</span></label>
                                                     <input type="text" name="price_title_ar[]" class="form-control"
-                                                           value="{{ $dp['ar'] }}" required>
+                                                           value="{{ $dp['ar'] }}">
                                                 </div>
                                                 <div class="col-md-3 mb-2 mb-md-0">
                                                     <label class="form-label fw-bold">Title (EN)</label>
@@ -558,7 +558,7 @@
                                                     <label class="form-label fw-bold">Price (SAR) <span
                                                             class="text-danger">*</span></label>
                                                     <input type="number" name="price_value[]" class="form-control"
-                                                           step="0.01" min="0" required>
+                                                           step="0.01" min="0">
                                                 </div>
                                                 <div class="col-md-3 mb-2 mb-md-0">
                                                     <label class="form-label fw-bold">Discount</label>
@@ -597,15 +597,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="col-md-9 mb-3">
-                                    <label class="form-label">Map Link <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i
-                                                class="fas fa-map-marker-alt text-danger"></i></span>
-                                        <input type="text" name="map" class="form-control" value="{{ $item->map }}"
-                                               required>
-                                    </div>
-                                </div>
+                                <div class="col-md-9 mb-3"></div>
                             </div>
                             {{-- Dates Row (Gregorian & Hijri) --}}
                             <div class="row mb-4 p-3 bg-light rounded-3 border">
@@ -615,14 +607,14 @@
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label">Start Date (Gregorian) <span class="text-danger">*</span></label>
                                     <input type="date" name="start_date" class="form-control"
-                                           value="{{ $item->start_date }}" required>
+                                           value="{{ $item->start_date }}">
                                 </div>
 
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label">End Date (Gregorian) <span
                                             class="text-danger">*</span></label>
                                     <input type="date" name="end_date" class="form-control"
-                                           value="{{ $item->end_date }}" required>
+                                           value="{{ $item->end_date }}">
                                 </div>
 
                                 <div class="col-md-3 mb-3">
@@ -646,13 +638,13 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Season <span class="text-danger">*</span></label>
                                     <input type="text" name="season" class="form-control" placeholder="e.g. Summer 2026"
-                                           value="{{ $item->season ?? old('season') }}" required>
+                                           value="{{ $item->season ?? old('season') }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Earned Points <span class="text-danger">*</span></label>
                                     <input type="number" name="earned_points" class="form-control"
                                            placeholder="Points user gets"
-                                           value="{{ $item->earned_points ?? old('earned_points', 0) }}" required>
+                                           value="{{ $item->earned_points ?? old('earned_points', 0) }}">
                                 </div>
                             </div>
 
@@ -663,21 +655,21 @@
                                         Number <span class="text-danger">*</span></label>
                                     <input type="text" name="whatsapp" class="form-control"
                                            placeholder="+9665xxxxxxxx"
-                                           value="{{ $item->whatsapp ?? old('whatsapp') }}" required>
+                                           value="{{ $item->whatsapp ?? old('whatsapp') }}">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label"><i class="fas fa-phone-alt text-primary"></i> Quick
                                         Contact <span class="text-danger">*</span></label>
                                     <input type="text" name="quick_contact" class="form-control"
                                            placeholder="e.g. 05xxxxxxxx"
-                                           value="{{ $item->quick_contact ?? old('quick_contact') }}" required>
+                                           value="{{ $item->quick_contact ?? old('quick_contact') }}">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label"><i class="fas fa-headset text-info"></i> Contact Us
                                         URL/Number <span class="text-danger">*</span></label>
                                     <input type="text" name="contact_us" class="form-control"
                                            placeholder="Link or info"
-                                           value="{{ $item->contact_us ?? old('contact_us') }}" required>
+                                           value="{{ $item->contact_us ?? old('contact_us') }}">
                                 </div>
                             </div>
 
@@ -703,7 +695,7 @@
                                                 <label class="form-label text-dark fw-bold">City <span
                                                         class="text-danger">*</span></label>
                                                 <select name="itinerary_city_id[]"
-                                                        class="form-select bg-white shadow-sm" required>
+                                                        class="form-select bg-white shadow-sm">
                                                     <option value="">-- Select City --</option>
                                                     @foreach($cities as $city)
                                                         <option
@@ -717,7 +709,7 @@
                                                 <input type="date" name="itinerary_start[]"
                                                        class="form-control start-date bg-white shadow-sm"
                                                        onchange="calculateNights(this)" value="{{ $itin->start_date }}"
-                                                       required>
+                                                      >
                                             </div>
                                             <div class="col-md-3 mb-2 mb-md-0">
                                                 <label class="form-label text-dark fw-bold">End Date <span
@@ -725,7 +717,7 @@
                                                 <input type="date" name="itinerary_end[]"
                                                        class="form-control end-date bg-white shadow-sm"
                                                        onchange="calculateNights(this)" value="{{ $itin->end_date }}"
-                                                       required>
+                                                      >
                                             </div>
                                             <div class="col-md-2 mb-2 mb-md-0">
                                                 <label class="form-label text-dark fw-bold">Nights</label>
@@ -740,16 +732,6 @@
                                                         class="fas fa-trash-alt"></i></button>
                                             </div>
 
-                                            <div class="col-md-12 mt-3">
-                                                <label class="form-label text-dark fw-bold">City Map Link</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-white"><i
-                                                            class="fas fa-map-marker-alt text-danger"></i></span>
-                                                    <input type="text" name="itinerary_map[]" class="form-control"
-                                                           placeholder="Google Maps Link"
-                                                           value="{{ $itin->map ?? '' }}">
-                                                </div>
-                                            </div>
 
                                             <div class="col-md-12 mt-3">
                                                 <div
@@ -803,7 +785,7 @@
                                             <label class="form-label text-dark fw-bold">City <span
                                                     class="text-danger">*</span></label>
                                             <select name="itinerary_city_id[]" class="form-select bg-white shadow-sm"
-                                                    required>
+                                                   >
                                                 <option value="">-- Select City --</option>
                                                 @foreach($cities as $city)
                                                     <option
@@ -816,14 +798,14 @@
                                                     class="text-danger">*</span></label>
                                             <input type="date" name="itinerary_start[]"
                                                    class="form-control start-date bg-white shadow-sm"
-                                                   onchange="calculateNights(this)" required>
+                                                   onchange="calculateNights(this)">
                                         </div>
                                         <div class="col-md-3 mb-2 mb-md-0">
                                             <label class="form-label text-dark fw-bold">End Date <span
                                                     class="text-danger">*</span></label>
                                             <input type="date" name="itinerary_end[]"
                                                    class="form-control end-date bg-white shadow-sm"
-                                                   onchange="calculateNights(this)" required>
+                                                   onchange="calculateNights(this)">
                                         </div>
                                         <div class="col-md-2 mb-2 mb-md-0">
                                             <label class="form-label text-dark fw-bold">Nights</label>
@@ -837,15 +819,6 @@
                                                     class="fas fa-trash-alt"></i></button>
                                         </div>
 
-                                        <div class="col-md-12 mt-3">
-                                            <label class="form-label text-dark fw-bold">City Map Link</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-white"><i
-                                                        class="fas fa-map-marker-alt text-danger"></i></span>
-                                                <input type="text" name="itinerary_map[]" class="form-control"
-                                                       placeholder="Google Maps Link">
-                                            </div>
-                                        </div>
 
                                         <div class="col-md-12 mt-3">
                                             <div class="p-3 bg-white rounded border border-secondary border-opacity-25">
@@ -884,7 +857,7 @@
                                             <div class="col-md-3 mb-2 mb-md-0">
                                                 <label class="form-label fw-bold">Title (EN)</label>
                                                 <input type="text" name="route_title_en[]" class="form-control"
-                                                       value="{{ $route->title_en }}" required>
+                                                       value="{{ $route->title_en }}">
                                             </div>
                                             <div class="col-md-3 mb-2 mb-md-0">
                                                 <label class="form-label fw-bold">Title (AR)</label>
@@ -947,7 +920,7 @@
                                             <div class="col-md-3 mb-2 mb-md-0">
                                                 <label class="form-label fw-bold">Title (EN)</label>
                                                 <input type="text" name="route_title_en[]" class="form-control"
-                                                       value="{{ $include['en'] }}" required>
+                                                       value="{{ $include['en'] }}">
                                             </div>
                                             <div class="col-md-3 mb-2 mb-md-0">
                                                 <label class="form-label fw-bold">Title (AR)</label>
@@ -1339,7 +1312,7 @@
         <div class="row route-row mb-3 align-items-center p-3 rounded" style="background-color: #f0fdf4; border: 1px dashed #bbf7d0; animation: fadeIn 0.3s;">
             <div class="col-md-3 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Title (EN)</label>
-                <input type="text" name="route_title_en[]" class="form-control" placeholder="e.g. Flight ticket" required>
+                <input type="text" name="route_title_en[]" class="form-control" placeholder="e.g. Flight ticket">
             </div>
             <div class="col-md-3 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Title (AR)</label>
@@ -1419,15 +1392,15 @@
                     <div class="row itinerary-row mb-4 align-items-end p-3 rounded shadow-sm" style="background-color: #f4f6f9; border: 1px solid #e1e5ef; animation: fadeIn 0.3s;" data-index="${currentIndex}">
                         <div class="col-md-3 mb-2 mb-md-0">
                             <label class="form-label text-dark fw-bold">City <span class="text-danger">*</span></label>
-                            <select name="itinerary_city_id[]" class="form-select bg-white shadow-sm" required>${cityOptions}</select>
+                            <select name="itinerary_city_id[]" class="form-select bg-white shadow-sm">${cityOptions}</select>
                         </div>
                         <div class="col-md-3 mb-2 mb-md-0">
                             <label class="form-label text-dark fw-bold">Start Date <span class="text-danger">*</span></label>
-                            <input type="date" name="itinerary_start[]" class="form-control start-date bg-white shadow-sm" onchange="calculateNights(this)" required>
+                            <input type="date" name="itinerary_start[]" class="form-control start-date bg-white shadow-sm" onchange="calculateNights(this)">
                         </div>
                         <div class="col-md-3 mb-2 mb-md-0">
                             <label class="form-label text-dark fw-bold">End Date <span class="text-danger">*</span></label>
-                            <input type="date" name="itinerary_end[]" class="form-control end-date bg-white shadow-sm" onchange="calculateNights(this)" required>
+                            <input type="date" name="itinerary_end[]" class="form-control end-date bg-white shadow-sm" onchange="calculateNights(this)">
                         </div>
                         <div class="col-md-2 mb-2 mb-md-0">
                             <label class="form-label text-dark fw-bold">Nights</label>
@@ -1437,13 +1410,6 @@
                             <button type="button" class="btn btn-danger remove-row w-100 shadow-sm" style="height: 46px; border-radius: 8px;"><i class="fas fa-trash-alt"></i></button>
                         </div>
 
-                        <div class="col-md-12 mt-3">
-                            <label class="form-label text-dark fw-bold">City Map Link</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="fas fa-map-marker-alt text-danger"></i></span>
-                                <input type="text" name="itinerary_map[]" class="form-control" placeholder="Google Maps Link">
-                            </div>
-                        </div>
 
                         <div class="col-md-12 mt-3">
                             <div class="p-3 bg-white rounded border border-secondary border-opacity-25">
@@ -1502,7 +1468,7 @@
         <div class="row price-row mb-3 align-items-end p-3 rounded" style="background-color: #f8f9fa; border: 1px solid #dee2e6; animation: fadeIn 0.3s;">
             <div class="col-md-3 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Title (AR) <span class="text-danger">*</span></label>
-                <input type="text" name="price_title_ar[]" class="form-control" placeholder="مثال: سعر تذكرة الطفل" required>
+                <input type="text" name="price_title_ar[]" class="form-control" placeholder="مثال: سعر تذكرة الطفل">
             </div>
             <div class="col-md-3 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Title (EN)</label>
@@ -1510,7 +1476,7 @@
             </div>
             <div class="col-md-2 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Price (SAR) <span class="text-danger">*</span></label>
-                <input type="number" name="price_value[]" class="form-control" step="0.01" min="0" required>
+                <input type="number" name="price_value[]" class="form-control" step="0.01" min="0">
             </div>
             <div class="col-md-3 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Discount</label>

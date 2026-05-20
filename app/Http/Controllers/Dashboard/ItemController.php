@@ -77,10 +77,9 @@ class ItemController extends Controller
 
             $data = $request->except($fieldsToExclude);
             if (checkIfAdmin()) {
-                $request->validate(['responsible_user_ids' => 'required|array|min:1']);
-                $ids = $request->input('responsible_user_ids');
+                $ids = $request->input('responsible_user_ids', []);
                 $data['responsible_user_ids'] = $ids;
-                $data['user_id'] = $ids[0];
+                $data['user_id'] = $ids[0] ?? null;
             } else {
                 $data['user_id'] = auth()->id();
                 $data['responsible_user_ids'] = [auth()->id()];

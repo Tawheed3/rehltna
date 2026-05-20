@@ -217,7 +217,7 @@ class OrderController extends Controller
                 'email' => $request->get('email'),
                 'phone' => $request->get('phone'),
                 'payment_method' => $paymentCode,
-                'payment_status' => 'pending',
+                'payment_status' => (str_contains($paymentCode, 'bank_transfer') || str_contains($paymentCode, 'wallet') || $paymentCode === 'instapay') ? 'reviewing' : 'pending',
                 'sub_total' => $calculation['sub_total'],
                 'discount_amount' => $calculation['total_discount'],
                 'used_points' => $calculation['points_used'],
@@ -285,7 +285,7 @@ class OrderController extends Controller
                 'total_discount' => $calculation['total_discount'],
                 'tamara_fee' => $calculation['tamara_fee'],
                 'total_amount' => $calculation['final_total'],
-                'status' => 'pending',
+                'status' => (str_contains($paymentCode, 'bank_transfer') || str_contains($paymentCode, 'wallet') || $paymentCode === 'instapay') ? 'reviewing' : 'pending',
             ];
 
             if ($paymentCode === 'moyasar' || $paymentCode === 'apple_pay') {
@@ -526,9 +526,6 @@ class OrderController extends Controller
 
         if ($order->payment_status === 'paid')
             return $this->responseMessage(400, 'Order is already paid');
-
-        if ($order->payment_status === 'reviewing')
-            return $this->responseMessage(400, 'This order is already under reviewed. please wait for review');
 
         if (!str_contains($order->payment_method, 'bank_transfer') && !str_contains($order->payment_method, 'wallet') && $order->payment_method !== 'instapay') {
             return $this->responseMessage(400, 'This payment method does not require a receipt');

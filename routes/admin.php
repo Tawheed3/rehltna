@@ -126,6 +126,7 @@ Route::group([
             Route::resource('/item-types', ItemTypeController::class);
             Route::post('/item-types-change-is-feature/{id}', [ItemTypeController::class, 'itemTypesChangeIsFeature'])->name('item.types.change.is_feature');
             Route::get('items/{id}/duplicate', [ItemController::class, 'duplicate'])->name('items.duplicate');
+            Route::get('/items/download-template', [ItemController::class, 'downloadTemplate'])->name('items.download-template');
             Route::get('/items/upload', [ItemController::class, 'showUploadForm'])->name('items.upload.form');
             Route::post('/items/import', [ItemController::class, 'import'])->name('items.import');
             Route::resource('/items', ItemController::class);

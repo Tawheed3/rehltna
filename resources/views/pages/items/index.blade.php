@@ -247,6 +247,11 @@
                 real-time.</p>
         </div>
         <div class="d-flex gap-3 align-items-center">
+            <a href="{{ route('items.download-template') }}"
+               class="btn rounded-pill px-4 fw-bold border-0 d-flex align-items-center"
+               style="background: rgba(255,255,255,0.15); color: #ffffff; height: 48px; border: 1.5px solid rgba(255,255,255,0.4) !important;">
+                <i class="fas fa-file-alt me-2"></i> نموذج الرحلة
+            </a>
             <a href="{{ route('items.create') }}"
                class="btn btn-primary rounded-pill px-4 shadow-lg fw-bold border-0 d-flex align-items-center"
                style="background: #ffffff; color: #4f46e5; height: 48px;">

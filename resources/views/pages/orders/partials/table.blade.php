@@ -4,6 +4,7 @@
         <tr>
             <th class="text-center" width="60">#</th>
             <th>Customer Info</th>
+            <th>Trip Name</th>
             <th>Total Bill</th>
             <th class="text-center">Method</th>
             <th class="text-center">Proof</th>
@@ -19,6 +20,13 @@
                 <td>
                     <h6 class="mb-0 fw-bold text-dark">{{ $order->name }}</h6>
                     <span class="text-muted small fw-medium"><i class="las la-phone me-1"></i>{{ $order->phone }}</span>
+                </td>
+                <td>
+                    @php
+                        $tripItem = $order->items->first()?->item;
+                        $tripName = $tripItem?->title_ar ?? $tripItem?->title_en ?? '-';
+                    @endphp
+                    <span class="fw-bold text-dark small">{{ $tripName }}</span>
                 </td>
                 <td><span class="fw-extrabold text-primary">{{ $order->total_amount }} SAR</span></td>
                 <td class="text-center">

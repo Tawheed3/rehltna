@@ -20,7 +20,16 @@ class OrderController extends Controller
 {
     public function index(Request $request): View|string
     {
-        $query = Order::with(['items', 'coupon']);
+        $query = Order::with(['items.item', 'coupon']);
+
+        // Non-admins only see orders for trips they are assigned to
+        if (!checkIfAdmin()) {
+            $userId = auth()->id();
+            $query->whereHas('items.item', function ($q) use ($userId) {
+                $q->where('user_id', $userId)
+                  ->orWhereJsonContains('responsible_user_ids', $userId);
+            });
+        }
 
         $query->when($request->filled('search'), function ($q) use ($request) {
             $search = $request->get('search');
@@ -59,6 +68,18 @@ class OrderController extends Controller
     public function show($id): View
     {
         $order = Order::with(['items.item', 'coupon'])->findOrFail(decrypt($id));
+
+        if (!checkIfAdmin()) {
+            $userId = auth()->id();
+            $isAssigned = $order->items->contains(function ($orderItem) use ($userId) {
+                $item = $orderItem->item;
+                if (!$item) return false;
+                return $item->user_id === $userId
+                    || in_array($userId, $item->responsible_user_ids ?? []);
+            });
+            abort_if(!$isAssigned, 403);
+        }
+
         return view('pages.orders.show', compact('order'));
     }
 

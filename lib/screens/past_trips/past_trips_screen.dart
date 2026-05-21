@@ -274,7 +274,12 @@ class _PastTripsScreenState extends State<PastTripsScreen> {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            trip.itemType.getTitle('ar'),
+                            trip.itineraries.isNotEmpty
+                                ? trip.itineraries
+                                    .map((it) => it.city.getTitle('ar'))
+                                    .where((c) => c.isNotEmpty)
+                                    .join(' - ')
+                                : trip.itemType.getTitle('ar'),
                             style: TextStyle(
                               fontSize: 12,
                               color: isDark ? Colors.white70 : Colors.grey[700],

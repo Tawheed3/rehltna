@@ -252,7 +252,12 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            item.itemType.getTitle(settingsService.languageCode),
+                            item.itineraries.isNotEmpty
+                                ? item.itineraries
+                                    .map((it) => it.city.getTitle(settingsService.languageCode))
+                                    .where((c) => c.isNotEmpty)
+                                    .join(' - ')
+                                : item.itemType.getTitle(settingsService.languageCode),
                             style: TextStyle(
                               fontSize: 12,
                               color: isDark ? Colors.white70 : Colors.grey[600],

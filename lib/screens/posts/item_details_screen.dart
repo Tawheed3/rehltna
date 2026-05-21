@@ -300,7 +300,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         _buildImageGallery(ss),
         Padding(padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           _buildTitleAndSeason(ss, isDark), const SizedBox(height: 16),
-          _buildPriceAndAttendeesCard(ss, isDark), const SizedBox(height: 16),
+          _buildPriceAndAttendeesCard(ss, isDark, _item!.isExpired), const SizedBox(height: 16),
           if (_item!.itineraries.isNotEmpty) ...[_buildItinerarySection(ss, isDark), const SizedBox(height: 16)],
           if (_item!.routes.isNotEmpty) ...[_buildRoutesSection(ss, isDark), const SizedBox(height: 16)],
           if (_item!.excludes.isNotEmpty) ...[_buildExcludesSection(ss, isDark), const SizedBox(height: 16)],
@@ -327,7 +327,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   // ==================== الأسعار + الأفراد + التاريخ ====================
 
-  Widget _buildPriceAndAttendeesCard(SettingsService ss, bool isDark) {
+  Widget _buildPriceAndAttendeesCard(SettingsService ss, bool isDark, bool isEnded) {
     List<PriceModel> sortedPrices = <PriceModel>[];
     if (_item!.prices.isNotEmpty) {
       sortedPrices = List<PriceModel>.from(_item!.prices);
@@ -336,17 +336,17 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     return Container(
       padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: _bgLight(isDark), borderRadius: BorderRadius.circular(16), border: Border.all(color: widget.categoryColor.withOpacity(0.3))),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [Icon(Icons.sell_outlined, size: 20, color: widget.categoryColor), const SizedBox(width: 8), Text('الأسعار وعدد المسافرين', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _textColor(isDark)))]),
+        Row(children: [Icon(Icons.sell_outlined, size: 20, color: widget.categoryColor), const SizedBox(width: 8), Text(isEnded ? 'الأسعار' : 'الأسعار وعدد المسافرين', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _textColor(isDark)))]),
         const SizedBox(height: 16),
-        if (sortedPrices.isNotEmpty) ...sortedPrices.map((price) => _buildPriceItem(price, ss, isDark))
-        else ...[_buildSinglePriceRow(isDark), const SizedBox(height: 12), _buildAttendeesRow(0, isDark)],
+        if (sortedPrices.isNotEmpty) ...sortedPrices.map((price) => _buildPriceItem(price, ss, isDark, isEnded))
+        else ...[_buildSinglePriceRow(isDark), if (!isEnded) ...[const SizedBox(height: 12), _buildAttendeesRow(0, isDark)]],
         const Divider(height: 24, color: Colors.grey),
         _buildDateRow(isDark),
       ]),
     );
   }
 
-  Widget _buildPriceItem(PriceModel price, SettingsService ss, bool isDark) {
+  Widget _buildPriceItem(PriceModel price, SettingsService ss, bool isDark, bool isEnded) {
     final att = _attendeesPerPrice[price.id] ?? 0;
     return Container(
       margin: const EdgeInsets.only(bottom: 12), padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: _bgColor(isDark), borderRadius: BorderRadius.circular(12), border: Border.all(color: widget.categoryColor.withOpacity(0.2))),
@@ -360,14 +360,16 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               if (price.hasDiscount) ...[const SizedBox(width: 8), Text('${price.price.toStringAsFixed(0)}', style: TextStyle(fontSize: 14, color: Colors.grey, decoration: TextDecoration.lineThrough))],
             ]),
           ])),
-          if (att > 0) Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: widget.categoryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Text('${price.effectivePrice * att} ريال', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: widget.categoryColor))),
+          if (!isEnded && att > 0) Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: widget.categoryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(12)), child: Text('${price.effectivePrice * att} ريال', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: widget.categoryColor))),
         ]),
-        const SizedBox(height: 10),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          IconButton(onPressed: att > 0 ? () => _updateAttendees(price.id, -1) : null, icon: Icon(Icons.remove_circle_outline, color: att > 0 ? widget.categoryColor : Colors.grey), iconSize: 28),
-          const SizedBox(width: 20), Text('$att', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: att > 0 ? widget.categoryColor : Colors.grey)), const SizedBox(width: 20),
-          IconButton(onPressed: () => _updateAttendees(price.id, 1), icon: Icon(Icons.add_circle_outline, color: widget.categoryColor), iconSize: 28),
-        ]),
+        if (!isEnded) ...[
+          const SizedBox(height: 10),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            IconButton(onPressed: att > 0 ? () => _updateAttendees(price.id, -1) : null, icon: Icon(Icons.remove_circle_outline, color: att > 0 ? widget.categoryColor : Colors.grey), iconSize: 28),
+            const SizedBox(width: 20), Text('$att', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: att > 0 ? widget.categoryColor : Colors.grey)), const SizedBox(width: 20),
+            IconButton(onPressed: () => _updateAttendees(price.id, 1), icon: Icon(Icons.add_circle_outline, color: widget.categoryColor), iconSize: 28),
+          ]),
+        ],
       ]),
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/localization/app_localizations.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/providers/auth_provider.dart';
+import '../../data/services/notification_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -69,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
 
     if (success && mounted) {
-      // الانتقال للصفحة الرئيسية بعد التسجيل
+      _updateFcmTokenInBackground(authProvider);
       context.go(AppRoutes.home);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -78,6 +80,17 @@ class _SignupScreenState extends State<SignupScreen> {
           backgroundColor: Colors.green,
         ),
       );
+    }
+  }
+
+  void _updateFcmTokenInBackground(AuthProvider authProvider) async {
+    try {
+      final fcmToken = await NotificationService().getToken();
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        authProvider.updateFcmTokenInBackground(fcmToken);
+      }
+    } catch (e) {
+      developer.log('[Signup] FCM update error: $e', name: 'Response-output', level: 900);
     }
   }
 

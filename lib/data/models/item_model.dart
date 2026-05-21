@@ -242,14 +242,15 @@ class ItemModel {
         }
       }
       if (start == null || end == null) return 1;
-      final difference = end.difference(start).inDays;
+      final totalHours = end.difference(start).inHours;
+      final difference = (totalHours / 24).ceil();
       return difference > 0 ? difference : 1;
     } catch (e) { return 1; }
   }
 
   bool get isExpired {
-    if (status == 0) return true;
-    if (startDate.isEmpty) return false;
+    if (startDate.isEmpty) return status == 0;
+    // A draft (status=0) with a future start_date is not expired — only date matters
     try {
       final today = DateTime.now();
       DateTime? start;
@@ -543,5 +544,8 @@ class CityModel {
     );
   }
 
-  String getTitle(String langCode) => langCode == 'ar' ? titleAr : titleEn;
+  String getTitle(String langCode) {
+    if (langCode == 'ar') return titleAr.isNotEmpty ? titleAr : titleEn;
+    return titleEn.isNotEmpty ? titleEn : titleAr;
+  }
 }

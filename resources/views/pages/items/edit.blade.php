@@ -695,14 +695,14 @@
                                             <div class="col-md-3 mb-2 mb-md-0">
                                                 <label class="form-label text-dark fw-bold">City <span
                                                         class="text-danger">*</span></label>
-                                                <select name="itinerary_city_id[]"
-                                                        class="form-select bg-white shadow-sm">
+                                                <select class="city-select form-select bg-white shadow-sm">
                                                     <option value="">-- Select City --</option>
                                                     @foreach($cities as $city)
                                                         <option
                                                             value="{{ $city->id }}" {{ $itin->city_id == $city->id ? 'selected' : '' }}>{{ transDB($city, 'title') }}</option>
                                                     @endforeach
                                                 </select>
+                                                <input type="hidden" name="itinerary_city_id[]" class="city-id-input" value="{{ $itin->city_id }}">
                                             </div>
                                             <div class="col-md-3 mb-2 mb-md-0">
                                                 <label class="form-label text-dark fw-bold">Start Date <span
@@ -788,14 +788,14 @@
                                         <div class="col-md-3 mb-2 mb-md-0">
                                             <label class="form-label text-dark fw-bold">City <span
                                                     class="text-danger">*</span></label>
-                                            <select name="itinerary_city_id[]" class="form-select bg-white shadow-sm"
-                                                   >
+                                            <select class="city-select form-select bg-white shadow-sm">
                                                 <option value="">-- Select City --</option>
                                                 @foreach($cities as $city)
                                                     <option
                                                         value="{{ $city->id }}">{{ transDB($city, 'title') }}</option>
                                                 @endforeach
                                             </select>
+                                            <input type="hidden" name="itinerary_city_id[]" class="city-id-input" value="">
                                         </div>
                                         <div class="col-md-3 mb-2 mb-md-0">
                                             <label class="form-label text-dark fw-bold">Start Date <span
@@ -1110,12 +1110,16 @@
         function initCitySelect(el) {
             if (el.tomselect) return;
             const preSelected = el.value;
+            const hiddenInput = el.closest('.itinerary-row').querySelector('.city-id-input');
             new TomSelect(el, {
                 valueField: 'value',
                 labelField: 'text',
                 searchField: 'text',
                 options: ITINERARY_CITIES,
                 items: preSelected ? [preSelected] : [],
+                onChange: function (value) {
+                    if (hiddenInput) hiddenInput.value = value;
+                },
                 create: function (input, callback) {
                     $.post('{{ route("cities.quick-create") }}', { name: input, _token: '{{ csrf_token() }}' })
                         .done(function (data) {
@@ -1132,7 +1136,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('select[name="itinerary_city_id[]"]').forEach(initCitySelect);
+            document.querySelectorAll('.itinerary-row .city-select').forEach(initCitySelect);
         });
     </script>
     <script>
@@ -1400,7 +1404,8 @@
                         </div>
                         <div class="col-md-3 mb-2 mb-md-0">
                             <label class="form-label text-dark fw-bold">City <span class="text-danger">*</span></label>
-                            <select name="itinerary_city_id[]" class="form-select bg-white shadow-sm">${cityOptions}</select>
+                            <select class="city-select form-select bg-white shadow-sm">${cityOptions}</select>
+                            <input type="hidden" name="itinerary_city_id[]" class="city-id-input" value="">
                         </div>
                         <div class="col-md-3 mb-2 mb-md-0">
                             <label class="form-label text-dark fw-bold">Start Date <span class="text-danger">*</span></label>
@@ -1434,7 +1439,7 @@
                 `;
                 const repeater = document.getElementById('itinerary-repeater');
                 repeater.insertAdjacentHTML('beforeend', rowHtml);
-                initCitySelect(repeater.lastElementChild.querySelector('select[name="itinerary_city_id[]"]'));
+                initCitySelect(repeater.lastElementChild.querySelector('.city-select'));
                 reindexRows();
             }
 

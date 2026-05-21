@@ -605,6 +605,9 @@
                                         <div class="row itinerary-row mb-4 align-items-end p-3 rounded shadow-sm"
                                              style="background-color: #f4f6f9; border: 1px solid #e1e5ef;"
                                              data-index="{{ $index }}">
+                                            <div class="col-12 drag-handle text-center py-1 mb-2" style="cursor: grab; color: #999; background: #e0e4ed; border-radius: 6px; user-select: none;" title="Drag to reorder">
+                                                <i class="fas fa-grip-horizontal"></i>
+                                            </div>
                                             <div class="col-md-3 mb-2 mb-md-0">
                                                 <label class="form-label text-dark fw-bold">City <span
                                                         class="text-danger">*</span></label>
@@ -695,6 +698,9 @@
                                 @else
                                     <div class="row itinerary-row mb-4 align-items-end p-3 rounded shadow-sm"
                                          style="background-color: #f4f6f9; border: 1px solid #e1e5ef;" data-index="0">
+                                        <div class="col-12 drag-handle text-center py-1 mb-2" style="cursor: grab; color: #999; background: #e0e4ed; border-radius: 6px; user-select: none;" title="Drag to reorder">
+                                            <i class="fas fa-grip-horizontal"></i>
+                                        </div>
                                         <div class="col-md-3 mb-2 mb-md-0">
                                             <label class="form-label text-dark fw-bold">City <span
                                                     class="text-danger">*</span></label>
@@ -1001,6 +1007,7 @@
     <script src="https://cdn.jsdelivr.net/npm/moment-hijri@2.1.2/moment-hijri.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-hijri-datepicker@1.0.2/dist/js/bootstrap-hijri-datetimepicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
     <script>
         const ITINERARY_CITIES = [
             @foreach($cities as $city)
@@ -1284,6 +1291,9 @@
 
                 let rowHtml = `
                     <div class="row itinerary-row mb-4 align-items-end p-3 rounded shadow-sm" style="background-color: #f4f6f9; border: 1px solid #e1e5ef; animation: fadeIn 0.3s;" data-index="${currentIndex}">
+                        <div class="col-12 drag-handle text-center py-1 mb-2" style="cursor: grab; color: #999; background: #e0e4ed; border-radius: 6px; user-select: none;" title="Drag to reorder">
+                            <i class="fas fa-grip-horizontal"></i>
+                        </div>
                         <div class="col-md-3 mb-2 mb-md-0">
                             <label class="form-label text-dark fw-bold">City <span class="text-danger">*</span></label>
                             <select name="itinerary_city_id[]" class="form-select bg-white shadow-sm">${cityOptions}</select>
@@ -1321,6 +1331,7 @@
                 const repeater = document.getElementById('itinerary-repeater');
                 repeater.insertAdjacentHTML('beforeend', rowHtml);
                 initCitySelect(repeater.lastElementChild.querySelector('select[name="itinerary_city_id[]"]'));
+                reindexRows();
             }
 
             window.addPlaceRow = function (btn) {
@@ -1354,6 +1365,7 @@
                     $(this).closest('.itinerary-row').find('input').not('[type="button"]').val('');
                     $(this).closest('.itinerary-row').find('.places-repeater').empty();
                 }
+                reindexRows();
             });
 
         });
@@ -1439,5 +1451,24 @@
             }
         });
 
+    </script>
+    <script>
+        function reindexRows() {
+            document.querySelectorAll('#itinerary-repeater .itinerary-row').forEach(function (row, newIndex) {
+                row.dataset.index = newIndex;
+                row.querySelectorAll('input[name^="itinerary_places_en["]').forEach(function (el) {
+                    el.name = 'itinerary_places_en[' + newIndex + '][]';
+                });
+                row.querySelectorAll('input[name^="itinerary_places_ar["]').forEach(function (el) {
+                    el.name = 'itinerary_places_ar[' + newIndex + '][]';
+                });
+            });
+        }
+
+        new Sortable(document.getElementById('itinerary-repeater'), {
+            handle: '.drag-handle',
+            animation: 150,
+            onEnd: function () { reindexRows(); }
+        });
     </script>
 @endsection

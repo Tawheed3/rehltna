@@ -19,7 +19,7 @@ class ItemController extends Controller
             'galleries',
             'itemType',
             'itineraries' => function ($q) {
-                $q->orderBy('start_date', 'asc');
+                $q->orderBy('id', 'asc');
             },
             'itineraries.places' => function ($q) {
                 $q->orderBy('id', 'asc');

@@ -42,7 +42,8 @@
 
 <script>
 (function () {
-    const CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB per chunk
+    const CHUNK_SIZE     = 10 * 1024 * 1024; // 10 MB per chunk
+    const DIRECT_LIMIT   = 10 * 1024 * 1024; // files ≤ 10 MB go in one request
     const uploadUrl  = '{{ route('trip-documents.upload-chunk') }}';
     const csrfToken  = '{{ csrf_token() }}';
 
@@ -85,7 +86,7 @@
     }
 
     async function startUpload(file) {
-        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+        const totalChunks = file.size <= DIRECT_LIMIT ? 1 : Math.ceil(file.size / CHUNK_SIZE);
         const uploadId    = generateId();
 
         progressWrap.classList.remove('d-none');
@@ -107,7 +108,7 @@
             const pct = Math.round(((i) / totalChunks) * 100);
             bar.style.width      = pct + '%';
             percentLabel.textContent = pct + '%';
-            statusText.textContent   = `جاري الرفع — جزء ${i + 1} من ${totalChunks}`;
+            statusText.textContent   = totalChunks === 1 ? 'جاري الرفع...' : `جاري الرفع — جزء ${i + 1} من ${totalChunks}`;
             sizeInfo.textContent     = `${fmt(Math.min((i + 1) * CHUNK_SIZE, file.size))} من ${fmt(file.size)}`;
 
             let resp;

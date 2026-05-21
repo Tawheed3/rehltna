@@ -43,8 +43,8 @@ class _SplashScreenState extends State<SplashScreen>
       _loadDataInBackground();
     });
 
-    // ✅ إظهار الزر بعد 5 ثواني بالظبط
-    Future.delayed(const Duration(seconds: 5), () {
+    // ✅ إظهار الزر بعد 2 ثواني بالظبط
+    Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
           _showButton = true;

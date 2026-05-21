@@ -1,3 +1,4 @@
+// ==================== main.dart ====================
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ import 'data/providers/payment_methods_provider.dart';
 import 'data/providers/pixel_provider.dart';
 import 'data/providers/reviews_provider.dart';
 import 'data/providers/custom_pages_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

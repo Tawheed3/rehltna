@@ -7,7 +7,7 @@ class AppRoutes {
   static const String category = '/category';
   static const String groupTours = '/group-tours';
   static const String posts = '/posts';
-  static const String details = '/details';
+  static const String details = '/details';  // ✅ لازم يكون موجود
   static const String settings = '/settings';
   static const String notifications = '/notifications';
   static const String about = '/about';

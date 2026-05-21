@@ -34,7 +34,7 @@ class TripDocumentController extends Controller
     {
         $request->validate([
             'item_id'        => 'required|exists:items,id',
-            'pdf'            => 'nullable|file|mimes:pdf|max:204800',
+            'pdf_path'       => 'nullable|string|max:500',
             'details'        => 'nullable|array',
             'details.*.key'      => 'required_with:details|string|max:255',
             'details.*.value'    => 'required_with:details|string',
@@ -50,10 +50,7 @@ class TripDocumentController extends Controller
             $old->delete();
         }
 
-        $pdfPath = null;
-        if ($request->hasFile('pdf')) {
-            $pdfPath = $request->file('pdf')->store('trip-documents', 'public');
-        }
+        $pdfPath = $request->input('pdf_path') ?: null;
 
         $details = collect($request->details ?? [])
             ->filter(fn($row) => !empty($row['key']) && !empty($row['value']))
@@ -90,7 +87,7 @@ class TripDocumentController extends Controller
     {
         $request->validate([
             'item_id'        => 'required|exists:items,id',
-            'pdf'            => 'nullable|file|mimes:pdf|max:204800',
+            'pdf_path'       => 'nullable|string|max:500',
             'details'        => 'nullable|array',
             'details.*.key'      => 'required_with:details|string|max:255',
             'details.*.value'    => 'required_with:details|string',
@@ -100,10 +97,11 @@ class TripDocumentController extends Controller
         ]);
 
         $pdfPath = $tripDocument->pdf_path;
+        $newPath = $request->input('pdf_path');
 
-        if ($request->hasFile('pdf')) {
+        if ($newPath && $newPath !== $pdfPath) {
             if ($pdfPath) Storage::disk('public')->delete($pdfPath);
-            $pdfPath = $request->file('pdf')->store('trip-documents', 'public');
+            $pdfPath = $newPath;
         }
 
         if ($request->boolean('remove_pdf') && $pdfPath) {

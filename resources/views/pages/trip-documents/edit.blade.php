@@ -45,7 +45,7 @@
         </div>
     @endif
 
-    <form action="{{ route('trip-documents.update', $tripDocument) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('trip-documents.update', $tripDocument) }}" method="POST" id="doc-form">
         @csrf @method('PUT')
 
         <div class="row g-4">
@@ -125,31 +125,20 @@
                     <div class="section-label"><i class="fas fa-file-pdf me-2"></i> ملف PDF</div>
 
                     @if($tripDocument->pdf_path)
-                    <div class="pdf-current">
+                    <div class="pdf-current mb-3">
                         <div class="d-flex align-items-center gap-3">
                             <i class="fas fa-file-pdf fa-lg text-danger"></i>
                             <div>
-                                <div class="fw-bold text-sm">الملف الحالي</div>
+                                <div class="fw-bold" style="font-size:13px;">الملف الحالي</div>
                                 <a href="{{ Storage::url($tripDocument->pdf_path) }}" target="_blank"
                                    class="text-danger text-decoration-none" style="font-size:12px;">عرض PDF</a>
                             </div>
                         </div>
-                        <label class="d-flex align-items-center gap-2 mb-0 cursor-pointer">
-                            <input type="checkbox" name="remove_pdf" value="1" id="remove-pdf">
-                            <span style="font-size:13px; color:#ef4444; font-weight:700;">حذف الملف</span>
-                        </label>
                     </div>
                     @endif
-
-                    <label class="pdf-upload-area d-block" for="pdf-input">
-                        <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2 d-block"></i>
-                        <div class="fw-bold text-muted" id="pdf-label">
-                            {{ $tripDocument->pdf_path ? 'اختر ملفاً جديداً لاستبدال الحالي' : 'اضغط لاختيار ملف PDF' }}
-                        </div>
-                        <div class="text-muted mt-1" style="font-size:12px;">PDF فقط — حد أقصى 200 ميجابايت</div>
-                    </label>
-                    <input type="file" name="pdf" id="pdf-input" accept=".pdf" class="d-none"
-                           onchange="document.getElementById('pdf-label').textContent = this.files[0]?.name || ''">
+                    @include('pages.trip-documents.partials.chunked-uploader', [
+                        'existingPath' => $tripDocument->pdf_path ?? null
+                    ])
                 </div>
 
             </div>
@@ -181,7 +170,7 @@
         </div>
 
         <div class="d-flex gap-3 mt-2 mb-5">
-            <button type="submit" class="btn btn-primary fw-bold px-5 py-2" style="border-radius:14px;">
+            <button type="submit" id="submit-btn" class="btn btn-primary fw-bold px-5 py-2" style="border-radius:14px;">
                 <i class="fas fa-save me-2"></i> حفظ التعديلات
             </button>
             <a href="{{ route('trip-documents.index') }}" class="btn btn-light fw-bold px-4 py-2" style="border-radius:14px;">إلغاء</a>

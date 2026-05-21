@@ -50,6 +50,7 @@ use App\Http\Controllers\Dashboard\{ActivityLogController,
     TenantController,
     TestimonialController,
     TripDocumentController,
+    ChunkUploadController,
     TypeOfferController};
 
 use App\Http\Controllers\Sitemap\SitemapController;
@@ -131,6 +132,7 @@ Route::group([
             Route::post('/items/import', [ItemController::class, 'import'])->name('items.import');
             Route::resource('/items', ItemController::class);
             Route::resource('/trip-documents', TripDocumentController::class);
+            Route::post('/trip-documents/upload-chunk', [ChunkUploadController::class, 'uploadChunk'])->name('trip-documents.upload-chunk');
             Route::post('/items-change-status/{id}', [ItemController::class, 'itemsChangeStatus'])->name('items.change.status');
             Route::post('/items-change-is-feature/{id}', [ItemController::class, 'itemsChangeIsFeature'])->name('items.change.is_feature');
             Route::post('items/change-out-of-stock/{id}', [ItemController::class, 'changeOutOfStock'])->name('items.change.out_of_stock');

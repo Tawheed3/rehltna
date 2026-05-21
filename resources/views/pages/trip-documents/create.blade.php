@@ -47,7 +47,7 @@
         </div>
     @endif
 
-    <form action="{{ route('trip-documents.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('trip-documents.store') }}" method="POST" id="doc-form">
         @csrf
 
         <div class="row g-4">
@@ -122,16 +122,10 @@
                     </button>
                 </div>
 
-                {{-- PDF Upload --}}
+                {{-- PDF Upload (chunked) --}}
                 <div class="form-card">
                     <div class="section-label"><i class="fas fa-file-pdf me-2"></i> ملف PDF (اختياري)</div>
-                    <label class="pdf-upload-area d-block" for="pdf-input">
-                        <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2 d-block"></i>
-                        <div class="fw-bold text-muted" id="pdf-label">اضغط لاختيار ملف PDF أو اسحبه هنا</div>
-                        <div class="text-muted mt-1" style="font-size:12px;">PDF فقط — حد أقصى 200 ميجابايت</div>
-                    </label>
-                    <input type="file" name="pdf" id="pdf-input" accept=".pdf" class="d-none"
-                           onchange="document.getElementById('pdf-label').textContent = this.files[0]?.name || 'اضغط لاختيار ملف PDF'">
+                    @include('pages.trip-documents.partials.chunked-uploader')
                 </div>
 
             </div>
@@ -161,7 +155,7 @@
         </div>
 
         <div class="d-flex gap-3 mt-2 mb-5">
-            <button type="submit" class="btn btn-primary fw-bold px-5 py-2" style="border-radius:14px;">
+            <button type="submit" id="submit-btn" class="btn btn-primary fw-bold px-5 py-2" style="border-radius:14px;">
                 <i class="fas fa-save me-2"></i> حفظ الوثيقة
             </button>
             <a href="{{ route('trip-documents.index') }}" class="btn btn-light fw-bold px-4 py-2" style="border-radius:14px;">إلغاء</a>

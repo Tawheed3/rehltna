@@ -19,22 +19,22 @@ class Item extends Model
 
     public function packages(): HasMany
     {
-        return $this->hasMany(ItemPackage::class, 'item_id');
+        return $this->hasMany(ItemPackage::class, 'item_id')->orderBy('id', 'asc');
     }
 
     public function excludes(): HasMany
     {
-        return $this->hasMany(ItemExclude::class, 'item_id');
+        return $this->hasMany(ItemExclude::class, 'item_id')->orderBy('id', 'asc');
     }
 
     public function prices(): HasMany
     {
-        return $this->hasMany(ItemPrice::class, 'item_id');
+        return $this->hasMany(ItemPrice::class, 'item_id')->orderBy('id', 'asc');
     }
 
     public function routes(): HasMany
     {
-        return $this->hasMany(ItemRoute::class, 'item_id');
+        return $this->hasMany(ItemRoute::class, 'item_id')->orderBy('id', 'asc');
     }
 
     public function itemType(): BelongsTo

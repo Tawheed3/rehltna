@@ -34,7 +34,7 @@ class TripDocumentController extends Controller
     {
         $request->validate([
             'item_id'        => 'required|exists:items,id',
-            'pdf'            => 'nullable|file|mimes:pdf|max:20480',
+            'pdf'            => 'nullable|file|mimes:pdf|max:204800',
             'details'        => 'nullable|array',
             'details.*.key'      => 'required_with:details|string|max:255',
             'details.*.value'    => 'required_with:details|string',
@@ -90,7 +90,7 @@ class TripDocumentController extends Controller
     {
         $request->validate([
             'item_id'        => 'required|exists:items,id',
-            'pdf'            => 'nullable|file|mimes:pdf|max:20480',
+            'pdf'            => 'nullable|file|mimes:pdf|max:204800',
             'details'        => 'nullable|array',
             'details.*.key'      => 'required_with:details|string|max:255',
             'details.*.value'    => 'required_with:details|string',

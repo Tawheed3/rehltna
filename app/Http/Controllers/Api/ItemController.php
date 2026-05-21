@@ -44,7 +44,7 @@ class ItemController extends Controller
         $today = now()->toDateString();
         $query = Item::query()
             ->when($ended,
-                fn($q) => $q->where(fn($q2) => $q2->where('status', 0)->orWhere('start_date', '<', $today)),
+                fn($q) => $q->where('start_date', '<', $today),
                 fn($q) => $q->where('status', 1)->where('start_date', '>=', $today)
             )
             ->with($this->getOrderedRelations());

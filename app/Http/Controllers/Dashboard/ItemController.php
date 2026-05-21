@@ -817,14 +817,25 @@ class ItemController extends Controller
             $newItem->is_feature = 0;
             $newItem->featured_at = null;
 
+            // Clear slugs temporarily — they are set after save() so the new ID is available
             $activeLangs = get_active_langs();
             foreach ($activeLangs as $lang) {
                 if (!empty($newItem->{"title_$lang"})) {
                     $newItem->{"title_$lang"} = $newItem->{"title_$lang"} . ' (Copy)';
-                    $newItem->{"slug_$lang"} = $this->generateSlug("slug_$lang", $newItem->{"title_$lang"});
                 }
+                $newItem->{"slug_$lang"} = null;
             }
 
+            $newItem->save();
+
+            // Generate slugs anchored to the new ID so Arabic titles never collide
+            foreach ($activeLangs as $lang) {
+                if (!empty($newItem->{"title_$lang"})) {
+                    $base = Str::slug($newItem->{"title_$lang"}, '-');
+                    if (empty($base)) $base = 'trip';
+                    $newItem->{"slug_$lang"} = $base . '-' . $newItem->id;
+                }
+            }
             $newItem->save();
 
             foreach ($originalItem->galleries as $gallery) {

@@ -146,7 +146,7 @@
                         <div class="fw-bold text-muted" id="pdf-label">
                             {{ $tripDocument->pdf_path ? 'اختر ملفاً جديداً لاستبدال الحالي' : 'اضغط لاختيار ملف PDF' }}
                         </div>
-                        <div class="text-muted mt-1" style="font-size:12px;">PDF فقط — حد أقصى 20 ميجابايت</div>
+                        <div class="text-muted mt-1" style="font-size:12px;">PDF فقط — حد أقصى 200 ميجابايت</div>
                     </label>
                     <input type="file" name="pdf" id="pdf-input" accept=".pdf" class="d-none"
                            onchange="document.getElementById('pdf-label').textContent = this.files[0]?.name || ''">

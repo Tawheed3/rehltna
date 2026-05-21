@@ -128,7 +128,7 @@
                     <label class="pdf-upload-area d-block" for="pdf-input">
                         <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2 d-block"></i>
                         <div class="fw-bold text-muted" id="pdf-label">اضغط لاختيار ملف PDF أو اسحبه هنا</div>
-                        <div class="text-muted mt-1" style="font-size:12px;">PDF فقط — حد أقصى 20 ميجابايت</div>
+                        <div class="text-muted mt-1" style="font-size:12px;">PDF فقط — حد أقصى 200 ميجابايت</div>
                     </label>
                     <input type="file" name="pdf" id="pdf-input" accept=".pdf" class="d-none"
                            onchange="document.getElementById('pdf-label').textContent = this.files[0]?.name || 'اضغط لاختيار ملف PDF'">

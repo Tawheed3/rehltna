@@ -54,7 +54,7 @@ class Item extends Model
 
     public function itineraries(): HasMany
     {
-        return $this->hasMany(ItemItinerary::class);
+        return $this->hasMany(ItemItinerary::class)->orderBy('id', 'asc');
     }
 
     public function tripDocument()

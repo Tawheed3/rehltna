@@ -342,7 +342,12 @@
                             <i class="fas fa-map-marker-alt me-1 text-danger"></i> {{ $item->itineraries->count() }} Cities
                         </span>
                                             <span class="text-muted mt-1" style="font-size: 11px;">
-                            <i class="fas fa-moon me-1 text-primary"></i> {{ $item->itineraries->sum('nights') }} Nights
+                            <i class="fas fa-moon me-1 text-primary"></i>
+                            @if($item->start_date && $item->end_date)
+                                {{ \Carbon\Carbon::parse($item->start_date)->diffInDays(\Carbon\Carbon::parse($item->end_date)) }} Nights
+                            @else
+                                — Nights
+                            @endif
                         </span>
                                         </div>
                                     </td>

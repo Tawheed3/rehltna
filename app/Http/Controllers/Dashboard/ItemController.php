@@ -247,34 +247,39 @@ class ItemController extends Controller
                 }
             }
 
-            try {
-                $template = NotificationTemplate::inRandomOrder()->first();
-                if ($template) {
+            // Only notify users if the trip is actually visible (active + future date)
+            $isVisible = $item->status == 1 && (!$item->start_date || $item->start_date >= now()->toDateString());
 
-                    $isArabic = preg_match('/[\x{0600}-\x{06FF}]/u', $template->title . $template->body);
+            if ($isVisible) {
+                try {
+                    $template = NotificationTemplate::inRandomOrder()->first();
+                    if ($template) {
 
-                    if ($isArabic) {
-                        $tripName = $item->title_ar ?? $item->title_en ?? 'Our Trip';
-                    } else {
-                        $tripName = $item->title_en ?? $item->title_ar ?? 'Our Trip';
+                        $isArabic = preg_match('/[\x{0600}-\x{06FF}]/u', $template->title . $template->body);
+
+                        if ($isArabic) {
+                            $tripName = $item->title_ar ?? $item->title_en ?? 'Our Trip';
+                        } else {
+                            $tripName = $item->title_en ?? $item->title_ar ?? 'Our Trip';
+                        }
+
+                        $title = str_replace('{trip_name}', $tripName, $template->title);
+                        $body = str_replace('{trip_name}', $tripName, $template->body);
+
+                        $tokens = ResidencyUser::whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
+
+                        foreach ($tokens as $token) {
+                            SendPushNotificationJob::dispatch(
+                                $token,
+                                $title,
+                                $body,
+                                ['type' => 'new_trip', 'trip_id' => (string)$item->id]
+                            );
+                        }
                     }
-
-                    $title = str_replace('{trip_name}', $tripName, $template->title);
-                    $body = str_replace('{trip_name}', $tripName, $template->body);
-
-                    $tokens = ResidencyUser::whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
-
-                    foreach ($tokens as $token) {
-                        SendPushNotificationJob::dispatch(
-                            $token,
-                            $title,
-                            $body,
-                            ['type' => 'new_trip', 'trip_id' => (string)$item->id]
-                        );
-                    }
+                } catch (\Exception $e) {
+                    Log::error("Error sending push notification for new trip: " . $e->getMessage());
                 }
-            } catch (\Exception $e) {
-                Log::error("Error sending push notification for new trip: " . $e->getMessage());
             }
 
             return redirect()->route('items.index')->with('success', 'Item created successfully.');

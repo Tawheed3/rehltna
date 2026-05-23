@@ -45,7 +45,7 @@ class ItemController extends Controller
         $query = Item::query()
             ->when($ended,
                 fn($q) => $q->where('start_date', '<', $today),
-                fn($q) => $q->where('status', 1)->where('start_date', '>=', $today)
+                fn($q) => $q->where('status', 1)->where(fn($q2) => $q2->whereNull('start_date')->orWhere('start_date', '>=', $today))
             )
             ->with($this->getOrderedRelations());
 
@@ -176,7 +176,7 @@ class ItemController extends Controller
             return $this->responseMessage(404, 'not found');
 
         $today = now()->toDateString();
-        $items = $itemType->items()->where('status', 1)->where('start_date', '>=', $today)->with($this->getOrderedRelations())->orderByDesc('id')->paginate(10);
+        $items = $itemType->items()->where('status', 1)->where(fn($q) => $q->whereNull('start_date')->orWhere('start_date', '>=', $today))->with($this->getOrderedRelations())->orderByDesc('id')->paginate(10);
 
         $data = [
             'itemType' => $itemType,

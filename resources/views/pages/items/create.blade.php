@@ -505,7 +505,7 @@
 
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label">Start Date (Gregorian) <span class="text-danger">*</span></label>
-                                    <input type="date" name="start_date" class="form-control">
+                                    <input type="date" name="start_date" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
 
                                 <div class="col-md-3 mb-3">

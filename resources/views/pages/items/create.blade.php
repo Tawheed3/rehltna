@@ -353,7 +353,7 @@
                                     <div class="bg-light p-4 rounded border border-dashed text-center">
                                         <button type="button" class="btn btn-outline-primary mb-3 open-gallery"
                                                 data-input="gallery" data-preview="gallery_container" data-multi="true">
-                                            <i class="fas fa-images me-1"></i> Open Gallery
+                                            <i class="fas fa-photo-video me-1"></i> Add Images & Videos
                                         </button>
                                         <div id="gallery_container"
                                              class="d-flex flex-wrap justify-content-center gap-2"></div>

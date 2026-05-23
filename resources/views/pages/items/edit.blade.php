@@ -366,7 +366,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-12 mb-4">
                                     <h6 class="text-dark fw-bold mb-3 border-bottom pb-2">Gallery</h6>
                                     <div class="bg-light p-4 rounded border border-dashed text-center">
                                         <button class="btn btn-outline-primary mb-3 open-gallery" type="button"
@@ -398,59 +398,6 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 mb-4">
-                                    <h6 class="text-danger fw-bold mb-3 border-bottom pb-2">
-                                        <i class="fas fa-lock me-1"></i> Private Media (Visible to Subscribers Only)
-                                    </h6>
-                                    <div class="bg-light p-4 rounded border border-dashed text-center"
-                                         style="border-color: #ffc107 !important;">
-                                        <button class="btn btn-outline-danger mb-3 open-gallery" type="button"
-                                                data-input="private_gallery" data-preview="private_gallery_container"
-                                                data-multi="true">
-                                            <i class="fas fa-folder-plus me-1"></i> Add Private Files (Images, Videos,
-                                            PDFs)
-                                        </button>
-                                        <div id="private_gallery_container"
-                                             class="d-flex flex-wrap justify-content-center gap-2">
-                                            @if(isset($item) && $item->privateGalleries)
-                                                @foreach($item->privateGalleries as $gallery)
-                                                    @php
-                                                        $ext = pathinfo($gallery->image, PATHINFO_EXTENSION);
-                                                        $isVid = in_array(strtolower($ext), ['mp4', 'mov', 'avi', 'mkv']);
-                                                        $isPdf = in_array(strtolower($ext), ['pdf', 'doc', 'docx', 'xls', 'xlsx']);
-                                                    @endphp
-                                                    <div
-                                                        class="d-inline-block position-relative shadow-sm border rounded bg-white"
-                                                        style="width: 100px; height: 100px;">
-                                                        <input type="hidden" name="private_gallery[]"
-                                                               value="{{ asset($gallery->image) }}">
-
-                                                        @if($isVid)
-                                                            <video width="100%" height="100%" class="rounded bg-black">
-                                                                <source src="{{ asset($gallery->image) }}">
-                                                            </video>
-                                                        @elseif($isPdf)
-                                                            <div
-                                                                class="w-100 h-100 rounded bg-light d-flex flex-column align-items-center justify-content-center border">
-                                                                <i class="fas fa-file-pdf fs-1 text-danger mb-1"></i>
-                                                                <span
-                                                                    class="small text-muted fw-bold">{{ strtoupper($ext) }}</span>
-                                                            </div>
-                                                        @else
-                                                            <img src="{{ asset($gallery->image) }}"
-                                                                 class="w-100 h-100 rounded" style="object-fit:cover">
-                                                        @endif
-
-                                                        <button type="button"
-                                                                class="remove-btn btn btn-danger btn-sm p-0 d-flex justify-content-center align-items-center"
-                                                                onclick="$(this).parent().remove()">×
-                                                        </button>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
 
                             </div>
                             <div class="row">

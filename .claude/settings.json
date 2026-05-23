@@ -42,10 +42,43 @@
       "Bash(php -l app/Http/Controllers/Dashboard/EmployeeController.php)",
       "Bash(php -l app/Http/Controllers/Dashboard/ReviewController.php)",
       "Bash(php -l app/Http/Controllers/Dashboard/LoginController.php)",
-      "Bash(php -l app/Http/Controllers/Dashboard/DashboardController.php)"
+      "Bash(php -l app/Http/Controllers/Dashboard/DashboardController.php)",
+      "Bash(flutter --version)",
+      "Bash(ls /home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/)",
+      "Read(//home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/**)",
+      "Bash(git fetch *)",
+      "Bash(flutter build *)",
+      "Bash(find /home/crc-user -name \"flutter\" -type f 2>/dev/null | head -5)",
+      "Read(//home/crc-user/**)",
+      "Bash(/home/crc-user/Downloads/Android-Development/Flutter/flutter_linux_3.29.0-stable/flutter/bin/flutter build *)",
+      "Bash(/home/crc-user/Android/Sdk/cmdline-tools/latest/bin/sdkmanager \"ndk;27.0.12077973\" --sdk_root=/home/crc-user/Android/Sdk)",
+      "Bash(rm -rf /home/crc-user/Android/Sdk/ndk/26.3.11579264 && echo \"removed\")",
+      "Bash(/home/crc-user/Android/Sdk/cmdline-tools/latest/bin/sdkmanager \"platforms;android-36\" --sdk_root=/home/crc-user/Android/Sdk)",
+      "Bash(/home/crc-user/Android/Sdk/cmdline-tools/latest/bin/sdkmanager \"cmake;3.22.1\" --sdk_root=/home/crc-user/Android/Sdk)",
+      "Bash(grep -n \"fetchItemDetails\\\\|getItemDetails\\\\|items/$\\\\|items/{\" /home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/lib/screens/posts/item_details_screen.dart)",
+      "Bash(git checkout *)",
+      "Bash(bash /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/deploy.sh)",
+      "Bash(sed -i -e 's/ required>/>/g' -e 's/ required\\\\/>/\\\\/>/g' -e 's/ required / /g' /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/resources/views/pages/items/create.blade.php)",
+      "Bash(sed -i -e 's/ required>/>/g' -e 's/ required\\\\/>/\\\\/>/g' -e 's/ required / /g' /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/resources/views/pages/items/edit.blade.php)",
+      "Bash(sed -n '253,265p' /home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/lib/screens/category/subcategory_screen.dart)",
+      "Bash(sed -n '430,442p' /home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/lib/screens/category/category_screen.dart)",
+      "Bash(sed -n '275,287p' /home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/lib/screens/past_trips/past_trips_screen.dart)",
+      "Bash(flutter pub *)",
+      "Bash(which flutter *)",
+      "Read(//usr/**)",
+      "Bash(/home/crc-user/Downloads/Android-Development/Flutter/flutter_linux_3.29.0-stable/flutter/bin/flutter pub *)",
+      "Bash(yes)",
+      "Bash(/home/crc-user/Android/Sdk/cmdline-tools/latest/bin/sdkmanager \"platforms;android-31\")",
+      "Bash(grep -n \"class Item\\\\|public \\\\$\" /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/app/Models/Item.php)",
+      "Bash(grep -n \"class ResidencyUser\\\\|public \\\\$\" /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/app/Models/ResidencyUser.php)",
+      "Bash(cp /home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/build/app/outputs/flutter-apk/app-release.apk /home/crc-user/Downloads/app-release.apk && echo \"Done\")"
     ],
     "additionalDirectories": [
-      "/home/crc-user/Downloads/Private/rehltna-web/Rehltna-travel"
+      "/home/crc-user/Downloads/Private/rehltna-web/Rehltna-travel",
+      "/home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/lib",
+      "/home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter",
+      "/home/crc-user/Android/Sdk/ndk/26.3.11579264",
+      "/home/crc-user/Downloads"
     ]
   }
 }

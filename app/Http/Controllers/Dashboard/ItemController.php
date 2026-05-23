@@ -41,7 +41,7 @@ class ItemController extends Controller
         if ($filter === 'ended') {
             $query->where(fn($q) => $q->where('status', 0)->orWhere('start_date', '<', $today));
         } else {
-            $query->where('status', 1)->where('start_date', '>=', $today);
+            $query->where('status', 1)->where(fn($q) => $q->whereNull('start_date')->orWhere('start_date', '>=', $today));
         }
 
         $items = $query->with('user')->orderByDesc('id')->paginate(10)->withQueryString();

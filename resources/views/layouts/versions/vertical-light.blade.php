@@ -92,6 +92,16 @@
         opacity: 0 !important;
         visibility: hidden !important;
     }
+
+    @media (max-width: 767px) {
+        body.app {
+            overflow: visible !important;
+            -webkit-overflow-scrolling: touch;
+        }
+        .page {
+            overflow-x: hidden;
+        }
+    }
 </style>
 </head>
 

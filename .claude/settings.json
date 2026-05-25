@@ -71,7 +71,11 @@
       "Bash(/home/crc-user/Android/Sdk/cmdline-tools/latest/bin/sdkmanager \"platforms;android-31\")",
       "Bash(grep -n \"class Item\\\\|public \\\\$\" /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/app/Models/Item.php)",
       "Bash(grep -n \"class ResidencyUser\\\\|public \\\\$\" /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/app/Models/ResidencyUser.php)",
-      "Bash(cp /home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/build/app/outputs/flutter-apk/app-release.apk /home/crc-user/Downloads/app-release.apk && echo \"Done\")"
+      "Bash(cp /home/crc-user/Downloads/Private/rehltna-web/rehltna-flutter/build/app/outputs/flutter-apk/app-release.apk /home/crc-user/Downloads/app-release.apk && echo \"Done\")",
+      "Bash(ssh -p 21098 rehltwoz@premium54.web-hosting.com \"cd ~/admin.rehltna.com && git pull\")",
+      "Bash(ssh -p 21098 rehltwoz@premium54.web-hosting.com \"mysql -u rehltwoz_rehltna -p\\\\$\\(grep DB_PASSWORD ~/admin.rehltna.com/.env | cut -d'=' -f2\\) rehltwoz_rehltna -e \\\\\"SELECT id, title_ar, title_en FROM cities ORDER BY title_ar;\\\\\" 2>/dev/null\")",
+      "Bash(sed -n '2851,2880p' /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/public/assets/css/style.css)",
+      "Bash(sed -n '2862,2885p' /home/crc-user/Downloads/Private/rehltna-web/backend-php-git/rehltna/public/assets/css/style.css)"
     ],
     "additionalDirectories": [
       "/home/crc-user/Downloads/Private/rehltna-web/Rehltna-travel",

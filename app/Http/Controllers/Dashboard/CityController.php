@@ -24,6 +24,13 @@ class CityController extends Controller
     public function store(Request $request): RedirectResponse
     {
         try {
+            $existing = $this->findDuplicateCity($request->title_ar, $request->title_en);
+            if ($existing) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', "هذه المدينة موجودة بالفعل: «{$existing->title_ar}»");
+            }
+
             $data = $request->all();
 
             if ($request->filled('state_id')) {
@@ -83,6 +90,14 @@ class CityController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255']);
 
+        $existing = $this->findDuplicateCity($request->name, $request->name);
+        if ($existing) {
+            return response()->json([
+                'id'   => $existing->id,
+                'name' => $existing->title_ar ?: $existing->title_en,
+            ]);
+        }
+
         $city = City::create([
             'title_en' => $request->name,
             'title_ar' => $request->name,
@@ -90,6 +105,34 @@ class CityController extends Controller
         ]);
 
         return response()->json(['id' => $city->id, 'name' => $request->name]);
+    }
+
+    private function normalizeArabic(string $text): string
+    {
+        $text = mb_strtolower(trim($text), 'UTF-8');
+        $text = str_replace(['أ', 'إ', 'آ', 'ٱ'], 'ا', $text);
+        $text = str_replace('ى', 'ي', $text);
+        $text = preg_replace('/[\x{064B}-\x{065F}\x{0670}]/u', '', $text);
+        $text = str_replace('ـ', '', $text);
+        return $text;
+    }
+
+    private function findDuplicateCity(?string $titleAr, ?string $titleEn): ?City
+    {
+        if (!$titleAr && !$titleEn) return null;
+
+        $normalizedAr = $titleAr ? $this->normalizeArabic($titleAr) : null;
+        $normalizedEn = $titleEn ? mb_strtolower(trim($titleEn), 'UTF-8') : null;
+
+        return City::all()->first(function ($city) use ($normalizedAr, $normalizedEn) {
+            if ($normalizedAr && $normalizedAr !== '' && $this->normalizeArabic($city->title_ar ?? '') === $normalizedAr) {
+                return true;
+            }
+            if ($normalizedEn && $normalizedEn !== '' && mb_strtolower(trim($city->title_en ?? ''), 'UTF-8') === $normalizedEn) {
+                return true;
+            }
+            return false;
+        });
     }
 
     public function cityChangeStatus($id): JsonResponse

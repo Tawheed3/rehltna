@@ -282,7 +282,9 @@
                             <tr>
                                 <th class="text-center" width="80">Index</th>
                                 @foreach(get_active_langs() as $lang)
-                                    <th>Title <span class="lang-tag">{{ strtoupper($lang) }}</span></th>
+                                    @if($lang !== 'en')
+                                        <th>Title <span class="lang-tag">{{ strtoupper($lang) }}</span></th>
+                                    @endif
                                 @endforeach
                                 <th class="text-center">Season</th>
                                 <th class="text-center">Duration</th>
@@ -301,6 +303,7 @@
                                     <td class="text-center fw-bold text-muted">#{{ $loop->iteration }}</td>
 
                                     @foreach(get_active_langs() as $index => $lang)
+                                        @if($lang === 'en') @continue @endif
                                         <td>
                                             <div class="fw-bold text-dark"
                                                  style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">

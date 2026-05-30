@@ -304,7 +304,7 @@
                                         @if($lang === 'en') @continue @endif
                                         <td>
                                             <div class="fw-bold text-dark"
-                                                 style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                 style="max-width: 300px;">
                                                 {{ $item->{'title_'.$lang} }}
                                             </div>
                                             @if($index === 0)

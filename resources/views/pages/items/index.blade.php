@@ -292,7 +292,6 @@
                                 <th class="text-center">Points</th>
                                 <th class="text-center">Order</th>
                                 <th class="text-center">Special Offer</th>
-                                <th class="text-center">Out of Stock</th>
                                 <th class="text-center">Visibility</th>
                                 <th class="text-center px-4">Actions</th>
                             </tr>
@@ -398,18 +397,6 @@
                                         @endif
                                     </td>
 
-                                    <td class="text-center">
-                                        <div
-                                            class="toggle-out-of-stock-btn main-toggle mx-auto {{ $item->out_of_stock == 1 ? 'main-toggle-danger on' : 'main-toggle-success of' }}"
-                                            data-id="{{ $item->id }}"
-                                            data-out_of_stock="{{ $item->out_of_stock }}"
-                                            title="{{ $item->out_of_stock == 1 ? 'Out of Stock' : 'In Stock' }}">
-                                            <span></span>
-                                        </div>
-                                        @if($item->out_of_stock == 1)
-                                            <div class="small text-danger mt-1 fw-bold" style="font-size: 10px;">Out of stock</div>
-                                        @endif
-                                    </td>
 
                                     <td class="text-center">
                                         <div

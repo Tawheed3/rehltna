@@ -290,7 +290,6 @@
                                 <th class="text-center">Duration</th>
                                 <th class="text-center">Price</th>
                                 <th class="text-center">Points</th>
-                                <th class="text-center">Order</th>
                                 <th class="text-center">Special Offer</th>
                                 <th class="text-center">Visibility</th>
                                 <th class="text-center px-4">Actions</th>
@@ -379,9 +378,6 @@
                                         </span>
                                     </td>
 
-                                    <td class="text-center">
-                                        <div class="order-indicator mx-auto">{{ $item->order ?? 0}}</div>
-                                    </td>
 
                                     <td class="text-center">
                                         <div

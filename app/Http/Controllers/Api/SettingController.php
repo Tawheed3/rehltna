@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class SettingController extends Controller
 {
@@ -21,17 +22,19 @@ class SettingController extends Controller
             'company_profile_ar'
         ];
 
-        $settings = Setting::all()->mapWithKeys(function ($setting) use ($fileKeys) {
-            $value = $setting->value;
+        $settings = Cache::remember('api_settings', 300, function () use ($fileKeys) {
+            return Setting::all()->mapWithKeys(function ($setting) use ($fileKeys) {
+                $value = $setting->value;
 
-            if (in_array($setting->key, $fileKeys) && $value) {
-                $value = asset($value);
-            }
+                if (in_array($setting->key, $fileKeys) && $value) {
+                    $filePath = public_path($value);
+                    $value = file_exists($filePath) ? asset($value) : null;
+                }
 
-            return [$setting->key => $value];
+                return [$setting->key => $value];
+            });
         });
 
-        return $this->responseMessage(200, 'Settings', $settings);
+        return $this->responseMessage(200, 'Settings', $settings, 300);
     }
-
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Slider;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class SliderController extends Controller
 {
@@ -13,7 +14,10 @@ class SliderController extends Controller
 
     public function getSliders(): JsonResponse
     {
-        $sliders = Slider::query()->where('status', 1)->orderBy('order', 'asc')->get();
-        return $this->responseMessage(200, 'success', $sliders);
+        $sliders = Cache::remember('api_sliders', 300, function () {
+            return Slider::query()->where('status', 1)->orderBy('order', 'asc')->get();
+        });
+
+        return $this->responseMessage(200, 'success', $sliders, 300);
     }
 }

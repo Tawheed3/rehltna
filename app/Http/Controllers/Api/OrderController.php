@@ -601,6 +601,13 @@ class OrderController extends Controller
             'items.*.selected_prices.*.attendees' => 'required|integer|min:1',
         ]);
 
+        if ($request->filled('coupon_code')) {
+            $coupon = Coupon::where('code', $request->get('coupon_code'))->first();
+            if (!$coupon || !$coupon->isValid()) {
+                return $this->responseMessage(422, 'الكوبون منتهي الصلاحية أو غير صالح');
+            }
+        }
+
         $calculation = $this->calculateOrderDetails(
             $request->get('items'),
             $request->get('coupon_code'),

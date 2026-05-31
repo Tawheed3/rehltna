@@ -272,8 +272,8 @@
                                     </select></div>
                                 <div class="col-md-3 mb-3"><label class="form-label">Feature</label><select
                                         name="is_feature" class="form-select">
-                                        <option value="1">Feature</option>
                                         <option value="0">Not Feature</option>
+                                        <option value="1">Feature</option>
                                     </select></div>
                                 <div class="col-md-3 mb-3"><label class="form-label">Order</label><select name="order"
                                                                                                           class="form-select"

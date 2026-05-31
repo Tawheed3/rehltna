@@ -246,19 +246,16 @@
                         <div class="step-content active" id="step-1">
                             <h5 class="mb-4 text-primary fw-bold border-bottom pb-2">Step 1: Basic Information</h5>
                             <div class="row">
-                                @foreach(get_active_langs() as $lang)
-                                    <div class="{{ colClass() }} mb-3">
-                                        <label class="form-label">Title ({{ strtoupper($lang) }}) <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="title_{{ $lang }}" class="form-control form-control-lg"
-                                              >
+                                @foreach(['ar'] as $lang)
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label">العنوان <span class="text-danger">*</span></label>
+                                        <input type="text" name="title_{{ $lang }}" class="form-control form-control-lg" dir="rtl">
                                     </div>
                                 @endforeach
-                                @foreach(get_active_langs() as $lang)
-                                    <div class="{{ colClass() }} mb-3">
+                                @foreach(['ar'] as $lang)
+                                    <div class="col-md-12 mb-3">
                                         <label class="form-label">Slug ({{ strtoupper($lang) }})</label>
-                                        <input type="text" name="slug_{{ $lang }}" class="form-control bg-light"
-                                               readonly>
+                                        <input type="text" name="slug_{{ $lang }}" class="form-control bg-light" readonly>
                                     </div>
                                 @endforeach
                                 <div class="col-md-3 mb-3"><label class="form-label">Type <span
@@ -308,18 +305,16 @@
                         <div class="step-content" id="step-2">
                             <h5 class="mb-4 text-primary fw-bold border-bottom pb-2">Step 2: Course Content</h5>
                             <div class="row">
-                                @foreach(get_active_langs() as $lang)
-                                    <div class="{{ colClass() }} mb-3"><label class="form-label">Short Description
-                                            ({{ strtoupper($lang) }})</label><textarea
-                                            name="short_description_{{ $lang }}" class="form-control"
+                                @foreach(['ar'] as $lang)
+                                    <div class="col-md-12 mb-3"><label class="form-label">الوصف المختصر</label><textarea
+                                            name="short_description_{{ $lang }}" class="form-control" dir="rtl"
                                             rows="3"></textarea></div>
                                 @endforeach
                                 <div class="col-12">
                                     <hr class="my-4">
                                 </div>
-                                @foreach(get_active_langs() as $lang)
-                                    <div class="{{ colClass() }} mb-4"><label class="form-label">Full Description
-                                            ({{ strtoupper($lang) }})</label><textarea name="description_{{ $lang }}"
+                                @foreach(['ar'] as $lang)
+                                    <div class="col-md-12 mb-4"><label class="form-label">الوصف الكامل</label><textarea name="description_{{ $lang }}"
                                                                                        id="description_{{ $lang }}"
                                                                                        class="form-control"></textarea>
                                     </div>
@@ -330,17 +325,17 @@
                         <div class="step-content" id="step-3">
                             <h5 class="mb-4 text-primary fw-bold border-bottom pb-2">Step 3: Media & Assets</h5>
                             <div class="row mb-4">
-                                @foreach(get_active_langs() as $lang)
-                                    <div class="{{ colClass() }} mb-3">
-                                        <label class="form-label">Banner ({{ strtoupper($lang) }})</label>
+                                @foreach(['ar'] as $lang)
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label">البانر</label>
                                         <div class="media-selector-group">
                                             <input type="text" id="banner_{{ $lang }}" name="banner_{{ $lang }}"
-                                                   readonly placeholder="Select image/video..."
+                                                   readonly placeholder="اختر صورة أو فيديو..."
                                                    onclick="$('#btn_banner_{{ $lang }}').click()">
                                             <button type="button" id="btn_banner_{{ $lang }}"
                                                     class="btn btn-primary btn-choose open-gallery"
                                                     data-input="banner_{{ $lang }}"
-                                                    data-preview="preview_banner_{{ $lang }}">Choose
+                                                    data-preview="preview_banner_{{ $lang }}">اختر
                                             </button>
                                         </div>
                                         <div id="preview_banner_{{ $lang }}"></div>
@@ -393,11 +388,7 @@
                                                     <input type="text" name="price_title_ar[]" class="form-control"
                                                            value="{{ $price->title_ar }}">
                                                 </div>
-                                                <div class="col-md-3 mb-2 mb-md-0">
-                                                    <label class="form-label fw-bold">Title (EN)</label>
-                                                    <input type="text" name="price_title_en[]" class="form-control"
-                                                           value="{{ $price->title_en }}">
-                                                </div>
+                                                <input type="hidden" name="price_title_en[]" value="{{ $price->title_en ?? '' }}">
                                                 <div class="col-md-2 mb-2 mb-md-0">
                                                     <label class="form-label fw-bold">Price (SAR) <span
                                                             class="text-danger">*</span></label>
@@ -451,11 +442,7 @@
                                                     <input type="text" name="price_title_ar[]" class="form-control"
                                                            value="{{ $dp['ar'] }}">
                                                 </div>
-                                                <div class="col-md-3 mb-2 mb-md-0">
-                                                    <label class="form-label fw-bold">Title (EN)</label>
-                                                    <input type="text" name="price_title_en[]" class="form-control"
-                                                           value="{{ $dp['en'] }}">
-                                                </div>
+                                                <input type="hidden" name="price_title_en[]" value="{{ $dp['en'] }}">
                                                 <div class="col-md-2 mb-2 mb-md-0">
                                                     <label class="form-label fw-bold">Price (SAR) <span
                                                             class="text-danger">*</span></label>
@@ -650,18 +637,15 @@
                                                         @if($itin->places && $itin->places->count() > 0)
                                                             @foreach($itin->places as $place)
                                                                 <div class="row place-row mb-2 mt-2 align-items-center">
-                                                                    <div class="col-md-5">
-                                                                        <input type="text"
+                                                                    <input type="hidden"
                                                                                name="itinerary_places_en[{{ $index }}][]"
-                                                                               class="form-control form-control-sm"
-                                                                               placeholder="Place Name (EN)"
-                                                                               value="{{ $place->title_en }}">
-                                                                    </div>
-                                                                    <div class="col-md-5">
+                                                                               value="{{ $place->title_en ?? '' }}">
+                                                                    <div class="col-md-10">
                                                                         <input type="text"
                                                                                name="itinerary_places_ar[{{ $index }}][]"
                                                                                class="form-control form-control-sm"
-                                                                               placeholder="اسم المكان (AR)"
+                                                                               dir="rtl"
+                                                                               placeholder="اسم المكان"
                                                                                value="{{ $place->title_ar }}">
                                                                     </div>
                                                                     <div class="col-md-2 text-end">
@@ -760,14 +744,10 @@
                                         @php $uid = uniqid(); @endphp
                                         <div class="row route-row mb-3 align-items-center p-3 rounded"
                                              style="background-color: #f0fdf4; border: 1px dashed #bbf7d0;">
-                                            <div class="col-md-3 mb-2 mb-md-0">
-                                                <label class="form-label fw-bold">Title (EN)</label>
-                                                <input type="text" name="route_title_en[]" class="form-control"
-                                                       value="{{ $route->title_en }}">
-                                            </div>
-                                            <div class="col-md-3 mb-2 mb-md-0">
-                                                <label class="form-label fw-bold">Title (AR)</label>
-                                                <input type="text" name="route_title_ar[]" class="form-control"
+                                            <input type="hidden" name="route_title_en[]" value="{{ $route->title_en ?? '' }}">
+                                            <div class="col-md-6 mb-2 mb-md-0">
+                                                <label class="form-label fw-bold">العنوان</label>
+                                                <input type="text" name="route_title_ar[]" class="form-control" dir="rtl"
                                                        value="{{ $route->title_ar }}">
                                             </div>
                                             <div class="col-md-3 mb-2 mb-md-0">
@@ -874,14 +854,10 @@
                                         @php $uid = uniqid(); @endphp
                                         <div class="row exclude-row mb-3 align-items-center p-3 rounded"
                                              style="background-color: #fef2f2; border: 1px dashed #fecaca;">
-                                            <div class="col-md-3 mb-2 mb-md-0">
-                                                <label class="form-label fw-bold">Title (EN)</label>
-                                                <input type="text" name="exclude_title_en[]" class="form-control"
-                                                       value="{{ $exclude->title_en }}">
-                                            </div>
-                                            <div class="col-md-3 mb-2 mb-md-0">
-                                                <label class="form-label fw-bold">Title (AR)</label>
-                                                <input type="text" name="exclude_title_ar[]" class="form-control"
+                                            <input type="hidden" name="exclude_title_en[]" value="{{ $exclude->title_en ?? '' }}">
+                                            <div class="col-md-6 mb-2 mb-md-0">
+                                                <label class="form-label fw-bold">العنوان</label>
+                                                <input type="text" name="exclude_title_ar[]" class="form-control" dir="rtl"
                                                        value="{{ $exclude->title_ar }}">
                                             </div>
                                             <div class="col-md-3 mb-2 mb-md-0">
@@ -935,7 +911,7 @@
                                 <div id="preview_meta_img"></div>
                             </div>
 
-                            @foreach(get_active_langs() as $lang)
+                            @foreach(['ar', 'en'] as $lang)
                                 <div class="card bg-light border-0 mb-3">
                                     <div class="card-body">
                                         <h6 class="text-dark fw-bold mb-3 border-bottom pb-2">SEO
@@ -1199,13 +1175,10 @@
                 let uid = Date.now();
                 let rowHtml = `
         <div class="row route-row mb-3 align-items-center p-3 rounded" style="background-color: #f0fdf4; border: 1px dashed #bbf7d0; animation: fadeIn 0.3s;">
-            <div class="col-md-3 mb-2 mb-md-0">
-                <label class="form-label fw-bold">Title (EN)</label>
-                <input type="text" name="route_title_en[]" class="form-control" placeholder="e.g. Flight ticket">
-            </div>
-            <div class="col-md-3 mb-2 mb-md-0">
-                <label class="form-label fw-bold">Title (AR)</label>
-                <input type="text" name="route_title_ar[]" class="form-control" placeholder="مثال: تذاكر الطيران">
+            <input type="hidden" name="route_title_en[]" value="">
+            <div class="col-md-6 mb-2 mb-md-0">
+                <label class="form-label fw-bold">العنوان</label>
+                <input type="text" name="route_title_ar[]" class="form-control" dir="rtl" placeholder="مثال: تذاكر الطيران">
             </div>
             <div class="col-md-3 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Icon/Image</label>
@@ -1231,13 +1204,10 @@
                 let uid = Date.now();
                 let rowHtml = `
         <div class="row exclude-row mb-3 align-items-center p-3 rounded" style="background-color: #fef2f2; border: 1px dashed #fecaca; animation: fadeIn 0.3s;">
-            <div class="col-md-3 mb-2 mb-md-0">
-                <label class="form-label fw-bold">Title (EN)</label>
-                <input type="text" name="exclude_title_en[]" class="form-control" placeholder="e.g. Visas">
-            </div>
-            <div class="col-md-3 mb-2 mb-md-0">
-                <label class="form-label fw-bold">Title (AR)</label>
-                <input type="text" name="exclude_title_ar[]" class="form-control" placeholder="مثال: التأشيرات">
+            <input type="hidden" name="exclude_title_en[]" value="">
+            <div class="col-md-6 mb-2 mb-md-0">
+                <label class="form-label fw-bold">العنوان</label>
+                <input type="text" name="exclude_title_ar[]" class="form-control" dir="rtl" placeholder="مثال: التأشيرات">
             </div>
             <div class="col-md-3 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Icon/Image</label>
@@ -1328,11 +1298,9 @@
 
                 let placeHtml = `
                     <div class="row place-row mb-2 mt-2 align-items-center animation-fadeIn">
-                        <div class="col-md-5">
-                            <input type="text" name="itinerary_places_en[${idx}][]" class="form-control form-control-sm" placeholder="Place Name (EN)">
-                        </div>
-                        <div class="col-md-5">
-                            <input type="text" name="itinerary_places_ar[${idx}][]" class="form-control form-control-sm" placeholder="اسم المكان (AR)">
+                        <input type="hidden" name="itinerary_places_en[${idx}][]" value="">
+                        <div class="col-md-10">
+                            <input type="text" name="itinerary_places_ar[${idx}][]" class="form-control form-control-sm" dir="rtl" placeholder="اسم المكان">
                         </div>
                         <div class="col-md-2 text-end">
                             <button type="button" class="btn btn-sm btn-danger remove-place-row"><i class="fas fa-times"></i></button>
@@ -1361,13 +1329,10 @@
         window.addPriceRow = function () {
             let rowHtml = `
         <div class="row price-row mb-3 align-items-end p-3 rounded" style="background-color: #f8f9fa; border: 1px solid #dee2e6; animation: fadeIn 0.3s;">
-            <div class="col-md-3 mb-2 mb-md-0">
-                <label class="form-label fw-bold">Title (AR) <span class="text-danger">*</span></label>
-                <input type="text" name="price_title_ar[]" class="form-control" placeholder="مثال: سعر تذكرة الطفل">
-            </div>
-            <div class="col-md-3 mb-2 mb-md-0">
-                <label class="form-label fw-bold">Title (EN)</label>
-                <input type="text" name="price_title_en[]" class="form-control" placeholder="e.g. Child Ticket">
+            <input type="hidden" name="price_title_en[]" value="">
+            <div class="col-md-6 mb-2 mb-md-0">
+                <label class="form-label fw-bold">العنوان <span class="text-danger">*</span></label>
+                <input type="text" name="price_title_ar[]" class="form-control" dir="rtl" placeholder="مثال: سعر الشخص">
             </div>
             <div class="col-md-2 mb-2 mb-md-0">
                 <label class="form-label fw-bold">Price (SAR) <span class="text-danger">*</span></label>

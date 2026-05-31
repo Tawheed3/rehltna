@@ -134,7 +134,8 @@ class ItemController extends Controller
             });
         }
 
-        $Items = $query->orderByDesc('id')->paginate(10);
+        $perPage = min((int) $request->get('per_page', 10), 200);
+        $Items = $query->orderByDesc('id')->paginate($perPage);
 
         $data = [
             'items_count' => $Items->total(),

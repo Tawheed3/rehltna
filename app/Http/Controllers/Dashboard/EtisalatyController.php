@@ -31,20 +31,20 @@ class EtisalatyController extends Controller
             ->withQueryString();
 
         $totalContacts  = EtisalatyContact::count();
-        $totalEmployees = User::whereNotNull('etisalaty_role')->count();
+        $totalEmployees = $distribution->employeesQuery()->count();
 
         $contacts->getCollection()->each(function (EtisalatyContact $contact) use ($distribution) {
             $contact->setAttribute('ownership_marker', $distribution->ownershipMarker($contact->employeeLinks));
         });
 
         // Top uploaders — only count links to contacts that still exist
-        $topEmployees = User::whereNotNull('etisalaty_role')
+        $topEmployees = $distribution->employeesQuery()
             ->withCount(['etisalatyUploads as uploads_count' => fn($q) => $q->whereHas('contact')])
             ->orderByDesc('uploads_count')
             ->take(5)
             ->get();
 
-        $employees = User::whereNotNull('etisalaty_role')
+        $employees = $distribution->employeesQuery()
             ->withCount([
                 'etisalatyUploads as uploads_count' => fn ($q) => $q->whereHas('contact'),
                 'assignedEtisalatyContacts as assigned_count',
@@ -66,7 +66,7 @@ class EtisalatyController extends Controller
 
     public function exportAssigned(int $employeeId, EtisalatyDistributionService $distribution)
     {
-        $employee = User::whereNotNull('etisalaty_role')->findOrFail($employeeId);
+        $employee = $distribution->employeesQuery()->findOrFail($employeeId);
         $distribution->rebalance();
 
         $filename = 'etisalaty-assigned-' . Str::slug($employee->name) . '.csv';
@@ -100,7 +100,7 @@ class EtisalatyController extends Controller
 
     public function destroyByEmployee(int $employeeId, EtisalatyDistributionService $distribution)
     {
-        $employee = User::findOrFail($employeeId);
+        $employee = $distribution->employeesQuery()->findOrFail($employeeId);
 
         $contactIds = EtisalatyEmployeeContact::where('employee_id', $employeeId)
             ->pluck('contact_id');

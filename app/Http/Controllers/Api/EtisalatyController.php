@@ -19,7 +19,7 @@ class EtisalatyController extends Controller
     /**
      * POST /api/v1/etisalaty/login
      */
-    public function login(Request $request): JsonResponse
+    public function login(Request $request, EtisalatyDistributionService $distribution): JsonResponse
     {
         $request->validate([
             'email'    => 'required|email',
@@ -30,7 +30,7 @@ class EtisalatyController extends Controller
             ->whereNotNull('etisalaty_role')
             ->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user || !$distribution->isSupportedEmployee($user) || !Hash::check($request->password, $user->password)) {
             return $this->responseMessage(401, 'Invalid email or password.');
         }
 
@@ -61,6 +61,10 @@ class EtisalatyController extends Controller
 
         $user  = $request->etisalaty_user;
         $now   = now();
+
+        if (!$distribution->isSupportedEmployee($user)) {
+            return $this->responseMessage(403, 'This user is not enabled for Etisalaty uploads.');
+        }
 
         $totalReceived        = count($request->contacts);
         $newContactsAdded     = 0;
@@ -186,7 +190,7 @@ class EtisalatyController extends Controller
         int $employeeId,
         EtisalatyDistributionService $distribution
     ): JsonResponse {
-        $employee = User::whereNotNull('etisalaty_role')->findOrFail($employeeId);
+        $employee = $distribution->employeesQuery()->findOrFail($employeeId);
         $distribution->rebalance();
 
         $contacts = EtisalatyContact::query()

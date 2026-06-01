@@ -4,11 +4,18 @@ namespace App\Services;
 
 use App\Models\EtisalatyContact;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class EtisalatyDistributionService
 {
+    private const EMPLOYEE_CODES = [
+        'zakaria' => 'Z',
+        'mostafa' => 'M',
+        'kamal' => 'K',
+    ];
+
     public function rebalance(): array
     {
         return DB::transaction(function () {
@@ -24,7 +31,7 @@ class EtisalatyDistributionService
                 ->map(fn (EtisalatyContact $contact) => [
                     'contact' => $contact,
                     'employee_ids' => $contact->employeeLinks
-                        ->filter(fn ($link) => $link->employee !== null)
+                        ->filter(fn ($link) => $link->employee !== null && $this->isSupportedEmployee($link->employee))
                         ->pluck('employee_id')
                         ->unique()
                         ->sort()
@@ -76,8 +83,7 @@ class EtisalatyDistributionService
         return [
             'total_unique_numbers' => $contacts->count(),
             'total_unassigned' => $contacts->whereNull('assigned_employee_id')->count(),
-            'assigned_per_employee' => User::query()
-                ->whereNotNull('etisalaty_role')
+            'assigned_per_employee' => $this->employeesQuery()
                 ->orderBy('id')
                 ->get()
                 ->map(fn (User $employee) => [
@@ -94,7 +100,7 @@ class EtisalatyDistributionService
     public function ownershipMarker(Collection $links): string
     {
         $markers = $links
-            ->filter(fn ($link) => $link->employee !== null)
+            ->filter(fn ($link) => $link->employee !== null && $this->isSupportedEmployee($link->employee))
             ->map(fn ($link) => $this->employeeMarker($link->employee?->name, $link->employee_id))
             ->unique()
             ->sortBy(function (string $marker) {
@@ -107,10 +113,38 @@ class EtisalatyDistributionService
         return $markers->isEmpty() ? 'UNOWNED' : $markers->implode('');
     }
 
+    public function employeesQuery(): Builder
+    {
+        return User::query()
+            ->whereNotNull('etisalaty_role')
+            ->where(function (Builder $query) {
+                foreach (array_keys(self::EMPLOYEE_CODES) as $employee) {
+                    $query->orWhereRaw('LOWER(name) LIKE ?', ["%{$employee}%"])
+                        ->orWhereRaw('LOWER(email) LIKE ?', ["%{$employee}%"]);
+                }
+            });
+    }
+
+    public function isSupportedEmployee(User $employee): bool
+    {
+        return $this->employeeCode($employee->name, $employee->email) !== null;
+    }
+
     private function employeeMarker(?string $name, int $employeeId): string
     {
-        $name = trim((string) $name);
+        return $this->employeeCode($name) ?? "#{$employeeId}";
+    }
 
-        return $name !== '' ? mb_strtoupper(mb_substr($name, 0, 1)) : "#{$employeeId}";
+    private function employeeCode(?string $name, ?string $email = null): ?string
+    {
+        $identity = mb_strtolower(trim((string) $name) . ' ' . trim((string) $email));
+
+        foreach (self::EMPLOYEE_CODES as $employee => $code) {
+            if (str_contains($identity, $employee)) {
+                return $code;
+            }
+        }
+
+        return null;
     }
 }

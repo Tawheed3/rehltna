@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:in_app_review/in_app_review.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/localization/app_localizations.dart';
 import '../../core/routes/app_routes.dart';
 import '../../data/models/settings_model.dart';
 import '../../data/models/user_model.dart';
@@ -19,9 +18,9 @@ import 'custom_page_screen.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
+
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
@@ -35,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadSavedImage(); // ✅ تحميل الصورة المحفوظة
+      _loadSavedImage();
       final sp = Provider.of<SettingsProvider>(context, listen: false);
       if (sp.settings == null) sp.fetchSettings();
       final ap = Provider.of<AuthProvider>(context, listen: false);
@@ -71,7 +70,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _launchURL(String url) async {
     if (url.isEmpty) return;
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   Future<void> _launchPhone(String phone) async {
@@ -81,7 +82,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _launchWhatsApp(String phone) async {
     final Uri whatsappUri = Uri.parse('https://wa.me/${phone.replaceAll(RegExp(r'[^\d]'), '')}');
-    if (await canLaunchUrl(whatsappUri)) await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+    if (await canLaunchUrl(whatsappUri)) {
+      await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+    }
   }
 
   Future<void> _rateApp() async {
@@ -99,20 +102,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('تسجيل الخروج'),
-        content: const Text('هل أنت متأكد؟'),
+        content: const Text('هل أنت متأكد من تسجيل الخروج؟'),
         backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('إلغاء')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('إلغاء'),
+          ),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(ctx);
               await ap.signOut();
               if (mounted) context.go(AppRoutes.login);
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
             child: const Text('تسجيل الخروج'),
           ),
         ],
+      ),
+    );
+  }
+
+  void _shareApp() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('مشاركة التطبيق'),
+        backgroundColor: Colors.blue,
       ),
     );
   }
@@ -124,24 +142,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final settingsProvider = Provider.of<SettingsProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     final isDark = settingsService.isDarkMode;
-    final lang = settingsService.languageCode;
-    final localizations = AppLocalizations.of(context);
     final user = userProvider.user ?? authProvider.currentUser;
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8FAFC),
-      body: SafeArea(
-        child: CustomScrollView(
+
+        body: CustomScrollView(
           slivers: [
+            // رأس الصفحة
             SliverAppBar(
               expandedHeight: 200,
               floating: false,
               pinned: true,
               backgroundColor: AppColors.primary,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text(
-                  localizations.translate('settings'),
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                title: const Text(
+                  'الإعدادات',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
                 background: Stack(
                   fit: StackFit.expand,
@@ -161,7 +182,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Container(
                         width: 200,
                         height: 200,
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.1)),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
                       ),
                     ),
                     Positioned(
@@ -170,7 +194,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Container(
                         width: 300,
                         height: 300,
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.1)),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
                       ),
                     ),
                   ],
@@ -178,23 +205,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               leading: Container(
                 margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.white),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
             ),
+
+            // محتوى الإعدادات
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
+                  // ملف المستخدم
                   _buildProfileSection(user, isDark, authProvider),
                   const SizedBox(height: 24),
-                  _buildSectionTitle(localizations.translate('appearance_language'), isDark),
+
+                  // قسم المظهر
+                  _buildSectionTitle('المظهر', isDark),
                   SettingsTile(
                     icon: Icons.dark_mode_outlined,
-                    title: localizations.translate('dark_mode'),
+                    title: 'الوضع المظلم',
                     trailing: Switch(
                       value: isDark,
                       onChanged: (v) => settingsService.toggleDarkMode(v),
@@ -202,19 +237,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     onTap: () => settingsService.toggleDarkMode(!isDark),
                   ),
-                  SettingsTile(
-                    icon: Icons.language_outlined,
-                    title: localizations.translate('language'),
-                    subtitle: lang == 'ar' ? 'العربية' : 'English',
-                    onTap: () => _showLanguageDialog(settingsService, localizations),
-                  ),
+
                   const SizedBox(height: 16),
                   Divider(color: isDark ? Colors.white24 : Colors.grey.shade300),
                   const SizedBox(height: 16),
-                  _buildSectionTitle(localizations.translate('notifications'), isDark),
+
+                  // قسم الإشعارات
+                  _buildSectionTitle('الإشعارات', isDark),
                   SettingsTile(
                     icon: Icons.notifications_outlined,
-                    title: localizations.translate('notifications'),
+                    title: 'الإشعارات',
                     trailing: Switch(
                       value: _notificationsEnabled,
                       onChanged: _toggleNotifications,
@@ -222,14 +254,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     onTap: () => _toggleNotifications(!_notificationsEnabled),
                   ),
+
                   const SizedBox(height: 16),
                   Divider(color: isDark ? Colors.white24 : Colors.grey.shade300),
                   const SizedBox(height: 16),
+
+                  // قسم عن التطبيق
                   _buildSectionTitle('عن التطبيق', isDark),
-                  _buildContactInfo(settingsProvider.settings, isDark, lang),
+                  _buildContactInfo(settingsProvider.settings, isDark),
                   const SizedBox(height: 16),
 
-                  // ✅ الشروط والأحكام + سياسة الخصوصية
+                  // الشروط والأحكام وسياسة الخصوصية
                   Consumer<CustomPagesProvider>(
                     builder: (context, cpp, child) {
                       if (cpp.pages.isEmpty) return const SizedBox.shrink();
@@ -237,14 +272,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           _buildPageTile(
                             icon: Icons.description_outlined,
-                            title: lang == 'ar' ? 'الشروط والأحكام' : 'Terms & Conditions',
+                            title: 'الشروط والأحكام',
                             isDark: isDark,
                             onTap: () {
                               final page = cpp.getTermsAndConditions();
                               if (page != null) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => CustomPageScreen(page: page)),
+                                  MaterialPageRoute(
+                                    builder: (_) => CustomPageScreen(page: page),
+                                  ),
                                 );
                               }
                             },
@@ -252,14 +289,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           const SizedBox(height: 8),
                           _buildPageTile(
                             icon: Icons.privacy_tip_outlined,
-                            title: lang == 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy',
+                            title: 'سياسة الخصوصية',
                             isDark: isDark,
                             onTap: () {
                               final page = cpp.getPrivacyPolicy();
                               if (page != null) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => CustomPageScreen(page: page)),
+                                  MaterialPageRoute(
+                                    builder: (_) => CustomPageScreen(page: page),
+                                  ),
                                 );
                               }
                             },
@@ -270,18 +309,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
 
                   const SizedBox(height: 16),
+
+                  // روابط التواصل الاجتماعي
                   _buildSocialLinks(settingsProvider.settings, isDark),
                   const SizedBox(height: 16),
-                  _buildActionButtons(localizations, isDark),
+
+                  // أزرار الإجراءات
+                  _buildActionButtons(isDark),
                   const SizedBox(height: 24),
-                  _buildStats(isDark),
+
+                  // زر تسجيل الخروج
+                  if (user != null) _buildLogoutButton(authProvider),
                   const SizedBox(height: 24),
-                  if (user != null) _buildLogoutButton(authProvider, localizations),
-                  const SizedBox(height: 24),
+
+                  // إصدار التطبيق
                   Center(
                     child: Text(
-                      localizations.translate('version'),
-                      style: TextStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.grey[400]),
+                      'الإصدار 1.0.0',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark ? Colors.white38 : Colors.grey[400],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -290,123 +338,78 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
-      ),
+
     );
   }
 
-  // ==================== بطاقة الصفحة ====================
-
-  Widget _buildPageTile({
-    required IconData icon,
-    required String title,
-    required bool isDark,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      margin: EdgeInsets.zero,
-      elevation: 0,
-      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: AppColors.primary, size: 24),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : Colors.black87,
-                  ),
-                ),
-              ),
-              Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.white38 : Colors.grey),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ==================== باقي الدوال ====================
-
+  // ==================== قسم ملف المستخدم ====================
   Widget _buildProfileSection(UserModel? user, bool isDark, AuthProvider ap) {
-    return user == null
-        ? Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            isDark ? const Color(0xFF1E1E1E) : Colors.white,
-            isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade50,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    // حالة الزائر (غير مسجل دخول)
+    if (user == null) {
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              isDark ? const Color(0xFF1E1E1E) : Colors.white,
+              isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade50,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
         ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.person_outline,
-              size: 60,
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'أنت الآن زائر',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'سجل دخول للاستفادة من جميع المميزات',
-            style: TextStyle(
-              fontSize: 14,
-              color: isDark ? Colors.white70 : Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => context.go(AppRoutes.login),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.person_outline,
+                size: 60,
+                color: AppColors.primary,
               ),
             ),
-            child: const Text('تسجيل الدخول'),
-          ),
-        ],
-      ),
-    )
-        : Container(
+            const SizedBox(height: 16),
+            Text(
+              'أنت الآن زائر',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'سجل دخول للاستفادة من جميع المميزات',
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark ? Colors.white70 : Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => context.go(AppRoutes.login),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: const Text('تسجيل الدخول'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // حالة المستخدم (مسجل دخول)
+    return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -436,7 +439,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 child: ClipOval(
-                  child: _buildSettingsAvatar(user), // ✅ دالة جديدة
+                  child: _buildSettingsAvatar(user),
                 ),
               ),
               Positioned(
@@ -497,9 +500,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-  /// بناء صورة الآڤاتار للإعدادات - الصورة المحفوظة أولاً
+
+  // ==================== صورة الآفاتار ====================
   Widget _buildSettingsAvatar(UserModel user) {
-    // ✅ الصورة المحفوظة محلياً أولاً
+    // الصورة المحفوظة محلياً
     if (_savedImage != null) {
       return Image.file(
         _savedImage!,
@@ -509,7 +513,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     }
 
-    // ✅ صورة الباك إند ثانياً
+    // صورة من السيرفر
     if (user.avatarUrl != null && user.avatarUrl!.isNotEmpty) {
       return Image.network(
         user.avatarUrl!,
@@ -529,7 +533,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     }
 
-    // ✅ الأحرف الأولى
+    // الأحرف الأولى
     return Center(
       child: Text(
         user.initials,
@@ -541,15 +545,73 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-  Widget _buildContactInfo(SettingsModel? s, bool isDark, String lang) {
-    if (s == null) return const SizedBox();
-    final p = s.sitePhone.replaceAll(RegExp(r'[^\d+]'), '');
-    final w = s.whatsappNumber;
+
+  // ==================== بطاقة الصفحة ====================
+  Widget _buildPageTile({
+    required IconData icon,
+    required String title,
+    required bool isDark,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 45,
+                height: 45,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: AppColors.primary, size: 24),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: isDark ? Colors.white38 : Colors.grey,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ==================== معلومات الاتصال ====================
+  Widget _buildContactInfo(SettingsModel? s, bool isDark) {
+    if (s == null) return const SizedBox.shrink();
+
+    final phone = s.sitePhone.replaceAll(RegExp(r'[^\d+]'), '');
+    final whatsapp = s.whatsappNumber;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [isDark ? const Color(0xFF1E1E1E) : Colors.white, isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade50],
+          colors: [
+            isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade50,
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -563,23 +625,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 width: 4,
                 height: 24,
-                decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
               const SizedBox(width: 8),
-              Text('معلومات الاتصال', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
+              Text(
+                'معلومات الاتصال',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
-          if (s.getAddress(lang).isNotEmpty) _buildContactItem(Icons.location_on, 'العنوان', s.getAddress(lang), isDark),
-          if (s.siteEmail.isNotEmpty) _buildContactItem(Icons.email, 'البريد الإلكتروني', s.siteEmail, isDark, () => _launchURL('mailto:${s.siteEmail}')),
-          if (s.sitePhone.isNotEmpty) _buildContactItem(Icons.phone, 'الهاتف', s.sitePhone, isDark, () => _launchPhone(p)),
-          if (w.isNotEmpty) _buildContactItem(Icons.chat, 'واتساب', s.sitePhone, isDark, () => _launchWhatsApp(w)),
+
+          if (s.getAddress('ar').isNotEmpty)
+            _buildContactItem(
+              Icons.location_on,
+              'العنوان',
+              s.getAddress('ar'),
+              isDark,
+            ),
+
+          if (s.siteEmail.isNotEmpty)
+            _buildContactItem(
+              Icons.email,
+              'البريد الإلكتروني',
+              s.siteEmail,
+              isDark,
+                  () => _launchURL('mailto:${s.siteEmail}'),
+            ),
+
+          if (s.sitePhone.isNotEmpty)
+            _buildContactItem(
+              Icons.phone,
+              'الهاتف',
+              s.sitePhone,
+              isDark,
+                  () => _launchPhone(phone),
+            ),
+
+          if (whatsapp.isNotEmpty)
+            _buildContactItem(
+              Icons.chat,
+              'واتساب',
+              s.sitePhone,
+              isDark,
+                  () => _launchWhatsApp(whatsapp),
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildContactItem(IconData icon, String title, String value, bool isDark, [VoidCallback? onTap]) {
+  // ==================== عنصر الاتصال ====================
+  Widget _buildContactItem(
+      IconData icon,
+      String title,
+      String value,
+      bool isDark, [
+        VoidCallback? onTap,
+      ]) {
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -588,7 +698,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.1), shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
               child: Icon(icon, color: AppColors.primary, size: 18),
             ),
             const SizedBox(width: 12),
@@ -596,33 +709,98 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(fontSize: 12, color: isDark ? Colors.white60 : Colors.grey[600])),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark ? Colors.white60 : Colors.grey[600],
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: isDark ? Colors.white : Colors.black87)),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
                 ],
               ),
             ),
-            if (onTap != null) Icon(Icons.arrow_forward_ios, size: 14, color: isDark ? Colors.white38 : Colors.grey[400]),
+            if (onTap != null)
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: isDark ? Colors.white38 : Colors.grey[400],
+              ),
           ],
         ),
       ),
     );
   }
 
+  // ==================== روابط التواصل الاجتماعي ====================
   Widget _buildSocialLinks(SettingsModel? s, bool isDark) {
-    if (s == null) return const SizedBox();
+    if (s == null) return const SizedBox.shrink();
+
     final links = <Map<String, dynamic>>[];
-    if (s.facebook.isNotEmpty) links.add({'icon': Icons.facebook, 'color': const Color(0xFF1877F2), 'url': s.facebook.first, 'label': 'فيسبوك'});
-    if (s.instagram.isNotEmpty) links.add({'icon': Icons.photo_camera, 'color': const Color(0xFFE4405F), 'url': s.instagram.first, 'label': 'انستغرام'});
-    if (s.twitter.isNotEmpty) links.add({'icon': Icons.alternate_email, 'color': const Color(0xFF1DA1F2), 'url': s.twitter.first, 'label': 'تويتر'});
-    if (s.youtube.isNotEmpty) links.add({'icon': Icons.play_circle_fill, 'color': const Color(0xFFFF0000), 'url': s.youtube.first, 'label': 'يوتيوب'});
-    if (s.whatsappNumber.isNotEmpty) links.add({'icon': Icons.chat, 'color': const Color(0xFF25D366), 'url': 'https://wa.me/${s.whatsappNumber}', 'label': 'واتساب'});
-    if (links.isEmpty) return const SizedBox();
+
+    if (s.facebook.isNotEmpty) {
+      links.add({
+        'icon': Icons.facebook,
+        'color': const Color(0xFF1877F2),
+        'url': s.facebook.first,
+        'label': 'فيسبوك',
+      });
+    }
+
+    if (s.instagram.isNotEmpty) {
+      links.add({
+        'icon': Icons.photo_camera,
+        'color': const Color(0xFFE4405F),
+        'url': s.instagram.first,
+        'label': 'انستغرام',
+      });
+    }
+
+    if (s.twitter.isNotEmpty) {
+      links.add({
+        'icon': Icons.alternate_email,
+        'color': const Color(0xFF1DA1F2),
+        'url': s.twitter.first,
+        'label': 'تويتر',
+      });
+    }
+
+    if (s.youtube.isNotEmpty) {
+      links.add({
+        'icon': Icons.play_circle_fill,
+        'color': const Color(0xFFFF0000),
+        'url': s.youtube.first,
+        'label': 'يوتيوب',
+      });
+    }
+
+    if (s.whatsappNumber.isNotEmpty) {
+      links.add({
+        'icon': Icons.chat,
+        'color': const Color(0xFF25D366),
+        'url': 'https://wa.me/${s.whatsappNumber}',
+        'label': 'واتساب',
+      });
+    }
+
+    if (links.isEmpty) return const SizedBox.shrink();
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [isDark ? const Color(0xFF1E1E1E) : Colors.white, isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade50],
+          colors: [
+            isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade50,
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -633,31 +811,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           Row(
             children: [
-              Container(width: 4, height: 24, decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(4))),
+              Container(
+                width: 4,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
               const SizedBox(width: 8),
-              Text('تواصل معنا', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
+              Text(
+                'تواصل معنا',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: links.map((l) {
+            children: links.map((link) {
               return InkWell(
-                onTap: () => _launchURL(l['url']),
+                onTap: () => _launchURL(link['url']),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: l['color'].withOpacity(0.1),
+                    color: link['color'].withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: l['color'].withOpacity(0.3)),
+                    border: Border.all(color: link['color'].withOpacity(0.3)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(l['icon'], color: l['color'], size: 16),
+                      Icon(link['icon'], color: link['color'], size: 16),
                       const SizedBox(width: 4),
-                      Text(l['label'], style: TextStyle(fontSize: 12, color: l['color'], fontWeight: FontWeight.w500)),
+                      Text(
+                        link['label'],
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: link['color'],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -669,136 +868,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildActionButtons(AppLocalizations loc, bool isDark) {
+  // ==================== أزرار الإجراءات ====================
+  Widget _buildActionButtons(bool isDark) {
     return Column(
       children: [
-        SettingsTile(icon: Icons.share_outlined, title: loc.translate('share_app'), onTap: _shareApp),
-        SettingsTile(icon: Icons.star_outline, title: loc.translate('rate_app'), onTap: _rateApp),
-        SettingsTile(icon: Icons.feedback_outlined, title: loc.translate('feedback'), onTap: () => _showFeedbackDialog(loc)),
-      ],
-    );
-  }
-
-  Widget _buildStats(bool isDark) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [isDark ? const Color(0xFF1E1E1E) : Colors.white, isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade50],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        SettingsTile(
+          icon: Icons.share_outlined,
+          title: 'مشاركة التطبيق',
+          onTap: _shareApp,
         ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _statItem(Icons.flight, 'رحلات', '4'),
-          _statItem(Icons.people, 'أقسام', '5'),
-          _statItem(Icons.star, 'تقييم', '4.8'),
-        ],
-      ),
-    );
-  }
-
-  Widget _statItem(IconData icon, String label, String value) {
-    return Column(
-      children: [
-        Icon(icon, color: AppColors.primary, size: 24),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }
 
-  Widget _buildLogoutButton(AuthProvider ap, AppLocalizations loc) {
+  // ==================== زر تسجيل الخروج ====================
+  Widget _buildLogoutButton(AuthProvider ap) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () => _showLogoutDialog(ap),
         icon: const Icon(Icons.logout),
-        label: Text(loc.translate('logout')),
+        label: const Text('تسجيل الخروج'),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
       ),
     );
   }
 
+  // ==================== عنوان القسم ====================
   Widget _buildSectionTitle(String title, bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       child: Row(
         children: [
-          Container(width: 4, height: 20, decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(4))),
+          Container(
+            width: 4,
+            height: 20,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
           const SizedBox(width: 8),
-          Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.primary)),
-        ],
-      ),
-    );
-  }
-
-  void _showLanguageDialog(SettingsService settings, AppLocalizations loc) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(loc.translate('language')),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('العربية'),
-              leading: settings.languageCode == 'ar' ? const Icon(Icons.check, color: AppColors.primary) : null,
-              onTap: () async {
-                await settings.changeLanguage('ar');
-                if (ctx.mounted) Navigator.pop(ctx);
-              },
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : AppColors.primary,
             ),
-            ListTile(
-              title: const Text('English'),
-              leading: settings.languageCode == 'en' ? const Icon(Icons.check, color: AppColors.primary) : null,
-              onTap: () async {
-                await settings.changeLanguage('en');
-                if (ctx.mounted) Navigator.pop(ctx);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showFeedbackDialog(AppLocalizations loc) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(loc.translate('feedback')),
-        content: TextField(
-          maxLines: 5,
-          decoration: InputDecoration(hintText: loc.translate('feedback_hint'), border: const OutlineInputBorder()),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(loc.translate('cancel'))),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(loc.translate('thank_you_feedback')), backgroundColor: Colors.green),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
-            child: Text(loc.translate('save')),
           ),
         ],
       ),
     );
-  }
-
-  void _shareApp() {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Share App'), backgroundColor: Colors.blue));
   }
 }

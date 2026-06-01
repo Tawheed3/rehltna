@@ -35,6 +35,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  final Map<int, ScrollController> _reviewScrollControllers = {};
+
   // ==================== دورة الحياة ====================
 
   @override
@@ -65,9 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ==================== دوال مساعدة ====================
-  /// ✅ لو فيه أكتر من سعر → يعرض السعر التاني (أعلى سعر بعد الأكبر)
-  /// ✅ لو فيه سعر واحد → يعرضه
-  /// ✅ لو مفيش أسعار متعددة → يعرض السعر العادي
   String _getSecondPrice(ItemModel item) {
     if (item.prices.isEmpty) {
       return '${item.priceAfterDiscount.toStringAsFixed(0)} ريال';
@@ -1018,12 +1017,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
             else
-            // ✅ كل المراجعات في Horizontal Scroll
+            // ✅ ارتفاع مناسب للكارد المتناسق
               SizedBox(
-                height: sh * 0.18,
+                height: sh * 0.28,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: reviews.length,
                   itemBuilder: (context, index) {
                     final review = reviews[index];
@@ -1032,6 +1032,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ss: ss,
                       isDark: isDark,
                       sw: sw,
+                      cardIndex: index,  // ✅ تمرير الـ index
                     );
                   },
                 ),
@@ -1186,50 +1187,62 @@ class _HomeScreenState extends State<HomeScreen> {
     required SettingsService ss,
     required bool isDark,
     required double sw,
+    required int cardIndex, // ✅ أضف معامل index
   }) {
+    // ✅ إنشاء ScrollController لكل كارد إذا لم يكن موجوداً
+    if (!_reviewScrollControllers.containsKey(cardIndex)) {
+      _reviewScrollControllers[cardIndex] = ScrollController();
+    }
+    final scrollController = _reviewScrollControllers[cardIndex]!;
+
     return Container(
-      width: sw * 0.62,
-      margin: const EdgeInsets.only(right: 12),
+      width: sw * 0.72,
+      margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         color: isDark ? Colors.grey.shade900 : Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.2)
-                : Colors.amber.withOpacity(0.1),
-            blurRadius: 10,
+                ? Colors.black.withOpacity(0.3)
+                : Colors.amber.withOpacity(0.15),
+            blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
         border: Border.all(
           color: isDark
-              ? Colors.grey.shade700
-              : Colors.amber.withOpacity(0.2),
+              ? Colors.grey.shade800
+              : Colors.amber.withOpacity(0.15),
+          width: 1,
         ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // الآڤاتار + الاسم + النجوم
+          children: [  // ✅ إزالة mainAxisSize: MainAxisSize.min
+            // === صف المستخدم والنجوم ===
             Row(
               children: [
-                // آڤاتار
+                // الآڤاتار
                 Container(
-                  width: 38,
-                  height: 38,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.amber.shade400,
-                        Colors.orange.shade400,
-                      ],
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFC107), Color(0xFFFF9800)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.amber.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Center(
                     child: Text(
@@ -1239,14 +1252,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
 
-                // الاسم + النجوم
+                // الاسم والنجوم
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1261,7 +1274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 4),
                       Row(
                         children: List.generate(5, (index) {
                           return Icon(
@@ -1269,7 +1282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ? Icons.star
                                 : Icons.star_border,
                             color: Colors.amber,
-                            size: 14,
+                            size: 16,
                           );
                         }),
                       ),
@@ -1279,53 +1292,94 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-            // التعليق (لو موجود)
-            if (review.comment.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              Expanded(
-                child: Text(
-                  review.comment,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isDark ? Colors.white70 : Colors.grey[700],
-                    height: 1.4,
+            // === خط فاصل ===
+            const SizedBox(height: 8),
+            Container(
+              height: 1,
+              color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+            ),
+            const SizedBox(height: 8),
+
+            // === التعليق (مع Scrollbar) ===
+            if (review.comment.isNotEmpty)
+              Expanded(  // ✅ Expanded يأخذ المساحة المتاحة
+                child: Scrollbar(
+                  controller: scrollController,  // ✅ ربط الـ Controller
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  thickness: 5,
+                  radius: const Radius.circular(10),
+                  interactive: true,
+                  scrollbarOrientation: ScrollbarOrientation.left, // على اليسار لـ RTL
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    physics: const BouncingScrollPhysics(),
+                    child: Text(
+                      review.comment,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        color: isDark ? Colors.white70 : Colors.grey[700],
+                      ),
+                    ),
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            ],
 
-            // اسم الرحلة (لو فيه رحلة مرتبطة)
+            // === مسافة ثابتة قبل اسم الرحلة ===
+            const SizedBox(height: 8),
+
+            // === اسم الرحلة (ثابت في الأسفل) ===
             if (review.item != null)
               Container(
-                margin: const EdgeInsets.only(top: 6),
+                width: double.infinity,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8,
-                  vertical: 3,
+                  vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  review.item!.getTitle(ss.languageCode),
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w500,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.blue.shade50,
+                      Colors.blue.shade100,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.flight_takeoff,
+                      size: 14,
+                      color: Colors.blue.shade700,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        review.item!.getTitle(ss.languageCode),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blue.shade700,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else
+              const SizedBox(height: 30), // ✅ للحفاظ على نفس ارتفاع الكارد
           ],
         ),
       ),
     );
   }
 
-  // ==================== حوار إضافة مراجعة ====================
+// ==================== حوار إضافة مراجعة ====================
 
   void _showAddReviewFromHome() {
     final authProvider = context.read<AuthProvider>();
@@ -1341,7 +1395,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final commentController = TextEditingController();
 
     final allItems = itemsProvider.getActiveItems();
-    int? selectedItemId = null; // null = تقييم عام
+    int? selectedItemId = null;
 
     showModalBottomSheet(
       context: context,
@@ -1356,244 +1410,259 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (ctx, setModalState) {
             final isDark = Theme.of(ctx).brightness == Brightness.dark;
 
-            return Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 20,
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-              ),
+            return Container(
+              height: MediaQuery.of(ctx).size.height * 0.9, // تحديد ارتفاع 90%
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // مقبض
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
+                  // مقبض السحب - ثابت في الأعلى
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
 
-                  // عنوان
-                  const Text(
-                    '✏️ أضف تقييمك',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                  // محتوى قابل للتمرير
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20),
 
-                  // اختيار الرحلة (اختياري)
-                  if (allItems.isNotEmpty) ...[
-                    Text(
-                      'اختر الرحلة (اختياري):',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white70 : Colors.grey[700],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<int?>(
-                          value: selectedItemId,
-                          isExpanded: true,
-                          hint: Text(
-                            'تقييم عام (بدون رحلة)',
+                          // عنوان
+                          const Text(
+                            '✏️ أضف تقييمك',
                             style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 14,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          items: [
-                            const DropdownMenuItem<int?>(
-                              value: null,
-                              child: Text(
-                                '⭐ تقييم عام (بدون رحلة)',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.amber,
-                                ),
+                          const SizedBox(height: 16),
+
+                          // اختيار الرحلة (اختياري) - مع سكرول خاص بها
+                          if (allItems.isNotEmpty) ...[
+                            Text(
+                              'اختر الرحلة (اختياري):',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: isDark ? Colors.white70 : Colors.grey[700],
                               ),
                             ),
-                            ...allItems.map((item) {
-                              return DropdownMenuItem<int?>(
-                                value: item.id,
-                                child: Text(
-                                  item.getTitle(ss.languageCode),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: isDark
-                                        ? Colors.white
-                                        : Colors.black87,
+                            const SizedBox(height: 8),
+                            // حاوية القائمة المنسدلة مع سكرول
+                            Container(
+                              constraints: BoxConstraints(
+                                maxHeight: 200, // أقصى ارتفاع للقائمة
+                              ),
+                              child: SingleChildScrollView(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey.shade300),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<int?>(
+                                      value: selectedItemId,
+                                      isExpanded: true,
+                                      hint: Text(
+                                        'تقييم عام (بدون رحلة)',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade500,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      items: [
+                                        const DropdownMenuItem<int?>(
+                                          value: null,
+                                          child: Text(
+                                            '⭐ تقييم عام (بدون رحلة)',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.amber,
+                                            ),
+                                          ),
+                                        ),
+                                        ...allItems.map((item) {
+                                          return DropdownMenuItem<int?>(
+                                            value: item.id,
+                                            child: Text(
+                                              item.getTitle(ss.languageCode),
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: isDark
+                                                    ? Colors.white
+                                                    : Colors.black87,
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          );
+                                        }),
+                                      ],
+                                      onChanged: (value) {
+                                        setModalState(() {
+                                          selectedItemId = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              );
-                            }),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                           ],
-                          onChanged: (value) {
-                            setModalState(() {
-                              selectedItemId = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
 
-                  // اسم المستخدم (لغير المسجلين)
-                  if (!isLoggedIn)
-                    TextField(
-                      controller: reviewNameController,
-                      decoration: InputDecoration(
-                        labelText: 'اسمك',
-                        prefixIcon: const Icon(Icons.person),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  if (!isLoggedIn) const SizedBox(height: 12),
+                          // اسم المستخدم (لغير المسجلين)
+                          if (!isLoggedIn)
+                            TextField(
+                              controller: reviewNameController,
+                              decoration: InputDecoration(
+                                labelText: 'اسمك',
+                                prefixIcon: const Icon(Icons.person),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                          if (!isLoggedIn) const SizedBox(height: 12),
 
-                  // التقييم بالنجوم
-                  Row(
-                    children: [
-                      const Text('تقييمك: '),
-                      const SizedBox(width: 8),
-                      ...List.generate(5, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setModalState(
-                                  () => selectedRating = index + 1,
-                            );
-                          },
-                          child: Icon(
-                            index < selectedRating
-                                ? Icons.star
-                                : Icons.star_border,
-                            color: Colors.amber,
-                            size: 32,
+                          // التقييم بالنجوم
+                          Row(
+                            children: [
+                              const Text(
+                                'تقييمك: ',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              const SizedBox(width: 8),
+                              ...List.generate(5, (index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setModalState(
+                                          () => selectedRating = index + 1,
+                                    );
+                                  },
+                                  child: Icon(
+                                    index < selectedRating
+                                        ? Icons.star
+                                        : Icons.star_border,
+                                    color: Colors.amber,
+                                    size: 48,
+                                  ),
+                                );
+                              }),
+                            ],
                           ),
-                        );
-                      }),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+                          const SizedBox(height: 12),
 
-                  // التعليق (اختياري)
-                  TextField(
-                    controller: commentController,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      labelText: 'تعليقك (اختياري)',
-                      hintText: 'اكتب تجربتك معنا...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // زر الإرسال
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: reviewsProvider.isSubmitting
-                          ? null
-                          : () async {
-                        // التحقق من الاسم لغير المسجلين
-                        if (!isLoggedIn &&
-                            reviewNameController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(ctx).showSnackBar(
-                            const SnackBar(
-                              content:
-                              Text('الرجاء إدخال اسمك'),
-                              backgroundColor: Colors.orange,
-                            ),
-                          );
-                          return;
-                        }
-
-                        bool success;
-                        if (isLoggedIn) {
-                          success = await reviewsProvider
-                              .submitReviewLoggedIn(
-                            rating: selectedRating,
-                            comment:
-                            commentController.text.trim(),
-                            itemId: selectedItemId,
-                            token: authProvider.token!,
-                          );
-                        } else {
-                          success =
-                          await reviewsProvider.submitReview(
-                            reviewerName: reviewNameController
-                                .text
-                                .trim(),
-                            rating: selectedRating,
-                            comment:
-                            commentController.text.trim(),
-                            itemId: selectedItemId,
-                          );
-                        }
-
-                        if (success && ctx.mounted) {
-                          Navigator.pop(ctx);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'تم إضافة التقييم بنجاح 🎉',
+                          // التعليق (اختياري)
+                          TextField(
+                            controller: commentController,
+                            maxLines: 4,
+                            decoration: InputDecoration(
+                              labelText: 'تعليقك (اختياري)',
+                              hintText: 'اكتب تجربتك معنا...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              backgroundColor: Colors.green,
                             ),
-                          );
-                        } else if (ctx.mounted) {
-                          ScaffoldMessenger.of(ctx).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                reviewsProvider.errorMessage ??
-                                    'فشل في إرسال التقييم',
+                          ),
+                          const SizedBox(height: 16),
+
+                          // زر الإرسال
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: reviewsProvider.isSubmitting
+                                  ? null
+                                  : () async {
+                                if (!isLoggedIn &&
+                                    reviewNameController.text.trim().isEmpty) {
+                                  ScaffoldMessenger.of(ctx).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('الرجاء إدخال اسمك'),
+                                      backgroundColor: Colors.orange,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                bool success;
+                                if (isLoggedIn) {
+                                  success = await reviewsProvider
+                                      .submitReviewLoggedIn(
+                                    rating: selectedRating,
+                                    comment: commentController.text.trim(),
+                                    itemId: selectedItemId,
+                                    token: authProvider.token!,
+                                  );
+                                } else {
+                                  success = await reviewsProvider.submitReview(
+                                    reviewerName: reviewNameController.text.trim(),
+                                    rating: selectedRating,
+                                    comment: commentController.text.trim(),
+                                    itemId: selectedItemId,
+                                  );
+                                }
+
+                                if (success && ctx.mounted) {
+                                  Navigator.pop(ctx);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('تم إضافة التقييم بنجاح 🎉'),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                } else if (ctx.mounted) {
+                                  ScaffoldMessenger.of(ctx).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        reviewsProvider.errorMessage ??
+                                            'فشل في إرسال التقييم',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  reviewsProvider.clearError();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.amber,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
-                              backgroundColor: Colors.red,
+                              child: reviewsProvider.isSubmitting
+                                  ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                                  : const Text(
+                                'إرسال التقييم',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          );
-                          reviewsProvider.clearError();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: reviewsProvider.isSubmitting
-                          ? const CircularProgressIndicator(
-                        color: Colors.white,
-                      )
-                          : const Text(
-                        'إرسال التقييم',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
                   ),

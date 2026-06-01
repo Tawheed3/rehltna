@@ -97,7 +97,6 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final localizations = AppLocalizations.of(context);
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(

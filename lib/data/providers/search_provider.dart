@@ -95,6 +95,10 @@ class SearchProvider extends BaseProvider {
         .replaceAll('ة', 'ه')
     // الواو والهمزة
         .replaceAll('ؤ', 'و')
+    // ✅ توحيد "ذو" و "ذي" و "ذى" إلى "ذو"
+        .replaceAll(RegExp(r'ذ[ويى]'), 'ذو')
+    // ✅ توحيد "الحجة" و "الحجه" إلى "الحجه" (للتاء المربوطة)
+        .replaceAll('الحجة', 'الحجه')
     // تجاهل حالة الأحرف الإنجليزية
         .toLowerCase()
         .trim();

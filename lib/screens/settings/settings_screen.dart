@@ -237,7 +237,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     onTap: () => settingsService.toggleDarkMode(!isDark),
                   ),
-
                   const SizedBox(height: 16),
                   Divider(color: isDark ? Colors.white24 : Colors.grey.shade300),
                   const SizedBox(height: 16),

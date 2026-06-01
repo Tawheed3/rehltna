@@ -6,9 +6,9 @@ import '../services/cache_service.dart';
 import 'base_provider.dart';
 
 class ItemsProvider extends BaseProvider {
-  static const String _cacheKeyItems = 'items';
-  static const String _cacheKeyTypes = 'item-types';
-  static const Duration _ttl = Duration(hours: 2);
+  static const String _cacheKeyItems = 'items-v2';
+  static const String _cacheKeyTypes = 'item-types-v2';
+  static const Duration _ttl = Duration(minutes: 30);
 
   List<ItemModel> _items = [];
   List<ItemModel> _endedItems = [];
@@ -44,8 +44,8 @@ class ItemsProvider extends BaseProvider {
 
   Future<void> fetchItems({int? limit, int page = 1}) async {
     startLoading();
-    String endpoint = 'items';
-    if (page > 1) endpoint += '?page=$page';
+    String endpoint = 'items?per_page=200';
+    if (page > 1) endpoint += '&page=$page';
     final data = await getRequest(endpoint);
     if (data != null && data['code'] == 200 && data['data'] != null) {
       final itemsData = data['data']['items']['data'] as List;
@@ -116,7 +116,7 @@ class ItemsProvider extends BaseProvider {
   }
 
   Future<void> _fetchAndCacheItems() async {
-    final data = await getRequest('items');
+    final data = await getRequest('items?per_page=200');
     if (data != null && data['code'] == 200 && data['data'] != null) {
       _applyItemsData(data);
       CacheService().set(_cacheKeyItems, data);
@@ -134,7 +134,7 @@ class ItemsProvider extends BaseProvider {
   void _applyItemsData(Map<String, dynamic> data) {
     final itemsData = data['data']['items']['data'] as List;
     _items = itemsData.map((item) => ItemModel.fromJson(item)).toList();
-    _hasMoreData = _items.length >= 20;
+    _hasMoreData = _items.length >= 200;
     _currentPage = 1;
     developer.log('Items applied: ${_items.length}', name: BaseProvider.logTag);
   }

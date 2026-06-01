@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->hasMany(EtisalatyEmployeeContact::class, 'employee_id');
     }
 
+    public function assignedEtisalatyContacts()
+    {
+        return $this->hasMany(EtisalatyContact::class, 'assigned_employee_id');
+    }
+
     public function systemRole(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'role_id');

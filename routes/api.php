@@ -236,6 +236,10 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
             Route::post('/upload-contacts',      [EtisalatyController::class, 'uploadContacts']);
             Route::get('/download-all-contacts', [EtisalatyController::class, 'downloadAllContacts'])
                 ->middleware(EtisalatyRole::class);
+            Route::get('/download-assigned-contacts/{employeeId}', [EtisalatyController::class, 'downloadAssignedContacts'])
+                ->middleware(EtisalatyRole::class);
+            Route::get('/distribution-summary', [EtisalatyController::class, 'distributionSummary'])
+                ->middleware(EtisalatyRole::class);
         });
     });
 

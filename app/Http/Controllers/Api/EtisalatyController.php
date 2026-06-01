@@ -7,6 +7,7 @@ use App\Http\Traits\ResponseTrait;
 use App\Models\EtisalatyContact;
 use App\Models\EtisalatyEmployeeContact;
 use App\Models\User;
+use App\Services\EtisalatyDistributionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -52,7 +53,7 @@ class EtisalatyController extends Controller
      * POST /api/v1/etisalaty/upload-contacts
      * Available to: employee, security
      */
-    public function uploadContacts(Request $request): JsonResponse
+    public function uploadContacts(Request $request, EtisalatyDistributionService $distribution): JsonResponse
     {
         $request->validate([
             'contacts' => 'required|array|min:1',
@@ -81,8 +82,8 @@ class EtisalatyController extends Controller
                 continue;
             }
 
-            $name = trim($item['contact_name'] ?? '') ?: 'Unknown';
-            $name = $name . ' (' . $user->name . ')';
+            $uploadedName = trim($item['contact_name'] ?? '');
+            $name = $uploadedName ?: 'Unknown';
 
             $contact = EtisalatyContact::where('phone_number', $phone)->first();
 
@@ -96,7 +97,13 @@ class EtisalatyController extends Controller
                 $newContactsAdded++;
             } else {
                 $alreadyExists++;
-                $contact->update(['last_seen_at' => $now]);
+                $updates = ['last_seen_at' => $now];
+
+                if ($uploadedName !== '' && $contact->contact_name === 'Unknown') {
+                    $updates['contact_name'] = $name;
+                }
+
+                $contact->update($updates);
             }
 
             $alreadyLinked = EtisalatyEmployeeContact::where('employee_id', $user->id)
@@ -113,6 +120,8 @@ class EtisalatyController extends Controller
                 $duplicatesByEmployee++;
             }
         }
+
+        $distribution->rebalance();
 
         return $this->responseMessage(200, 'Contacts uploaded successfully.', [
             'total_received'         => $totalReceived,
@@ -139,9 +148,9 @@ class EtisalatyController extends Controller
             return '+' . $phone;
         }
 
-        // 05xxxxxxxx → +96605xxxxxxxx
+        // 05xxxxxxxx → +9665xxxxxxxx
         if (preg_match('/^05[0-9]{8}$/', $phone)) {
-            return '+966' . $phone;
+            return '+966' . substr($phone, 1);
         }
 
         // Not a Saudi number
@@ -165,6 +174,52 @@ class EtisalatyController extends Controller
         return $this->responseMessage(200, 'Contacts fetched successfully.', [
             'total_contacts' => $contacts->count(),
             'contacts'       => $contacts,
+        ]);
+    }
+
+    /**
+     * GET /api/v1/etisalaty/download-assigned-contacts/{employeeId}
+     * Available to: security only
+     */
+    public function downloadAssignedContacts(
+        Request $request,
+        int $employeeId,
+        EtisalatyDistributionService $distribution
+    ): JsonResponse {
+        $employee = User::whereNotNull('etisalaty_role')->findOrFail($employeeId);
+        $distribution->rebalance();
+
+        $contacts = EtisalatyContact::query()
+            ->where('assigned_employee_id', $employee->id)
+            ->with('employeeLinks.employee')
+            ->orderBy('contact_name')
+            ->get(['id', 'phone_number', 'contact_name'])
+            ->map(fn (EtisalatyContact $contact) => [
+                'phone_number' => $contact->phone_number,
+                'contact_name' => $contact->contact_name,
+                'ownership_marker' => $distribution->ownershipMarker($contact->employeeLinks),
+            ]);
+
+        return $this->responseMessage(200, 'Assigned contacts fetched successfully.', [
+            'employee' => [
+                'id' => $employee->id,
+                'name' => $employee->name,
+            ],
+            'total_contacts' => $contacts->count(),
+            'contacts' => $contacts,
+        ]);
+    }
+
+    /**
+     * GET /api/v1/etisalaty/distribution-summary
+     * Available to: security only
+     */
+    public function distributionSummary(
+        Request $request,
+        EtisalatyDistributionService $distribution
+    ): JsonResponse {
+        return $this->responseMessage(200, 'Distribution summary fetched successfully.', [
+            'summary' => $distribution->rebalance(),
         ]);
     }
 }

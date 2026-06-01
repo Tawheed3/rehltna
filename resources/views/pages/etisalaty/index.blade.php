@@ -9,6 +9,10 @@
             <h2 class="fw-bold mb-0">Etisalaty Contacts</h2>
             <small class="text-muted">All contacts uploaded by employees via the Etisalaty app</small>
         </div>
+        <form method="POST" action="{{ route('etisalaty.distribute') }}">
+            @csrf
+            <button class="btn btn-primary">Rebalance Assignments</button>
+        </form>
     </div>
 
     {{-- Alerts --}}
@@ -39,6 +43,34 @@
         </div>
     </div>
 
+    {{-- Distribution Summary --}}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-transparent border-0 pt-3">
+            <h6 class="fw-bold mb-0">Distribution Summary</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                @foreach($summary['assigned_per_employee'] as $assignment)
+                    <div class="col-md-4">
+                        <div class="border rounded p-3">
+                            <div class="text-muted small">{{ $assignment['employee_name'] }}</div>
+                            <div class="fs-4 fw-bold">{{ number_format($assignment['total_assigned']) }} assigned</div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="mt-3">
+                <span class="fw-semibold me-2">Ownership groups:</span>
+                @foreach($summary['ownership_groups'] as $marker => $count)
+                    <span class="badge bg-secondary me-1">{{ $marker }}: {{ number_format($count) }}</span>
+                @endforeach
+                @if($summary['total_unassigned'] > 0)
+                    <span class="badge bg-danger">Unassigned: {{ number_format($summary['total_unassigned']) }}</span>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <div class="row g-3">
         {{-- Contacts Table --}}
         <div class="col-lg-8">
@@ -60,7 +92,8 @@
                                     <th>#</th>
                                     <th>Phone Number</th>
                                     <th>Contact Name</th>
-                                    <th>Uploaded By</th>
+                                    <th>Owners</th>
+                                    <th>Assigned To</th>
                                     <th>First Seen</th>
                                     <th>Last Seen</th>
                                     <th>Actions</th>
@@ -74,9 +107,10 @@
                                     <td>{{ $contact->contact_name }}</td>
                                     <td>
                                         <span class="badge bg-primary rounded-pill">
-                                            {{ $contact->employee_links_count }} employee{{ $contact->employee_links_count != 1 ? 's' : '' }}
+                                            {{ $contact->ownership_marker }}
                                         </span>
                                     </td>
+                                    <td>{{ $contact->assignedEmployee?->name ?? 'Unassigned' }}</td>
                                     <td class="text-muted small">{{ \Carbon\Carbon::parse($contact->first_seen_at)->format('d M Y') }}</td>
                                     <td class="text-muted small">{{ \Carbon\Carbon::parse($contact->last_seen_at)->format('d M Y') }}</td>
                                     <td>
@@ -91,7 +125,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-5">No contacts uploaded yet.</td>
+                                    <td colspan="8" class="text-center text-muted py-5">No contacts uploaded yet.</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -138,7 +172,7 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
-                        @foreach(\App\Models\User::whereNotNull('etisalaty_role')->withCount(['etisalatyUploads as uploads_count' => fn($q) => $q->whereHas('contact')])->get() as $emp)
+                        @foreach($employees as $emp)
                         <li class="list-group-item px-4 py-3">
                             <div class="d-flex align-items-center justify-content-between mb-1">
                                 <div>
@@ -152,7 +186,15 @@
                                 @endif
                             </div>
                             <div class="d-flex align-items-center justify-content-between mt-2">
-                                <small class="text-muted">{{ number_format($emp->uploads_count) }} contacts uploaded</small>
+                                <small class="text-muted">
+                                    {{ number_format($emp->uploads_count) }} uploaded,
+                                    {{ number_format($emp->assigned_count) }} assigned
+                                </small>
+                                <a href="{{ route('etisalaty.export-assigned', $emp->id) }}" class="btn btn-sm btn-outline-primary">
+                                    Export Assigned
+                                </a>
+                            </div>
+                            <div class="d-flex justify-content-end mt-2">
                                 @if($emp->uploads_count > 0)
                                 <form method="POST"
                                       action="{{ route('etisalaty.destroy-by-employee', $emp->id) }}"

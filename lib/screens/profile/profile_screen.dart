@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'pdf_viewer_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -1767,11 +1768,13 @@ class _TripDocumentCardState extends State<_TripDocumentCard> {
 
   Widget _buildPdfButton(String url) {
     return GestureDetector(
-      onTap: () async {
-        final uri = Uri.tryParse(url);
-        if (uri != null) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        }
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => PdfViewerScreen(url: url, title: 'وثيقة رحلتي'),
+          ),
+        );
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
@@ -1789,7 +1792,7 @@ class _TripDocumentCardState extends State<_TripDocumentCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'تحميل وثيقة PDF',
+                    'عرض وثيقة PDF',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -1797,13 +1800,13 @@ class _TripDocumentCardState extends State<_TripDocumentCard> {
                     ),
                   ),
                   Text(
-                    'اضغط لفتح الملف',
+                    'اضغط لعرض الملف داخل التطبيق',
                     style: TextStyle(fontSize: 11, color: Colors.red.shade400),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.download, color: Colors.red.shade400, size: 20),
+            Icon(Icons.visibility_rounded, color: Colors.red.shade400, size: 20),
           ],
         ),
       ),

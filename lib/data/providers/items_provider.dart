@@ -6,8 +6,8 @@ import '../services/cache_service.dart';
 import 'base_provider.dart';
 
 class ItemsProvider extends BaseProvider {
-  static const String _cacheKeyItems = 'items-v2';
-  static const String _cacheKeyTypes = 'item-types-v2';
+  static const String _cacheKeyItems = 'items-v3';
+  static const String _cacheKeyTypes = 'item-types-v3';
   static const Duration _ttl = Duration(minutes: 30);
 
   List<ItemModel> _items = [];

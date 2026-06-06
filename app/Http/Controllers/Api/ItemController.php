@@ -135,7 +135,7 @@ class ItemController extends Controller
         }
 
         $perPage = min((int) $request->get('per_page', 10), 200);
-        $Items = $query->orderByDesc('id')->paginate($perPage);
+        $Items = $query->orderByRaw('(start_date IS NULL), start_date ASC')->paginate($perPage);
 
         $data = [
             'items_count' => $Items->total(),
@@ -177,7 +177,7 @@ class ItemController extends Controller
             return $this->responseMessage(404, 'not found');
 
         $today = now()->toDateString();
-        $items = $itemType->items()->where('status', 1)->where(fn($q) => $q->whereNull('start_date')->orWhere('start_date', '>=', $today))->with($this->getOrderedRelations())->orderByDesc('id')->paginate(10);
+        $items = $itemType->items()->where('status', 1)->where(fn($q) => $q->whereNull('start_date')->orWhere('start_date', '>=', $today))->with($this->getOrderedRelations())->orderByRaw('(start_date IS NULL), start_date ASC')->paginate(10);
 
         $data = [
             'itemType' => $itemType,

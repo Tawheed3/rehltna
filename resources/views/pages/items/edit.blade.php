@@ -366,6 +366,7 @@
                                 <div class="col-md-12 mb-4">
                                     <h6 class="text-dark fw-bold mb-3 border-bottom pb-2">Gallery</h6>
                                     <div class="bg-light p-4 rounded border border-dashed text-center">
+                                        <input type="hidden" name="gallery_cleared" value="1">
                                         <button class="btn btn-outline-primary mb-3 open-gallery" type="button"
                                                 data-input="gallery" data-preview="gallery_container" data-multi="true">
                                             <i class="fas fa-photo-video me-1"></i> Add Images & Videos

@@ -69,7 +69,7 @@ class ItemController extends Controller
 
             $activeLangs = get_active_langs();
 
-            $fieldsToExclude = ['meta_img', 'pdf', 'gallery', 'private_gallery', 'itinerary_city_id', 'itinerary_start', 'itinerary_end', 'itinerary_nights', 'itinerary_map', 'route_title_en', 'route_title_ar', 'route_icon', 'route_order', 'price_title_ar', 'price_title_en', 'price_value', 'price_discount', 'price_discount_type', 'exclude_title_en', 'exclude_title_ar', 'exclude_icon', 'exclude_order', 'itinerary_places_en', 'itinerary_places_ar'];
+            $fieldsToExclude = ['meta_img', 'pdf', 'gallery', 'gallery_cleared', 'private_gallery', 'private_gallery_cleared', 'itinerary_city_id', 'itinerary_start', 'itinerary_end', 'itinerary_nights', 'itinerary_map', 'route_title_en', 'route_title_ar', 'route_icon', 'route_order', 'price_title_ar', 'price_title_en', 'price_value', 'price_discount', 'price_discount_type', 'exclude_title_en', 'exclude_title_ar', 'exclude_icon', 'exclude_order', 'itinerary_places_en', 'itinerary_places_ar'];
 
             foreach ($activeLangs as $lang) {
                 $fieldsToExclude[] = 'banner_' . $lang;
@@ -321,7 +321,7 @@ class ItemController extends Controller
 
             $activeLangs = get_active_langs();
 
-            $fieldsToExclude = ['meta_img', 'pdf', 'gallery', 'private_gallery', 'itinerary_city_id', 'itinerary_start', 'itinerary_end', 'itinerary_nights', 'itinerary_map', 'route_title_en', 'route_title_ar', 'route_icon', 'route_order', 'price_title_ar', 'price_title_en', 'price_value', 'price_discount', 'price_discount_type', 'exclude_title_en', 'exclude_title_ar', 'exclude_icon', 'exclude_order', 'itinerary_places_en', 'itinerary_places_ar'];
+            $fieldsToExclude = ['meta_img', 'pdf', 'gallery', 'gallery_cleared', 'private_gallery', 'private_gallery_cleared', 'itinerary_city_id', 'itinerary_start', 'itinerary_end', 'itinerary_nights', 'itinerary_map', 'route_title_en', 'route_title_ar', 'route_icon', 'route_order', 'price_title_ar', 'price_title_en', 'price_value', 'price_discount', 'price_discount_type', 'exclude_title_en', 'exclude_title_ar', 'exclude_icon', 'exclude_order', 'itinerary_places_en', 'itinerary_places_ar'];
 
             foreach ($activeLangs as $lang) {
                 $fieldsToExclude[] = 'banner_' . $lang;

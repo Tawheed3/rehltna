@@ -39,7 +39,7 @@ dependencies:
   in_app_review: ^2.0.8
 
   # للتاريخ والوقت
-  intl: ^0.20.2
+  intl: ^0.19.0
 
   # لعرض ملفات PDF داخل التطبيق
   syncfusion_flutter_pdfviewer: ^29.0.0
@@ -57,6 +57,13 @@ dependencies:
 
   # لطلب الصلاحيات
   permission_handler: ^11.0.1
+
+  # لتحميل الملفات ومسارات التخزين
+  dio: ^5.4.0
+  path_provider: ^2.1.2
+
+  # لاتجاه القبلة والبوصلة
+  flutter_compass: ^0.8.0
 
 
   # للخطوط

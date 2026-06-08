@@ -37,6 +37,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   final Map<int, ScrollController> _reviewScrollControllers = {};
   bool _isReviewsSectionExpanded = false;
   bool _isReviewsLoaded = false;
+  bool _isPricesSectionExpanded = false;
   // ==================== متغيرات الفيديو ====================
   final Map<int, VideoPlayerController?> _videoControllers = {};
 
@@ -366,8 +367,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleAndSeason(ss, isDark),
-                const SizedBox(height: 16),
-                _buildPriceAndAttendeesCard(ss, isDark, _item!.isExpired),
+                const SizedBox(height: 12),
+                _buildDateRow(isDark),
                 const SizedBox(height: 16),
                 if (_item!.itineraries.isNotEmpty) ...[
                   _buildItinerarySection(ss, isDark),
@@ -385,6 +386,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 _buildDescriptionSection(ss, isDark),
                 const SizedBox(height: 16),
                 _buildReviewsSection(ss, isDark),
+                const SizedBox(height: 16),
+                _buildPriceAndAttendeesCard(ss, isDark, _item!.isExpired),
                 const SizedBox(height: 24),
                 _buildContactButtons(ss),
                 const SizedBox(height: 80),
@@ -442,43 +445,85 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       sortedPrices.sort((a, b) => b.effectivePrice.compareTo(a.effectivePrice));
     }
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _bgLight(isDark),
+        color: _bgColor(isDark),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: widget.categoryColor.withOpacity(0.3)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(Icons.sell_outlined, size: 20, color: widget.categoryColor),
-              const SizedBox(width: 8),
-              Text(
-                isEnded ? 'الأسعار' : 'الأسعار وعدد المسافرين',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: _textColor(isDark),
-                ),
+          GestureDetector(
+            onTap: () => setState(() => _isPricesSectionExpanded = !_isPricesSectionExpanded),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey.shade800 : Colors.grey.shade50,
+                borderRadius: _isPricesSectionExpanded
+                    ? const BorderRadius.vertical(top: Radius.circular(16))
+                    : BorderRadius.circular(16),
               ),
-            ],
+              child: Row(
+                children: [
+                  Container(
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [widget.categoryColor, widget.categoryColor.withOpacity(0.7)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.sell_outlined, color: Colors.white, size: 22),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isEnded ? 'الأسعار' : 'الأسعار وعدد المسافرين',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: _textColor(isDark),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AnimatedRotation(
+                    turns: _isPricesSectionExpanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    child: Icon(Icons.keyboard_arrow_down, color: widget.categoryColor, size: 28),
+                  ),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(height: 16),
-          if (sortedPrices.isNotEmpty)
-            ...sortedPrices.map(
-                  (price) => _buildPriceItem(price, ss, isDark, isEnded),
-            )
-          else ...[
-            _buildSinglePriceRow(isDark),
-            if (!isEnded) ...[
-              const SizedBox(height: 12),
-              _buildAttendeesRow(0, isDark),
-            ],
+          if (_isPricesSectionExpanded) ...[
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (sortedPrices.isNotEmpty)
+                    ...sortedPrices.map(
+                      (price) => _buildPriceItem(price, ss, isDark, isEnded),
+                    )
+                  else ...[
+                    _buildSinglePriceRow(isDark),
+                    if (!isEnded) ...[
+                      const SizedBox(height: 12),
+                      _buildAttendeesRow(0, isDark),
+                    ],
+                  ],
+                ],
+              ),
+            ),
           ],
-          const Divider(height: 24, color: Colors.grey),
-          _buildDateRow(isDark),
         ],
       ),
     );
@@ -724,153 +769,99 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       ][m.clamp(0, 12)];
 
   Widget _buildDateRow(bool isDark) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: widget.categoryColor.withOpacity(isDark ? 0.1 : 0.05),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: widget.categoryColor.withOpacity(0.2)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.calendar_today, size: 18, color: widget.categoryColor),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    final hasHijri = _item!.startDateHijri.isNotEmpty || _item!.endDateHijri.isNotEmpty;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: widget.categoryColor.withOpacity(isDark ? 0.1 : 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: widget.categoryColor.withOpacity(0.2)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Dates info (right side in RTL)
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.calendar_today_outlined, size: 14, color: widget.categoryColor),
+                    const SizedBox(width: 6),
+                    Text(
+                      'التاريخ الميلادي',
+                      style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _textColor(isDark)),
+                    children: [
+                      TextSpan(text: _formatDate(_item!.startDate)),
+                      TextSpan(text: '  —  ', style: TextStyle(color: widget.categoryColor)),
+                      TextSpan(text: _formatDate(_item!.endDate)),
+                    ],
+                  ),
+                ),
+                if (hasHijri) ...[
+                  const SizedBox(height: 10),
+                  Divider(height: 1, color: widget.categoryColor.withOpacity(0.15)),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Icon(Icons.mosque_outlined, size: 14, color: widget.categoryColor),
+                      const SizedBox(width: 6),
+                      Text(
+                        'التاريخ الهجري',
+                        style: TextStyle(fontSize: 12, color: widget.categoryColor, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _textColor(isDark)),
                       children: [
-                        Text(
-                          'التاريخ (ميلادي)',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: _textColor(isDark),
-                            ),
-                            children: [
-                              TextSpan(text: _formatDate(_item!.startDate)),
-                              TextSpan(
-                                text: ' — ',
-                                style: TextStyle(
-                                  color: widget.categoryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextSpan(text: _formatDate(_item!.endDate)),
-                            ],
-                          ),
-                        ),
+                        TextSpan(text: _formatHijriDate(_item!.startDateHijri)),
+                        TextSpan(text: '  —  ', style: TextStyle(color: widget.categoryColor)),
+                        TextSpan(text: _formatHijriDate(_item!.endDateHijri)),
                       ],
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.green.withOpacity(0.3)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.nightlight_round, size: 14, color: Colors.green.shade700),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${_item!.totalNights} ليالي',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green.shade700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (_item!.startDateHijri.isNotEmpty || _item!.endDateHijri.isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Row(
-              children: [
-                const Expanded(child: Divider(color: Colors.grey)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Icon(Icons.more_horiz, size: 16, color: Colors.grey),
-                ),
-                const Expanded(child: Divider(color: Colors.grey)),
               ],
             ),
           ),
+          const SizedBox(width: 12),
+          // Nights badge (left side in RTL)
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: widget.categoryColor.withOpacity(isDark ? 0.1 : 0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: widget.categoryColor.withOpacity(0.2)),
+              color: Colors.green.withOpacity(isDark ? 0.15 : 0.08),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.green.withOpacity(0.3)),
             ),
-            child: Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.mosque, size: 18, color: widget.categoryColor),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'التاريخ (هجري)',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: widget.categoryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: _textColor(isDark),
-                          ),
-                          children: [
-                            TextSpan(text: _formatHijriDate(_item!.startDateHijri)),
-                            TextSpan(
-                              text: ' — ',
-                              style: TextStyle(
-                                color: widget.categoryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextSpan(text: _formatHijriDate(_item!.endDateHijri)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                Icon(Icons.nightlight_round, size: 20, color: Colors.green.shade600),
+                const SizedBox(height: 4),
+                Text(
+                  '${_item!.totalNights}',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green.shade700),
+                ),
+                Text(
+                  'ليالي',
+                  style: TextStyle(fontSize: 11, color: Colors.green.shade600, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
           ),
         ],
-      ],
+      ),
     );
   }
 

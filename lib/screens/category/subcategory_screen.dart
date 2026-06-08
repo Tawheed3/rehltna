@@ -268,6 +268,23 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
                         ),
                       ],
                     ),
+                    if (item.startDate.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Icon(Icons.calendar_today_outlined, size: 12, color: Colors.teal.shade400),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatStartDate(item.startDate),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isDark ? Colors.teal.shade200 : Colors.teal.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
@@ -315,5 +332,17 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
         ),
       ),
     );
+  }
+
+  String _formatStartDate(String date) {
+    try {
+      final p = date.split('-');
+      if (p.length == 3) {
+        const months = ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+        final m = int.tryParse(p[1]) ?? 0;
+        return '${p[2]} ${months[m.clamp(0, 12)]}';
+      }
+    } catch (_) {}
+    return date;
   }
 }

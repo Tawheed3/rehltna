@@ -25,6 +25,12 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
+	<!-- صلاحيات الموقع لاتجاه القبلة -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة بدقة</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة بدقة</string>
+
 	<!-- إعدادات الإشعارات لـ iOS -->
 	<key>UIBackgroundModes</key>
 	<array>

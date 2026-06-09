@@ -9,10 +9,15 @@
             <h2 class="fw-bold mb-0">Etisalaty Contacts</h2>
             <small class="text-muted">All contacts uploaded by employees via the Etisalaty app</small>
         </div>
-        <form method="POST" action="{{ route('etisalaty.distribute') }}">
-            @csrf
-            <button class="btn btn-primary">Rebalance Assignments</button>
-        </form>
+        <div class="d-flex gap-2">
+            <a href="{{ route('etisalaty.export-all') }}" class="btn btn-success">
+                📥 Export All to CSV (Google Sheets)
+            </a>
+            <form method="POST" action="{{ route('etisalaty.distribute') }}">
+                @csrf
+                <button class="btn btn-primary">Rebalance Assignments</button>
+            </form>
+        </div>
     </div>
 
     {{-- Alerts --}}

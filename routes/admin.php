@@ -309,6 +309,7 @@ Route::group([
         Route::middleware('permission:manage_etisalaty')->group(function () {
             Route::get('/etisalaty', [\App\Http\Controllers\Dashboard\EtisalatyController::class, 'index'])->name('etisalaty.index');
             Route::post('/etisalaty/distribute', [\App\Http\Controllers\Dashboard\EtisalatyController::class, 'distribute'])->name('etisalaty.distribute');
+            Route::get('/etisalaty/export-all', [\App\Http\Controllers\Dashboard\EtisalatyController::class, 'exportAll'])->name('etisalaty.export-all');
             Route::get('/etisalaty/employee/{employeeId}/export', [\App\Http\Controllers\Dashboard\EtisalatyController::class, 'exportAssigned'])->name('etisalaty.export-assigned');
             Route::delete('/etisalaty/{id}', [\App\Http\Controllers\Dashboard\EtisalatyController::class, 'destroy'])->name('etisalaty.destroy');
             Route::delete('/etisalaty/employee/{employeeId}/contacts', [\App\Http\Controllers\Dashboard\EtisalatyController::class, 'destroyByEmployee'])->name('etisalaty.destroy-by-employee');

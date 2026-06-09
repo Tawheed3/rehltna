@@ -64,6 +64,29 @@ class EtisalatyController extends Controller
         return back()->with('success', "Distributed {$summary['total_unique_numbers']} unique contacts.");
     }
 
+    public function exportAll(EtisalatyDistributionService $distribution)
+    {
+        $distribution->rebalance();
+
+        return response()->streamDownload(function () use ($distribution) {
+            $output = fopen('php://output', 'w');
+            fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF)); // UTF-8 BOM for Excel/Sheets
+            fputcsv($output, ['phone_number', 'contact_name', 'ownership', 'assigned_to']);
+
+            EtisalatyContact::query()
+                ->with(['employeeLinks.employee', 'assignedEmployee'])
+                ->orderBy('contact_name')
+                ->each(fn (EtisalatyContact $contact) => fputcsv($output, [
+                    $contact->phone_number,
+                    $contact->contact_name,
+                    $distribution->ownershipMarker($contact->employeeLinks),
+                    $contact->assignedEmployee?->name ?? '',
+                ]));
+
+            fclose($output);
+        }, 'etisalaty-all-contacts-' . now()->format('Y-m-d') . '.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
     public function exportAssigned(int $employeeId, EtisalatyDistributionService $distribution)
     {
         $employee = $distribution->employeesQuery()->findOrFail($employeeId);

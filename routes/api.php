@@ -37,6 +37,7 @@ use App\Http\Controllers\Api\{ApplyJobController,
     SubscribeController,
     TenantController,
     TestimonialController,
+    TravelToolController,
     TypeOfferController,
     UserController,
     ReviewController
@@ -195,6 +196,9 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
         Route::get('/reviews', [ReviewController::class, 'all']);               #--------- All Approved Reviews (homepage) ---------#
         Route::get('/items/{id}/reviews', [ReviewController::class, 'index']);  #--------- Trip Reviews ---------#
         Route::post('/reviews', [ReviewController::class, 'store']);            #--------- Submit Review (public, item_id optional) ---------#
+
+        #---------------------------- Travel Tools ---------------------------#
+        Route::get('/travel-tools', [TravelToolController::class, 'getTravelTools']); #--------- Get Active Travel Tools ---------#
 
         #---------------------------- Auth Routes ---------------------------#
         Route::middleware('auth:sanctum')->group(function () {

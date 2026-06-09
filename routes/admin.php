@@ -50,6 +50,7 @@ use App\Http\Controllers\Dashboard\{ActivityLogController,
     TenantController,
     TestimonialController,
     TripDocumentController,
+    TravelToolController,
     ChunkUploadController,
     TypeOfferController};
 
@@ -300,6 +301,9 @@ Route::group([
             Route::post('/social-integration', [SettingController::class, 'updateOrCreate'])->name('social.integration.update');
             Route::resource('/ai-integration', AiController::class);
         });
+
+        #--- Travel Tools (أدوات السفر) ---#
+        Route::resource('/travel-tools', TravelToolController::class);
 
         #--- Etisalaty ---#
         Route::middleware('permission:manage_etisalaty')->group(function () {

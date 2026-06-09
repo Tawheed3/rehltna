@@ -86,6 +86,16 @@
             </li>
         @endif
 
+        {{-- Travel Tools --}}
+        @if(in_array('items', $tenantOptions) && auth()->user()->hasPermission('manage_trips'))
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('travel-tools.index') }}">
+                    <span class="side-menu__icon me-2 mb-3" style="font-size:18px">🕋</span>
+                    <span class="side-menu__label tx-15 bold">أدوات السفر</span>
+                </a>
+            </li>
+        @endif
+
         {{-- Location System --}}
         @if((in_array('countries', $tenantOptions) || in_array('states', $tenantOptions) || in_array('cities', $tenantOptions) || in_array('events_galleries', $tenantOptions)) && auth()->user()->hasPermission('manage_locations'))
             <li class="slide">

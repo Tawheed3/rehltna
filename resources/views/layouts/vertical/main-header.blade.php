@@ -40,7 +40,7 @@
 {{--                            <a class="dropdown-item" href="{{ route('tenants.index') }}">--}}
 {{--                                <i class="las la-arrow-left"></i>Change Panel--}}
 {{--                            </a>--}}
-                            <a class="dropdown-item" href="{{ route('sitemaps') }}">
+                            <a class="dropdown-item" href="{{ route('sitemaps.index') }}">
                                 <i class="las la-sitemap"></i> Sitemaps
                             </a>
                         @endif

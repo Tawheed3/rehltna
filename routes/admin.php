@@ -196,7 +196,7 @@ Route::group([
         #--- Custom Pages ---#
         Route::middleware('permission:manage_custom_pages')->group(function () {
             Route::resource('/sitemaps', SitemapController::class);
-            Route::get('/generate-sitemap', [SitemapController::class, 'generateSitemap'])->name('sitemaps');
+            Route::get('/generate-sitemap', [SitemapController::class, 'generateSitemap'])->name('admin.generate-sitemap');
             Route::resource('/custom-pages', CustomPageController::class);
             Route::post('/pages-change-status/{id}', [CustomPageController::class, 'pagesChangeStatus'])->name('pages.change.status');
             Route::get('/pages/preview/{id}', [CustomPageController::class, 'preview'])->name('custom-pages.preview');

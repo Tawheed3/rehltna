@@ -136,7 +136,7 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
         Route::get('/settings', [SettingController::class, 'index']); #------------ Get Settings ----------#
 
         #---------------------------- Sitemaps ---------------------------#
-        Route::get('/generate-sitemap', [SitemapController::class, 'generateSitemap'])->name('sitemaps'); #----------- Generate Sitemap -----------#
+        Route::get('/generate-sitemap', [SitemapController::class, 'generateSitemap'])->name('api.generate-sitemap'); #----------- Generate Sitemap -----------#
 
         #---------------------------- Payment Methods ---------------------------#
         Route::get('/payment-methods', [PaymentMethodController::class, 'index']); #------------ Get Payment Methods ----------#

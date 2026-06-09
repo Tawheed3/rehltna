@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Tenant;
 use App\Models\TravelTool;
 use Illuminate\Database\Seeder;
 
@@ -9,6 +10,14 @@ class TravelToolsSeeder extends Seeder
 {
     public function run(): void
     {
+        $tenant = Tenant::query()->first();
+        if (!$tenant) {
+            $this->command->warn('No tenant found. Skipping.');
+            return;
+        }
+        $tenant->makeCurrent();
+        $this->command->info("Seeding Travel Tools for tenant: {$tenant->name}");
+
         $tools = [
             ['icon' => '📶', 'title' => 'إنترنت أثناء السفر', 'description' => 'تجوال - شريحة دولية - باقة بيانات محلية. تأكد من تفعيل خدمة التجوال مع مزودك أو شراء شريحة محلية من المطار.', 'order' => 1],
             ['icon' => '🔌', 'title' => 'محول للشاحن', 'description' => 'تختلف منافذ الكهرباء من دولة لأخرى. احرص على اصطحاب محول عالمي يناسب الدولة التي ستسافر إليها.', 'order' => 2],

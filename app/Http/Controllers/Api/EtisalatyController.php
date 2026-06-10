@@ -66,12 +66,9 @@ class EtisalatyController extends Controller
             return $this->responseMessage(403, 'This user is not enabled for Etisalaty uploads.');
         }
 
-        $totalReceived        = count($request->contacts);
-        $newContactsAdded     = 0;
-        $alreadyExists        = 0;
-        $duplicatesByEmployee = 0;
-        $skippedNonSaudi      = 0;
-        $skippedInvalid       = 0;
+        $totalReceived    = count($request->contacts);
+        $newContactsAdded = 0;
+        $skippedInvalid   = 0;
 
         foreach ($request->contacts as $item) {
             if (empty($item['phone_number'])) {
@@ -82,58 +79,34 @@ class EtisalatyController extends Controller
             $phone = $this->normalizePhone(trim($item['phone_number']));
 
             if (!$this->isSaudiNumber($phone)) {
-                $skippedNonSaudi++;
+                $skippedInvalid++;
                 continue;
             }
 
-            $uploadedName = trim($item['contact_name'] ?? '');
-            $name = $uploadedName ?: 'Unknown';
+            $name = trim($item['contact_name'] ?? '') ?: 'Unknown';
 
-            $contact = EtisalatyContact::where('phone_number', $phone)->first();
+            $contact = EtisalatyContact::create([
+                'phone_number'  => $phone,
+                'contact_name'  => $name,
+                'first_seen_at' => $now,
+                'last_seen_at'  => $now,
+            ]);
 
-            if (!$contact) {
-                $contact = EtisalatyContact::create([
-                    'phone_number'  => $phone,
-                    'contact_name'  => $name,
-                    'first_seen_at' => $now,
-                    'last_seen_at'  => $now,
-                ]);
-                $newContactsAdded++;
-            } else {
-                $alreadyExists++;
-                $updates = ['last_seen_at' => $now];
+            EtisalatyEmployeeContact::create([
+                'employee_id' => $user->id,
+                'contact_id'  => $contact->id,
+                'uploaded_at' => $now,
+            ]);
 
-                if ($uploadedName !== '' && $contact->contact_name === 'Unknown') {
-                    $updates['contact_name'] = $name;
-                }
-
-                $contact->update($updates);
-            }
-
-            $alreadyLinked = EtisalatyEmployeeContact::where('employee_id', $user->id)
-                ->where('contact_id', $contact->id)
-                ->exists();
-
-            if (!$alreadyLinked) {
-                EtisalatyEmployeeContact::create([
-                    'employee_id' => $user->id,
-                    'contact_id'  => $contact->id,
-                    'uploaded_at' => $now,
-                ]);
-            } else {
-                $duplicatesByEmployee++;
-            }
+            $newContactsAdded++;
         }
 
         $distribution->rebalance();
 
         return $this->responseMessage(200, 'Contacts uploaded successfully.', [
-            'total_received'         => $totalReceived,
-            'new_contacts_added'     => $newContactsAdded,
-            'already_exists'         => $alreadyExists,
-            'duplicates_by_employee' => $duplicatesByEmployee,
-            'skipped_non_saudi'      => $skippedNonSaudi,
-            'skipped_invalid'        => $skippedInvalid,
+            'total_received'   => $totalReceived,
+            'new_contacts_added' => $newContactsAdded,
+            'skipped_invalid'  => $skippedInvalid,
         ]);
     }
 

@@ -70,7 +70,6 @@ class EtisalatyController extends Controller
         $newContactsAdded     = 0;
         $alreadyExists        = 0;
         $duplicatesByEmployee = 0;
-        $skippedNonSaudi      = 0;
         $skippedInvalid       = 0;
 
         foreach ($request->contacts as $item) {
@@ -81,8 +80,8 @@ class EtisalatyController extends Controller
 
             $phone = $this->normalizePhone(trim($item['phone_number']));
 
-            if (!$this->isSaudiNumber($phone)) {
-                $skippedNonSaudi++;
+            if ($phone === '') {
+                $skippedInvalid++;
                 continue;
             }
 
@@ -132,7 +131,6 @@ class EtisalatyController extends Controller
             'new_contacts_added'     => $newContactsAdded,
             'already_exists'         => $alreadyExists,
             'duplicates_by_employee' => $duplicatesByEmployee,
-            'skipped_non_saudi'      => $skippedNonSaudi,
             'skipped_invalid'        => $skippedInvalid,
         ]);
     }
@@ -142,28 +140,22 @@ class EtisalatyController extends Controller
         // Remove spaces, dashes, parentheses, dots
         $phone = preg_replace('/[\s\-\(\)\.]+/', '', $phone);
 
-        // Already E.164 with +966
-        if (preg_match('/^\+9665[0-9]{8}$/', $phone)) {
-            return $phone;
-        }
-
-        // 9665xxxxxxxx → +9665xxxxxxxx
-        if (preg_match('/^9665[0-9]{8}$/', $phone)) {
-            return '+' . $phone;
-        }
-
-        // 05xxxxxxxx → +9665xxxxxxxx
+        // Saudi shorthand: 05xxxxxxxx → +9665xxxxxxxx
         if (preg_match('/^05[0-9]{8}$/', $phone)) {
             return '+966' . substr($phone, 1);
         }
 
-        // Not a Saudi number
-        return '';
-    }
+        // Already has + prefix — keep as-is
+        if (str_starts_with($phone, '+') && strlen($phone) >= 7) {
+            return $phone;
+        }
 
-    private function isSaudiNumber(string $normalized): bool
-    {
-        return preg_match('/^\+9665[0-9]{8}$/', $normalized) === 1;
+        // No + but starts with country code digits (e.g. 9665xxxxxxxx, 201xxxxxxxx)
+        if (preg_match('/^[1-9][0-9]{6,14}$/', $phone)) {
+            return '+' . $phone;
+        }
+
+        return '';
     }
 
     /**

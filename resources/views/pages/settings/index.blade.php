@@ -432,6 +432,8 @@
                                             'whatsapp' => ['label' => 'WhatsApp', 'icon' => 'la-whatsapp', 'color' => '#25D366'],
                                             'linkedin' => ['label' => 'LinkedIn', 'icon' => 'la-linkedin-in', 'color' => '#0077b5'],
                                             'youtube' => ['label' => 'YouTube', 'icon' => 'la-youtube', 'color' => '#FF0000'],
+                                            'tiktok' => ['label' => 'TikTok', 'icon' => '', 'color' => '#010101', 'svg' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="18" height="18" class="me-1"><path d="M448 209.9a210.1 210.1 0 0 1-122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0h88a121.2 121.2 0 0 0 1.9 22.2A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z"/></svg>'],
+                                            'snapchat' => ['label' => 'Snapchat', 'icon' => 'la-snapchat-ghost', 'color' => '#FFFC00'],
                                         ];
                                     @endphp
 
@@ -440,7 +442,12 @@
                                             <div class="card h-100 border-0 bg-light">
                                                 <div class="card-body">
                                                     <label class="fw-bold mb-2" style="color: {{ $meta['color'] }}">
-                                                        <i class="lab {{ $meta['icon'] }} fs-4 me-1"></i> {{ $meta['label'] }}
+                                                        @if(!empty($meta['svg']))
+                                                            {!! $meta['svg'] !!}
+                                                        @else
+                                                            <i class="lab {{ $meta['icon'] }} fs-4 me-1"></i>
+                                                        @endif
+                                                        {{ $meta['label'] }}
                                                     </label>
                                                     <div class="repeater" data-name="{{ $key }}">
                                                         @php $values = decode_setting($key); @endphp

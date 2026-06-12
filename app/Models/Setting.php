@@ -17,6 +17,8 @@ class Setting extends Model
         'instagram',
         'twitter',
         'whatsapp',
+        'tiktok',
+        'snapchat',
         'site_address_en',
         'site_address_ar'
     ];

@@ -64,10 +64,10 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
         Route::get('/users-info', [UserController::class, 'index']);
 
         #--------------------------- Auth ---------------------------#
-        Route::post('register', [AuthController::class, 'register']);   #--------- Register ---------#
-        Route::post('login', [AuthController::class, 'login']);  #--------- Login ---------#
-        Route::post('forgot-password', [AuthController::class, 'forgotPassword']);  #--------- Forgot Password ---------#
-        Route::post('reset-password', [AuthController::class, 'resetPassword']);   #--------- Reset Password ---------#
+        Route::post('register', [AuthController::class, 'register'])->middleware('throttle:10,1');
+        Route::post('login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:5,1');
+        Route::post('reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:5,1');
 
         #--------------------------- Pixels ---------------------------#
         Route::get('/pixels-scripts', [PixelController::class, 'getTrackingScripts']); #--------- Get All Pixels Scripts ---------#
@@ -195,7 +195,7 @@ Route::middleware([ForceJsonResponseMiddleware::class, ApiKeyMiddleware::class, 
         #---------------------------- Reviews ---------------------------#
         Route::get('/reviews', [ReviewController::class, 'all']);               #--------- All Approved Reviews (homepage) ---------#
         Route::get('/items/{id}/reviews', [ReviewController::class, 'index']);  #--------- Trip Reviews ---------#
-        Route::post('/reviews', [ReviewController::class, 'store']);            #--------- Submit Review (public, item_id optional) ---------#
+        Route::post('/reviews', [ReviewController::class, 'store'])->middleware('throttle:10,1'); #--------- Submit Review (public, item_id optional) ---------#
 
         #---------------------------- Travel Tools ---------------------------#
         Route::get('/travel-tools', [TravelToolController::class, 'getTravelTools']); #--------- Get Active Travel Tools ---------#

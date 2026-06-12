@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\EtisalatyDistributionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class EtisalatyController extends Controller
@@ -59,17 +60,20 @@ class EtisalatyController extends Controller
             'contacts' => 'required|array|min:1',
         ]);
 
-        $user  = $request->etisalaty_user;
-        $now   = now();
+        $user = $request->etisalaty_user;
 
         if (!$distribution->isSupportedEmployee($user)) {
             return $this->responseMessage(403, 'This user is not enabled for Etisalaty uploads.');
         }
 
-        $totalReceived    = count($request->contacts);
-        $newContactsAdded = 0;
-        $skippedInvalid   = 0;
+        $totalReceived        = count($request->contacts);
+        $newContactsAdded     = 0;
+        $alreadyExists        = 0;
+        $duplicatesByEmployee = 0;
+        $skippedInvalid       = 0;
 
+        // Step 1 — normalize & validate; deduplicate within the batch (keep first name seen)
+        $batch = [];
         foreach ($request->contacts as $item) {
             if (empty($item['phone_number'])) {
                 $skippedInvalid++;
@@ -83,30 +87,88 @@ class EtisalatyController extends Controller
                 continue;
             }
 
-            $name = trim($item['contact_name'] ?? '') ?: 'Unknown';
-
-            $contact = EtisalatyContact::create([
-                'phone_number'  => $phone,
-                'contact_name'  => $name,
-                'first_seen_at' => $now,
-                'last_seen_at'  => $now,
-            ]);
-
-            EtisalatyEmployeeContact::create([
-                'employee_id' => $user->id,
-                'contact_id'  => $contact->id,
-                'uploaded_at' => $now,
-            ]);
-
-            $newContactsAdded++;
+            if (!isset($batch[$phone])) {
+                $batch[$phone] = trim($item['contact_name'] ?? '') ?: 'Unknown';
+            }
         }
+
+        if (empty($batch)) {
+            return $this->responseMessage(200, 'No valid Saudi contacts to upload.', [
+                'total_received'         => $totalReceived,
+                'new_contacts_added'     => 0,
+                'already_exists'         => 0,
+                'duplicates_by_employee' => 0,
+                'skipped_invalid'        => $skippedInvalid,
+            ]);
+        }
+
+        $now   = now();
+        $phones = array_keys($batch);
+
+        DB::transaction(function () use (
+            $batch, $phones, $user, $now,
+            &$newContactsAdded, &$alreadyExists, &$duplicatesByEmployee
+        ) {
+            // Step 2 — fetch all contacts that already exist in one query
+            $existing = EtisalatyContact::whereIn('phone_number', $phones)
+                ->get(['id', 'phone_number'])
+                ->keyBy('phone_number');
+
+            // Step 3 — fetch existing employee→contact links for this employee
+            $existingLinkIds = EtisalatyEmployeeContact::where('employee_id', $user->id)
+                ->whereIn('contact_id', $existing->pluck('id'))
+                ->pluck('contact_id')
+                ->flip(); // use as a set keyed by contact_id
+
+            $newLinks = [];
+
+            foreach ($batch as $phone => $name) {
+                $contact = $existing->get($phone);
+
+                if ($contact) {
+                    // Number already in the system — just refresh last_seen_at
+                    EtisalatyContact::where('id', $contact->id)
+                        ->update(['last_seen_at' => $now]);
+                    $alreadyExists++;
+                } else {
+                    // Brand-new number
+                    $contact = EtisalatyContact::create([
+                        'phone_number'  => $phone,
+                        'contact_name'  => $name,
+                        'first_seen_at' => $now,
+                        'last_seen_at'  => $now,
+                    ]);
+                    $existing->put($phone, $contact); // keep set consistent
+                    $newContactsAdded++;
+                }
+
+                if ($existingLinkIds->has($contact->id)) {
+                    // This employee already uploaded this number before
+                    $duplicatesByEmployee++;
+                } else {
+                    $newLinks[] = [
+                        'employee_id' => $user->id,
+                        'contact_id'  => $contact->id,
+                        'uploaded_at' => $now,
+                    ];
+                    $existingLinkIds->put($contact->id, true);
+                }
+            }
+
+            // Step 4 — bulk-insert all new employee→contact links in one query
+            if (!empty($newLinks)) {
+                EtisalatyEmployeeContact::insert($newLinks);
+            }
+        });
 
         $distribution->rebalance();
 
         return $this->responseMessage(200, 'Contacts uploaded successfully.', [
-            'total_received'   => $totalReceived,
-            'new_contacts_added' => $newContactsAdded,
-            'skipped_invalid'  => $skippedInvalid,
+            'total_received'         => $totalReceived,
+            'new_contacts_added'     => $newContactsAdded,
+            'already_exists'         => $alreadyExists,
+            'duplicates_by_employee' => $duplicatesByEmployee,
+            'skipped_invalid'        => $skippedInvalid,
         ]);
     }
 

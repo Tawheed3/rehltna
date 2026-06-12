@@ -22,7 +22,8 @@ class SettingController extends Controller
             'company_profile_ar'
         ];
 
-        $settings = Cache::remember('api_settings', 300, function () use ($fileKeys) {
+        $tenantId = request()->header('X-Tenant-ID', 0);
+        $settings = Cache::remember("api_settings_{$tenantId}", 300, function () use ($fileKeys) {
             return Setting::all()->mapWithKeys(function ($setting) use ($fileKeys) {
                 $value = $setting->value;
 

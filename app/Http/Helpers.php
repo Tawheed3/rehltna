@@ -10,7 +10,14 @@ use Illuminate\Support\Collection;
 if (!function_exists('get_setting')) {
     function get_setting($key)
     {
-        return Setting::query()->where('key', $key)->first()?->value;
+        // Static cache: load all settings once per request per tenant to avoid N+1 queries.
+        // PHP-FPM resets statics between requests, so there is no cross-request leakage.
+        static $cache = [];
+        $tenantId = (string) (getTenantId() ?: 0);
+        if (!array_key_exists($tenantId, $cache)) {
+            $cache[$tenantId] = Setting::all()->pluck('value', 'key')->all();
+        }
+        return $cache[$tenantId][$key] ?? null;
     }
 }
 
@@ -109,14 +116,45 @@ if (!function_exists('downloadAndSaveImage')) {
         if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
             return null;
         }
+
+        // Block non-HTTP(S) schemes (file://, ftp://, etc.)
+        $scheme = strtolower(parse_url($url, PHP_URL_SCHEME) ?? '');
+        if (!in_array($scheme, ['http', 'https'], true)) {
+            return null;
+        }
+
+        // Block loopback / private IP ranges (SSRF prevention)
+        $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
+        if (in_array($host, ['localhost', '0.0.0.0', '::1'], true)) {
+            return null;
+        }
+        $resolvedIp = gethostbyname($host);
+        if (filter_var($resolvedIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+            return null;
+        }
+
         try {
-            $imageContent = file_get_contents($url);
-            if ($imageContent === false) {
+            $ctx = stream_context_create(['http' => ['timeout' => 10], 'https' => ['timeout' => 10]]);
+            $imageContent = file_get_contents($url, false, $ctx);
+            if ($imageContent === false || strlen($imageContent) < 12) {
                 return null;
             }
-            $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
-            $fileName = uniqid() . '_' . time() . ($prefix ? "_{$prefix}" : '') . '.' . $extension;
-            $path = public_path("uploads/tenant_" . getTenantId() . "/{$type}/");
+
+            // Validate actual content is an image via MIME (not URL extension)
+            $mimeExtMap = [
+                'image/jpeg' => 'jpg',
+                'image/png'  => 'png',
+                'image/gif'  => 'gif',
+                'image/webp' => 'webp',
+            ];
+            $mimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($imageContent);
+            if (!isset($mimeExtMap[$mimeType])) {
+                return null;
+            }
+
+            $extension = $mimeExtMap[$mimeType];
+            $fileName  = uniqid() . '_' . time() . ($prefix ? "_{$prefix}" : '') . '.' . $extension;
+            $path      = public_path("uploads/tenant_" . getTenantId() . "/{$type}/");
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
@@ -132,8 +170,29 @@ if (!function_exists('downloadAndSaveImage')) {
 if (!function_exists('uploadFile')) {
     function uploadFile(UploadedFile $file, string $folder, string $prefix = null): string
     {
-        $path = "uploads/tenant_" . getTenantId() . "/{$folder}";
-        $fileName = uniqid() . '_' . time() . ($prefix ? "_{$prefix}" : '') . '.' . $file->getClientOriginalExtension();
+        // getMimeType() uses PHP finfo on the actual file bytes, not the client-supplied filename.
+        $mimeExtMap = [
+            'image/jpeg'      => 'jpg',
+            'image/png'       => 'png',
+            'image/gif'       => 'gif',
+            'image/webp'      => 'webp',
+            'image/svg+xml'   => 'svg',
+            'application/pdf' => 'pdf',
+            'video/mp4'       => 'mp4',
+            'video/quicktime' => 'mov',
+            'video/x-msvideo' => 'avi',
+            'video/webm'      => 'webm',
+        ];
+
+        $mimeType  = $file->getMimeType();
+        $extension = $mimeExtMap[$mimeType] ?? null;
+
+        if ($extension === null) {
+            throw new \InvalidArgumentException("File type not allowed: {$mimeType}");
+        }
+
+        $path     = "uploads/tenant_" . getTenantId() . "/{$folder}";
+        $fileName = uniqid() . '_' . time() . ($prefix ? "_{$prefix}" : '') . '.' . $extension;
         if (!file_exists(public_path($path))) {
             mkdir(public_path($path), 0777, true);
         }

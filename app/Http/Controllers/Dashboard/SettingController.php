@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -27,7 +28,8 @@ class SettingController extends Controller
     public function updateOrCreateSettings(Request $request): RedirectResponse
     {
         $jsonKeys = [
-            'facebook', 'instagram', 'twitter', 'whatsapp', 'linkedin', 'youtube', 'active_langs'
+            'facebook', 'instagram', 'twitter', 'whatsapp', 'linkedin', 'youtube',
+            'tiktok', 'snapchat', 'active_langs',
         ];
 
         foreach (get_active_langs() as $lang) {
@@ -71,6 +73,7 @@ class SettingController extends Controller
             );
         }
 
+        Cache::forget('api_settings_' . getTenantId());
         return back()->with('success', 'Settings updated successfully.');
     }
 
@@ -96,6 +99,7 @@ class SettingController extends Controller
             Setting::query()->updateOrCreate(['key' => str_replace('_id', '', $key)], ['value' => $status]);
         }
 
+        Cache::forget('api_settings_' . getTenantId());
         return redirect()->back()->with('success', 'Settings updated successfully.');
     }
 }

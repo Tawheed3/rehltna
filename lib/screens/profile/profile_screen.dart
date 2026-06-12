@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pdf_viewer_screen.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +11,6 @@ import '../../data/models/user_model.dart';
 import '../../data/providers/auth_provider.dart';
 import '../../data/providers/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../qibla/qibla_screen.dart';
 
 // ==================== ProfileScreen ====================
 
@@ -52,8 +49,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _phoneController = TextEditingController(text: user?.phone ?? '');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadSavedImage(); // ✅ الصورة المحلية أولاً (سريعة)
-      _refreshProfile(); // ✅ البيانات من الباك إند في الخلفية
+      _loadSavedImage();
+      _refreshProfile();
     });
   }
 
@@ -396,10 +393,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildOrdersSection(user, isDark),
                 const SizedBox(height: 20),
                 _buildTripDocumentsSection(userProvider, isDark),
-                const SizedBox(height: 20),
-                _buildPrayerTimesCard(isDark),
-                const SizedBox(height: 16),
-                _buildQiblaCard(isDark),
                 const SizedBox(height: 20),
                 _buildLogoutSection(authProvider, isDark),
                 const SizedBox(height: 30),
@@ -1421,280 +1414,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // ==================== قسم وثائق الرحلات ====================
-
-  // ── Prayer Times ──
-  Map<String, String> _prayerTimes = {};
-  bool _prayerLoading = false;
-  bool _prayerLoaded = false;
-  String _cityName = '';
-
-  Future<void> _loadPrayerTimes() async {
-    if (_prayerLoaded || _prayerLoading) return;
-    _prayerLoading = true;
-    try {
-      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
-
-      // Reverse geocode to get city name
-      try {
-        final geo = await Dio().get(
-          'https://nominatim.openstreetmap.org/reverse',
-          queryParameters: {'format': 'json', 'lat': pos.latitude, 'lon': pos.longitude, 'accept-language': 'ar'},
-          options: Options(headers: {'User-Agent': 'RehltnaApp/1.0'}),
-        );
-        final addr = geo.data['address'] as Map<String, dynamic>? ?? {};
-        final city = addr['city'] ?? addr['town'] ?? addr['county'] ?? addr['state_district'] ?? addr['state'] ?? '';
-        if (mounted) setState(() => _cityName = city.toString());
-      } catch (_) {}
-
-      final response = await Dio().get(
-        'https://api.aladhan.com/v1/timings',
-        queryParameters: {'latitude': pos.latitude, 'longitude': pos.longitude, 'method': 4},
-      );
-      final timings = response.data['data']['timings'] as Map<String, dynamic>;
-      if (mounted) {
-        setState(() {
-          _prayerTimes = {
-            'الفجر':   _stripSeconds(timings['Fajr'] ?? ''),
-            'الشروق':  _stripSeconds(timings['Sunrise'] ?? ''),
-            'الظهر':   _stripSeconds(timings['Dhuhr'] ?? ''),
-            'العصر':   _stripSeconds(timings['Asr'] ?? ''),
-            'المغرب':  _stripSeconds(timings['Maghrib'] ?? ''),
-            'العشاء':  _stripSeconds(timings['Isha'] ?? ''),
-          };
-          _prayerLoaded = true;
-          _prayerLoading = false;
-        });
-      }
-    } catch (_) {
-      if (mounted) setState(() { _prayerLoading = false; });
-    }
-  }
-
-  String _stripSeconds(String t) {
-    if (t.length >= 5) return t.substring(0, 5);
-    return t;
-  }
-
-  String? _nextPrayer() {
-    if (_prayerTimes.isEmpty) return null;
-    final now = TimeOfDay.now();
-    final nowMins = now.hour * 60 + now.minute;
-    for (final entry in _prayerTimes.entries) {
-      if (entry.key == 'الشروق') continue;
-      final parts = entry.value.split(':');
-      if (parts.length < 2) continue;
-      final mins = int.tryParse(parts[0])! * 60 + int.tryParse(parts[1])!;
-      if (mins > nowMins) return entry.key;
-    }
-    return _prayerTimes.keys.first;
-  }
-
-  String _remainingTime(String prayerTime) {
-    final parts = prayerTime.split(':');
-    if (parts.length < 2) return '';
-    final prayerMins = int.parse(parts[0]) * 60 + int.parse(parts[1]);
-    final now = TimeOfDay.now();
-    final nowMins = now.hour * 60 + now.minute;
-    int diff = prayerMins - nowMins;
-    if (diff <= 0) diff += 24 * 60;
-    final h = diff ~/ 60;
-    final m = diff % 60;
-    if (h > 0) return 'يتبقى ${h}س ${m}د';
-    return 'يتبقى ${m} دقيقة';
-  }
-
-  Widget _buildPrayerTimesCard(bool isDark) {
-    if (!_prayerLoaded && !_prayerLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _loadPrayerTimes());
-    }
-    final next = _nextPrayer();
-    final prayers = _prayerTimes.entries.toList();
-
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1c2333) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 14, offset: const Offset(0, 4))],
-      ),
-      child: Column(children: [
-        // Header
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF1a3a5c), Color(0xFF2c5f8a)],
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-            ),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Row(children: [
-            Container(
-              width: 44, height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(child: Text('🌙', style: TextStyle(fontSize: 22))),
-            ),
-            const SizedBox(width: 14),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('مواقيت الصلاة', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-              Text(
-                _cityName.isNotEmpty ? 'بتوقيت $_cityName' : 'بتوقيت موقعك الحالي',
-                style: const TextStyle(fontSize: 11, color: Colors.white70),
-              ),
-            ])),
-          ]),
-        ),
-
-        // Body
-        if (_prayerLoading)
-          const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-          )
-        else if (prayers.isEmpty)
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text('تعذّر تحميل المواقيت', style: TextStyle(color: Colors.grey.shade500)),
-          )
-        else
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Column(children: [
-              for (int i = 0; i < prayers.length; i++) ...[
-                _prayerRow(prayers[i].key, prayers[i].value, prayers[i].key == next, isDark, next),
-                if (i < prayers.length - 1) Divider(height: 1, color: Colors.grey.withOpacity(0.1)),
-              ],
-            ]),
-          ),
-      ]),
-    );
-  }
-
-  Widget _prayerRow(String name, String time, bool isNext, bool isDark, String? nextName) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-      decoration: BoxDecoration(
-        color: isNext ? const Color(0xFF1a3a5c).withOpacity(0.08) : Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(children: [
-        if (isNext)
-          Container(
-            width: 6, height: 6,
-            margin: const EdgeInsets.only(left: 8),
-            decoration: const BoxDecoration(color: Color(0xFF1a3a5c), shape: BoxShape.circle),
-          )
-        else
-          const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: isNext ? FontWeight.bold : FontWeight.w500,
-                  color: isNext ? const Color(0xFF1a3a5c) : (isDark ? Colors.white70 : Colors.black87),
-                ),
-              ),
-              if (isNext)
-                Text(
-                  _remainingTime(time),
-                  style: TextStyle(fontSize: 11, color: Colors.teal.shade600, fontWeight: FontWeight.w500),
-                ),
-            ],
-          ),
-        ),
-        Text(
-          time,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: isNext ? FontWeight.bold : FontWeight.w500,
-            color: isNext ? const Color(0xFF1a3a5c) : Colors.grey.shade500,
-          ),
-        ),
-        if (isNext) ...[
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1a3a5c),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text('التالية', style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold)),
-          ),
-        ],
-      ]),
-    );
-  }
-
-  Widget _buildQiblaCard(bool isDark) {
-    return GestureDetector(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QiblaScreen())),
-      child: Container(
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? [const Color(0xFF1a3a5c), const Color(0xFF0f2744)]
-                : [const Color(0xFF1a3a5c), const Color(0xFF2c5f8a)],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF1a3a5c).withOpacity(0.35),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Center(
-                child: Text('🕋', style: TextStyle(fontSize: 28)),
-              ),
-            ),
-            const SizedBox(width: 16),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'اتجاه القبلة',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'اضغط لتحديد اتجاه القبلة بدقة',
-                    style: TextStyle(fontSize: 12, color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white54, size: 18),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildTripDocumentsSection(UserProvider userProvider, bool isDark) {
     final docs = userProvider.tripDocuments;
     if (docs.isEmpty) return const SizedBox.shrink();

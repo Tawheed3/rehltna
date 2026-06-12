@@ -5,7 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class QiblaScreen extends StatefulWidget {
-  const QiblaScreen({super.key});
+  final Position? initialPosition;
+  const QiblaScreen({super.key, this.initialPosition});
 
   @override
   State<QiblaScreen> createState() => _QiblaScreenState();
@@ -40,6 +41,15 @@ class _QiblaScreenState extends State<QiblaScreen> with SingleTickerProviderStat
   }
 
   Future<void> _initLocation() async {
+    // Use position passed from profile page if already available
+    if (widget.initialPosition != null) {
+      if (mounted) setState(() {
+        _qiblaAngle = _calcQibla(widget.initialPosition!.latitude, widget.initialPosition!.longitude);
+        _loadingLocation = false;
+      });
+      return;
+    }
+    // Otherwise request permission and get position
     final status = await Permission.location.request();
     if (!status.isGranted) {
       if (mounted) setState(() { _loadingLocation = false; _locationDenied = true; });

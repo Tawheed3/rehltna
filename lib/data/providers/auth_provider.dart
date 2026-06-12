@@ -13,11 +13,7 @@ class AuthProvider extends BaseProvider {
   String? get token => _token;
   bool get isLoggedIn => _token != null && _token!.isNotEmpty;
   UserModel? get currentUser => _currentUser;
-  bool get isAdmin => _currentUser?.id == 999;
   bool get isEditor => false;
-
-  // ✅ معرفة إذا كان token وهمي (admin bypass)
-  bool get isMockAdmin => _token == 'admin_token_123456';
 
   Future<void> loadToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -36,11 +32,9 @@ class AuthProvider extends BaseProvider {
       }
     }
 
-    if (_token != null && !isMockAdmin) {
+    if (_token != null) {
       developer.log('Token found in storage', name: BaseProvider.logTag);
       _fetchProfileInBackground();
-    } else if (isMockAdmin) {
-      developer.log('Mock admin token - skipping profile fetch', name: BaseProvider.logTag);
     } else {
       developer.log('No token found — user is logged out', name: BaseProvider.logTag);
     }
@@ -80,29 +74,6 @@ class AuthProvider extends BaseProvider {
 
   Future<bool> login(String email, String password) async {
     startLoading();
-
-    // ✅ Admin bypass - للاختبار فقط
-    if (email == 'admin@rehlatna.com' && password == 'Admin@2026') {
-      developer.log('Admin bypass login used', name: BaseProvider.logTag);
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      final mockUser = UserModel(
-        id: 999,
-        name: 'مدير النظام',
-        email: email,
-        phone: '01234567890',
-        isVerified: true,
-        createdAt: DateTime.now(),
-      );
-
-      await _saveToken('admin_token_123456');
-      _currentUser = mockUser;
-      await _saveUserLocally(mockUser);
-      developer.log('Mock admin user loaded: ${_currentUser?.name}', name: BaseProvider.logTag);
-
-      stopLoading();
-      return true;
-    }
 
     final data = await postRequest('login', {
       'email': email,
@@ -270,12 +241,6 @@ class AuthProvider extends BaseProvider {
   Future<void> _fetchProfileInBackground() async {
     if (_token == null) return;
 
-    // ✅ إذا كان token وهمي، لا نحاول جلب الـ profile
-    if (isMockAdmin) {
-      developer.log('Mock admin - skipping profile fetch', name: BaseProvider.logTag);
-      return;
-    }
-
     try {
       final data = await getRequest('profile', token: _token);
       if (data != null && data['code'] == 200 && data['data'] != null) {
@@ -295,7 +260,6 @@ class AuthProvider extends BaseProvider {
 
   Future<void> getCurrentUser() async {
     if (_token == null) return;
-    if (isMockAdmin) return;
 
     final data = await getRequest('profile', token: _token);
     if (data != null && data['code'] == 200 && data['data'] != null) {
@@ -313,7 +277,7 @@ class AuthProvider extends BaseProvider {
   Future<void> logout() async {
     startLoading();
     try {
-      if (_token != null && !isMockAdmin) {
+      if (_token != null) {
         await postRequestWithTimeout('logout', {}, token: _token);
       }
     } catch (e) {
@@ -331,12 +295,6 @@ class AuthProvider extends BaseProvider {
   // ==================== FCM Token ====================
 
   Future<bool> updateFcmToken(String fcmToken) async {
-    // ✅ إذا كان token وهمي، لا نحاول التحديث (نرجع true عشان ما نعطلش)
-    if (isMockAdmin) {
-      developer.log('Mock admin token, skipping FCM update', name: BaseProvider.logTag);
-      return true;
-    }
-
     if (_token == null) {
       developer.log('Cannot update FCM token: No auth token', name: BaseProvider.logTag, level: 1000);
       return false;
@@ -374,7 +332,6 @@ class AuthProvider extends BaseProvider {
 
   // ✅ دالة لتحديث FCM في الخلفية بدون انتظار
   Future<void> updateFcmTokenInBackground(String fcmToken) async {
-    if (isMockAdmin) return;
     if (_token == null) return;
 
     try {

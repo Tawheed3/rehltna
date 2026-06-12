@@ -126,15 +126,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _shareApp() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('مشاركة التطبيق'),
-        backgroundColor: Colors.blue,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final settingsService = Provider.of<SettingsService>(context);
@@ -869,15 +860,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // ==================== أزرار الإجراءات ====================
   Widget _buildActionButtons(bool isDark) {
-    return Column(
-      children: [
-        SettingsTile(
-          icon: Icons.share_outlined,
-          title: 'مشاركة التطبيق',
-          onTap: _shareApp,
-        ),
-      ],
-    );
+    return const SizedBox.shrink();
   }
 
   // ==================== زر تسجيل الخروج ====================

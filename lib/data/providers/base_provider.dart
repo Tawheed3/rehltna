@@ -5,9 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../core/constants/app_config.dart';
 
+class _CacheEntry {
+  final Map<String, dynamic> data;
+  final DateTime expiresAt;
+  const _CacheEntry({required this.data, required this.expiresAt});
+  bool get isValid => DateTime.now().isBefore(expiresAt);
+}
+
 class BaseProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
+
+  static final Map<String, _CacheEntry> _responseCache = {};
+  static const Duration defaultCacheTtl = Duration(minutes: 5);
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -242,6 +252,42 @@ class BaseProvider extends ChangeNotifier {
       setError('حدث خطأ: $e');
       return null;
     }
+  }
+
+  /// GET with in-memory TTL cache. Identical to [getRequest] but serves
+  /// a cached copy until [ttl] expires, avoiding redundant API hits when
+  /// the user navigates back to a screen.
+  Future<Map<String, dynamic>?> getCachedRequest(
+    String endpoint, {
+    String? token,
+    Duration ttl = defaultCacheTtl,
+  }) async {
+    final cacheKey = '$baseUrl/$endpoint';
+    final entry = _responseCache[cacheKey];
+    if (entry != null && entry.isValid) {
+      developer.log('[GET-CACHE] HIT $cacheKey', name: logTag);
+      return entry.data;
+    }
+
+    final data = await getRequest(endpoint, token: token);
+    if (data != null) {
+      _responseCache[cacheKey] = _CacheEntry(
+        data: data,
+        expiresAt: DateTime.now().add(ttl),
+      );
+    }
+    return data;
+  }
+
+  static void invalidateCache(String endpoint) {
+    final key = '$baseUrl/$endpoint';
+    _responseCache.remove(key);
+    developer.log('[CACHE] Invalidated: $key', name: logTag);
+  }
+
+  static void clearCache() {
+    _responseCache.clear();
+    developer.log('[CACHE] All entries cleared', name: logTag);
   }
 
   Future<http.Response?> postRequestWithTimeout(

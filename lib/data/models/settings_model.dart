@@ -9,6 +9,8 @@ class SettingsModel {
   final List<String> twitter;
   final List<String> whatsapp;
   final List<String> youtube;
+  final List<String> tiktok;
+  final List<String> snapchat;
   final String siteNameAr;
   final String siteNameEn;
   final String siteEmail;
@@ -29,6 +31,8 @@ class SettingsModel {
     required this.twitter,
     required this.whatsapp,
     required this.youtube,
+    required this.tiktok,
+    required this.snapchat,
     required this.siteNameAr,
     required this.siteNameEn,
     required this.siteEmail,
@@ -93,6 +97,8 @@ class SettingsModel {
           : [],
       whatsapp: parseWhatsapp(json['whatsapp']),
       youtube: parseJsonOrList(json['youtube']),
+      tiktok: parseJsonOrList(json['tiktok']),
+      snapchat: parseJsonOrList(json['snapchat']),
       siteNameAr: json['site_name_ar'] ?? 'رحلتنا',
       siteNameEn: json['site_name_en'] ?? 'Rehltna',
       siteEmail: json['site_email'] ?? '',

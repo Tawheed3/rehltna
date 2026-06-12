@@ -25,15 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   final NotificationService _notificationService = NotificationService();
 
-  final List<Map<String, String>> _realUsers = [
-    {
-      'email': 'admin@rehlatna.com',
-      'password': 'Admin@2026',
-      'name': 'احمد',
-      'role': 'مدير النظام',
-      'color': 'red',
-    },
-  ];
 
   @override
   void dispose() {
@@ -142,19 +133,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       developer.log('[Login] FCM update error: $e', name: 'Response-output', level: 900);
-    }
-  }
-
-  Color _getRoleColor(String colorName) {
-    switch (colorName) {
-      case 'red':
-        return Colors.red;
-      case 'blue':
-        return Colors.blue;
-      case 'green':
-        return Colors.green;
-      default:
-        return AppColors.primary;
     }
   }
 
@@ -381,140 +359,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-
-              // حساب تجريبي
-              _buildUserAccount(context, isDark),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildUserAccount(BuildContext context, bool isDark) {
-    final user = _realUsers.first;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _getRoleColor(user['color']!).withOpacity(0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: _getRoleColor(user['color']!).withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.admin_panel_settings, color: _getRoleColor(user['color']!), size: 16),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'حساب تجريبي',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          InkWell(
-            onTap: () {
-              _emailController.text = user['email']!;
-              _passwordController.text = user['password']!;
-              _showSuccess('تم تعبئة بيانات ${user['name']}');
-            },
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: _getRoleColor(user['color']!).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _getRoleColor(user['color']!).withOpacity(0.3)),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: _getRoleColor(user['color']!),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'البريد الإلكتروني:',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: isDark ? Colors.white54 : Colors.grey[600],
-                          ),
-                        ),
-                        Text(
-                          user['email']!,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'الدور:',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: isDark ? Colors.white54 : Colors.grey[600],
-                          ),
-                        ),
-                        Text(
-                          user['role']!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: _getRoleColor(user['color']!),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: _getRoleColor(user['color']!),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.login, color: Colors.white, size: 14),
-                        SizedBox(width: 4),
-                        Text(
-                          'تعبئة البيانات',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -12,7 +12,7 @@ class SliderProvider extends BaseProvider {
   Future<void> fetchSliders() async {
     startLoading();
 
-    final data = await getRequest('sliders');
+    final data = await getCachedRequest('sliders');
 
     if (data != null && data['code'] == 200 && data['data'] != null) {
       final slidersData = data['data'] as List;

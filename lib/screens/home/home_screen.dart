@@ -22,7 +22,7 @@ import '../category/category_screen.dart';
 import '../posts/item_details_screen.dart';
 import 'search_screen.dart';
 import 'special_offers_screen.dart';
-import '../dashboard/admin_dashboard_screen.dart';
+import '../mosque/mosque_screen.dart';
 
 // ==================== HomeScreen ====================
 
@@ -161,99 +161,82 @@ class _HomeScreenState extends State<HomeScreen> {
       bool isDark,
       AppLocalizations loc,
       ) {
+    // Responsive sizing: scale with screen width, clamped so icons never
+    // look tiny on small phones or oversized on tablets.
+    // Typical range: 360dp (small Android) → 430dp (large iPhone/Android)
+    final sw = MediaQuery.of(context).size.width;
+    final iconBox   = (sw * 0.114).clamp(42.0, 52.0); // circle container
+    final iconInner = (iconBox * 0.50).clamp(20.0, 27.0); // material icon
+    final emojiSz   = (iconBox * 0.46).clamp(18.0, 25.0); // emoji font
+    final barHeight = iconBox + 14; // AppBar height = icon + comfortable padding
+    final leadW     = iconBox * 2 + 18; // 6 + icon + 6 + icon + 6
+
+    // Reusable circle button builder
+    Widget btn(Widget icon, VoidCallback onTap, Color bg,
+        {EdgeInsetsGeometry margin = const EdgeInsets.only(right: 5)}) {
+      return Container(
+        width: iconBox, height: iconBox,
+        margin: margin,
+        decoration: BoxDecoration(color: bg.withOpacity(0.12), shape: BoxShape.circle),
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          icon: icon,
+          onPressed: onTap,
+        ),
+      );
+    }
+
     return AppBar(
+      toolbarHeight: barHeight,
       title: sp.settings != null
           ? Image.network(
-        sp.settings!.getLogo(isDark),
-        height: 40,
-        errorBuilder: (c, e, s) => Text(
-          sp.settings!.getSiteName(ss.languageCode),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : Colors.black,
-          ),
-        ),
-      )
+              sp.settings!.getLogo(isDark),
+              height: iconBox * 0.85,
+              errorBuilder: (c, e, s) => Text(
+                sp.settings!.getSiteName(ss.languageCode),
+                style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black),
+              ),
+            )
           : Text(
-        loc.translate('home_title'),
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: isDark ? Colors.white : Colors.black,
-        ),
-      ),
+              loc.translate('home_title'),
+              style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black),
+            ),
       backgroundColor: Colors.transparent,
       elevation: 0,
       centerTitle: true,
-      iconTheme: IconThemeData(
-        color: isDark ? Colors.white : Colors.black,
-      ),
+      iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
 
-      // أيقونة البروفايل على اليسار
-      leading: Container(
-        margin: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.1),
-          shape: BoxShape.circle,
+      // Profile + Mosque icons on the left
+      leadingWidth: leadW,
+      leading: Row(children: [
+        const SizedBox(width: 6),
+        btn(
+          Icon(Icons.person_outline, color: AppColors.primary, size: iconInner),
+          () => context.push('/profile'),
+          AppColors.primary,
+          margin: EdgeInsets.zero,
         ),
-        child: IconButton(
-          icon: const Icon(Icons.person_outline, color: AppColors.primary),
-          onPressed: () => context.push('/profile'),
+        const SizedBox(width: 6),
+        btn(
+          Text('🕋', style: TextStyle(fontSize: emojiSz)),
+          () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MosqueScreen())),
+          const Color(0xFF1a3a5c),
+          margin: EdgeInsets.zero,
         ),
-      ),
+      ]),
 
-      // الأيقونات على اليمين
+      // Search + Settings on the right
       actions: [
-        // لوحة تحكم الأدمن — Selector: only rebuilds this button when isAdmin changes
-        Selector<AuthProvider, bool>(
-          selector: (_, ap) => ap.isAdmin,
-          builder: (_, isAdmin, __) {
-            if (!isAdmin) return const SizedBox.shrink();
-            return Container(
-              margin: const EdgeInsets.only(right: 4),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.dashboard, color: Colors.red),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (c) => const AdminDashboardScreen(),
-                  ),
-                ),
-              ),
-            );
-          },
+        btn(
+          Icon(Icons.search, color: AppColors.primary, size: iconInner),
+          () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen())),
+          AppColors.primary,
         ),
-        // زر البحث
-        Container(
-          margin: const EdgeInsets.only(right: 4),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.search, color: AppColors.primary),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (c) => const SearchScreen(),
-              ),
-            ),
-          ),
-        ),
-        // زر الإعدادات
-        Container(
+        btn(
+          Icon(Icons.settings_outlined, color: AppColors.primary, size: iconInner),
+          () => context.push('/settings'),
+          AppColors.primary,
           margin: const EdgeInsets.only(right: 8),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.settings_outlined, color: AppColors.primary),
-            onPressed: () => context.push('/settings'),
-          ),
         ),
       ],
     );

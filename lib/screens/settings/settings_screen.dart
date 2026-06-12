@@ -772,6 +772,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
     }
 
+    if (s.tiktok.isNotEmpty) {
+      links.add({
+        'icon': Icons.music_note,
+        'color': const Color(0xFF010101),
+        'url': s.tiktok.first,
+        'label': 'تيك توك',
+      });
+    }
+
+    if (s.snapchat.isNotEmpty) {
+      links.add({
+        'icon': Icons.camera_enhance,
+        'color': const Color(0xFFFFFC00),
+        'url': s.snapchat.first,
+        'label': 'سناب شات',
+      });
+    }
+
     if (s.whatsappNumber.isNotEmpty) {
       links.add({
         'icon': Icons.chat,

@@ -809,7 +809,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF1C1C2E), Color(0xFF2D2D44)],
+          colors: [Color(0xFF2E2E45), Color(0xFF3D3D5C)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

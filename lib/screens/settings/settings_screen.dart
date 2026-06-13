@@ -27,6 +27,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = true;
+  bool _contactInfoExpanded = false;
   final NotificationService _notificationService = NotificationService();
   File? _savedImage;
 
@@ -595,7 +596,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final whatsapp = s.whatsappNumber;
 
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -607,66 +607,70 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
+      clipBehavior: Clip.hardEdge,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 4,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+          InkWell(
+            onTap: () => setState(() => _contactInfoExpanded = !_contactInfoExpanded),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'معلومات الاتصال',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  const Spacer(),
+                  AnimatedRotation(
+                    turns: _contactInfoExpanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 250),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: isDark ? Colors.white54 : Colors.black45,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              Text(
-                'معلومات الاتصال',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(height: 16),
-
-          if (s.getAddress('ar').isNotEmpty)
-            _buildContactItem(
-              Icons.location_on,
-              'العنوان',
-              s.getAddress('ar'),
-              isDark,
+          AnimatedCrossFade(
+            duration: const Duration(milliseconds: 250),
+            crossFadeState: _contactInfoExpanded
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            firstChild: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                children: [
+                  if (s.getAddress('ar').isNotEmpty)
+                    _buildContactItem(Icons.location_on, 'العنوان', s.getAddress('ar'), isDark),
+                  if (s.siteEmail.isNotEmpty)
+                    _buildContactItem(Icons.email, 'البريد الإلكتروني', s.siteEmail, isDark,
+                        () => _launchURL('mailto:${s.siteEmail}')),
+                  if (s.sitePhone.isNotEmpty)
+                    _buildContactItem(Icons.phone, 'الهاتف', s.sitePhone, isDark,
+                        () => _launchPhone(phone)),
+                  if (whatsapp.isNotEmpty)
+                    _buildContactItem(Icons.chat, 'واتساب', s.sitePhone, isDark,
+                        () => _launchWhatsApp(whatsapp)),
+                ],
+              ),
             ),
-
-          if (s.siteEmail.isNotEmpty)
-            _buildContactItem(
-              Icons.email,
-              'البريد الإلكتروني',
-              s.siteEmail,
-              isDark,
-                  () => _launchURL('mailto:${s.siteEmail}'),
-            ),
-
-          if (s.sitePhone.isNotEmpty)
-            _buildContactItem(
-              Icons.phone,
-              'الهاتف',
-              s.sitePhone,
-              isDark,
-                  () => _launchPhone(phone),
-            ),
-
-          if (whatsapp.isNotEmpty)
-            _buildContactItem(
-              Icons.chat,
-              'واتساب',
-              s.sitePhone,
-              isDark,
-                  () => _launchWhatsApp(whatsapp),
-            ),
+            secondChild: const SizedBox.shrink(),
+          ),
         ],
       ),
     );
@@ -804,11 +808,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            isDark ? const Color(0xFF1E1E1E) : Colors.white,
-            isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade50,
-          ],
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1C1C2E), Color(0xFF2D2D44)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -828,12 +829,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
+              const Text(
                 'تواصل معنا',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: Colors.white,
                 ),
               ),
             ],
@@ -845,24 +846,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: links.map((link) {
               return InkWell(
                 onTap: () => _launchURL(link['url']),
+                borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: link['color'].withOpacity(0.1),
+                    color: (link['color'] as Color).withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: link['color'].withOpacity(0.3)),
+                    border: Border.all(color: (link['color'] as Color).withOpacity(0.7), width: 1.5),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(link['icon'], color: link['color'], size: 16),
-                      const SizedBox(width: 4),
+                      Icon(link['icon'] as IconData, color: link['color'] as Color, size: 16),
+                      const SizedBox(width: 6),
                       Text(
-                        link['label'],
+                        link['label'] as String,
                         style: TextStyle(
                           fontSize: 12,
-                          color: link['color'],
-                          fontWeight: FontWeight.w500,
+                          color: link['color'] as Color,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],

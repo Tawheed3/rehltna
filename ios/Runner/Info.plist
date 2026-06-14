@@ -31,6 +31,28 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة بدقة</string>
 
+	<!-- صلاحية البوصلة للقبلة -->
+	<key>NSMotionUsageDescription</key>
+	<string>يحتاج التطبيق إلى البوصلة لتحديد اتجاه القبلة</string>
+
+	<!-- صلاحيات الكاميرا والصور لتغيير صورة الملف الشخصي -->
+	<key>NSCameraUsageDescription</key>
+	<string>يحتاج التطبيق إلى الكاميرا لالتقاط صورة الملف الشخصي</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>يحتاج التطبيق إلى مكتبة الصور لاختيار صورة الملف الشخصي</string>
+
+	<!-- صلاحية جهات الاتصال -->
+	<key>NSContactsUsageDescription</key>
+	<string>يحتاج التطبيق إلى جهات اتصالك</string>
+
+	<!-- روابط URL الخارجية (واتساب) -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>whatsapp</string>
+		<string>tel</string>
+		<string>mailto</string>
+	</array>
+
 	<!-- إعدادات الإشعارات لـ iOS -->
 	<key>UIBackgroundModes</key>
 	<array>

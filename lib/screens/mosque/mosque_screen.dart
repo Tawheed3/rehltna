@@ -452,7 +452,6 @@ class _MosqueScreenState extends State<MosqueScreen> {
               const SizedBox(width: 14),
               const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('أسعار الصرف', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                Text('مقابل الريال السعودي', style: TextStyle(fontSize: 11, color: Colors.white70)),
               ])),
               AnimatedRotation(
                 turns: _currencyExpanded ? 0.5 : 0,
@@ -577,10 +576,6 @@ class _MosqueScreenState extends State<MosqueScreen> {
               const SizedBox(width: 14),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text('مواقيت الصلاة', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                Text(
-                  _cityName.isNotEmpty ? 'بتوقيت $_cityName' : 'بتوقيت موقعك الحالي',
-                  style: const TextStyle(fontSize: 11, color: Colors.white70),
-                ),
               ])),
               AnimatedRotation(
                 turns: _prayerExpanded ? 0.5 : 0,
@@ -719,7 +714,7 @@ class _MosqueScreenState extends State<MosqueScreen> {
               const SizedBox(width: 14),
               const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('أدوات السفر', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                Text('نصائح ومستلزمات للمسافر', style: TextStyle(fontSize: 11, color: Colors.white70)),
+                Text('نصائح السفر', style: TextStyle(fontSize: 11, color: Colors.white70)),
               ])),
               AnimatedRotation(
                 turns: _travelToolsExpanded ? 0.5 : 0,
@@ -819,10 +814,6 @@ class _MosqueScreenState extends State<MosqueScreen> {
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text('اتجاه القبلة', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                 const SizedBox(height: 4),
-                Text(
-                  _userPosition != null ? 'اضغط لفتح البوصلة' : 'اضغط لتحديد موقعك',
-                  style: const TextStyle(fontSize: 12, color: Colors.white70),
-                ),
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),

@@ -8,6 +8,7 @@ use App\Models\EtisalatyContact;
 use App\Models\EtisalatyEmployeeContact;
 use App\Models\User;
 use App\Services\EtisalatyDistributionService;
+use App\Support\SaudiPhoneNumber;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class EtisalatyController extends Controller
     public function login(Request $request, EtisalatyDistributionService $distribution): JsonResponse
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
@@ -31,7 +32,7 @@ class EtisalatyController extends Controller
             ->whereNotNull('etisalaty_role')
             ->first();
 
-        if (!$user || !$distribution->isSupportedEmployee($user) || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! $distribution->isSupportedEmployee($user) || ! Hash::check($request->password, $user->password)) {
             return $this->responseMessage(401, 'Invalid email or password.');
         }
 
@@ -41,12 +42,12 @@ class EtisalatyController extends Controller
         $token = $user->createToken('etisalaty-token')->plainTextToken;
 
         return $this->responseMessage(200, 'Logged Successfully', [
-            'id'           => $user->id,
-            'name'         => $user->name,
-            'email'        => $user->email,
-            'role'         => $user->etisalaty_role,
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->etisalaty_role,
             'access_token' => $token,
-            'token_type'   => 'Bearer',
+            'token_type' => 'Bearer',
         ]);
     }
 
@@ -62,47 +63,49 @@ class EtisalatyController extends Controller
 
         $user = $request->etisalaty_user;
 
-        if (!$distribution->isSupportedEmployee($user)) {
+        if (! $distribution->isSupportedEmployee($user)) {
             return $this->responseMessage(403, 'This user is not enabled for Etisalaty uploads.');
         }
 
-        $totalReceived        = count($request->contacts);
-        $newContactsAdded     = 0;
-        $alreadyExists        = 0;
+        $totalReceived = count($request->contacts);
+        $newContactsAdded = 0;
+        $alreadyExists = 0;
         $duplicatesByEmployee = 0;
-        $skippedInvalid       = 0;
+        $skippedInvalid = 0;
 
         // Step 1 — normalize & validate; deduplicate within the batch (keep first name seen)
         $batch = [];
         foreach ($request->contacts as $item) {
             if (empty($item['phone_number'])) {
                 $skippedInvalid++;
+
                 continue;
             }
 
-            $phone = $this->normalizePhone(trim($item['phone_number']));
+            $phone = SaudiPhoneNumber::canonicalize(trim($item['phone_number']));
 
-            if (!$this->isSaudiNumber($phone)) {
+            if ($phone === null) {
                 $skippedInvalid++;
+
                 continue;
             }
 
-            if (!isset($batch[$phone])) {
+            if (! isset($batch[$phone])) {
                 $batch[$phone] = trim($item['contact_name'] ?? '') ?: 'Unknown';
             }
         }
 
         if (empty($batch)) {
             return $this->responseMessage(200, 'No valid Saudi contacts to upload.', [
-                'total_received'         => $totalReceived,
-                'new_contacts_added'     => 0,
-                'already_exists'         => 0,
+                'total_received' => $totalReceived,
+                'new_contacts_added' => 0,
+                'already_exists' => 0,
                 'duplicates_by_employee' => 0,
-                'skipped_invalid'        => $skippedInvalid,
+                'skipped_invalid' => $skippedInvalid,
             ]);
         }
 
-        $now   = now();
+        $now = now();
         $phones = array_keys($batch);
 
         DB::transaction(function () use (
@@ -133,10 +136,10 @@ class EtisalatyController extends Controller
                 } else {
                     // Brand-new number
                     $contact = EtisalatyContact::create([
-                        'phone_number'  => $phone,
-                        'contact_name'  => $name,
+                        'phone_number' => $phone,
+                        'contact_name' => $name,
                         'first_seen_at' => $now,
-                        'last_seen_at'  => $now,
+                        'last_seen_at' => $now,
                     ]);
                     $existing->put($phone, $contact); // keep set consistent
                     $newContactsAdded++;
@@ -148,7 +151,7 @@ class EtisalatyController extends Controller
                 } else {
                     $newLinks[] = [
                         'employee_id' => $user->id,
-                        'contact_id'  => $contact->id,
+                        'contact_id' => $contact->id,
                         'uploaded_at' => $now,
                     ];
                     $existingLinkIds->put($contact->id, true);
@@ -156,7 +159,7 @@ class EtisalatyController extends Controller
             }
 
             // Step 4 — bulk-insert all new employee→contact links in one query
-            if (!empty($newLinks)) {
+            if (! empty($newLinks)) {
                 EtisalatyEmployeeContact::insert($newLinks);
             }
         });
@@ -164,41 +167,12 @@ class EtisalatyController extends Controller
         $distribution->rebalance();
 
         return $this->responseMessage(200, 'Contacts uploaded successfully.', [
-            'total_received'         => $totalReceived,
-            'new_contacts_added'     => $newContactsAdded,
-            'already_exists'         => $alreadyExists,
+            'total_received' => $totalReceived,
+            'new_contacts_added' => $newContactsAdded,
+            'already_exists' => $alreadyExists,
             'duplicates_by_employee' => $duplicatesByEmployee,
-            'skipped_invalid'        => $skippedInvalid,
+            'skipped_invalid' => $skippedInvalid,
         ]);
-    }
-
-    private function normalizePhone(string $phone): string
-    {
-        // Remove spaces, dashes, parentheses, dots
-        $phone = preg_replace('/[\s\-\(\)\.]+/', '', $phone);
-
-        // Already E.164 with +966
-        if (preg_match('/^\+9665[0-9]{8}$/', $phone)) {
-            return $phone;
-        }
-
-        // 9665xxxxxxxx → +9665xxxxxxxx
-        if (preg_match('/^9665[0-9]{8}$/', $phone)) {
-            return '+' . $phone;
-        }
-
-        // 05xxxxxxxx → +9665xxxxxxxx
-        if (preg_match('/^05[0-9]{8}$/', $phone)) {
-            return '+966' . substr($phone, 1);
-        }
-
-        // Not a Saudi number
-        return '';
-    }
-
-    private function isSaudiNumber(string $normalized): bool
-    {
-        return preg_match('/^\+9665[0-9]{8}$/', $normalized) === 1;
     }
 
     /**
@@ -212,7 +186,7 @@ class EtisalatyController extends Controller
 
         return $this->responseMessage(200, 'Contacts fetched successfully.', [
             'total_contacts' => $contacts->count(),
-            'contacts'       => $contacts,
+            'contacts' => $contacts,
         ]);
     }
 

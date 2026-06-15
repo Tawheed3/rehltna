@@ -310,11 +310,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 24),
 
                   // زر تسجيل الخروج
-                  if (user != null) _buildLogoutButton(authProvider),
-                  if (user != null) const SizedBox(height: 12),
+                  if (authProvider.isLoggedIn) _buildLogoutButton(authProvider),
+                  if (authProvider.isLoggedIn) const SizedBox(height: 12),
 
                   // زر حذف الحساب
-                  if (user != null) _buildDeleteAccountButton(authProvider),
+                  if (authProvider.isLoggedIn) _buildDeleteAccountButton(authProvider),
                   const SizedBox(height: 24),
 
                   // إصدار التطبيق

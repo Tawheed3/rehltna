@@ -307,14 +307,14 @@ class AuthProvider extends BaseProvider {
     if (_token == null) return false;
     startLoading();
     try {
-      final url = '$baseUrl/profile';
+      final url = '${BaseProvider.baseUrl}/profile';
       logRequest('DELETE', url);
       final response = await http.delete(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Key': XApiKey,
-          'X-Tenant-ID': XTenantID.toString(),
+          'X-API-Key': BaseProvider.XApiKey,
+          'X-Tenant-ID': BaseProvider.XTenantID.toString(),
           'Authorization': 'Bearer $_token',
         },
       ).timeout(const Duration(seconds: 15));
@@ -327,7 +327,7 @@ class AuthProvider extends BaseProvider {
       stopLoading();
       return false;
     } catch (e) {
-      logError('DELETE', '$baseUrl/profile', e);
+      logError('DELETE', '${BaseProvider.baseUrl}/profile', e);
       await _clearToken();
       stopLoading();
       return true; // clear locally even if server fails

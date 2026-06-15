@@ -9,7 +9,9 @@ import '../../data/providers/auth_provider.dart';
 import '../../data/services/notification_service.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({Key? key}) : super(key: key);
+  final bool returnOnLogin;
+
+  const SignupScreen({Key? key, this.returnOnLogin = false}) : super(key: key);
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -72,7 +74,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (success && mounted) {
       _updateFcmTokenInBackground(authProvider);
-      context.go(AppRoutes.home);
+      if (widget.returnOnLogin) {
+        Navigator.pop(context);
+      } else {
+        context.go(AppRoutes.home);
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

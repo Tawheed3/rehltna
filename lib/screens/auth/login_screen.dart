@@ -11,7 +11,9 @@ import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final bool returnOnLogin;
+
+  const LoginScreen({Key? key, this.returnOnLogin = false}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -64,7 +66,12 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
       _showSuccess('تم تسجيل الدخول بنجاح 🎉');
       await Future.delayed(const Duration(milliseconds: 500));
-      if (mounted) context.go(AppRoutes.home);
+      if (!mounted) return;
+      if (widget.returnOnLogin) {
+        Navigator.pop(context);
+      } else {
+        context.go(AppRoutes.home);
+      }
     } else if (mounted && !success) {
       // ✅ رسالة خطأ من الباك إند
       _showError(authProvider.errorMessage ?? 'فشل تسجيل الدخول\nتأكد من البريد الإلكتروني وكلمة المرور');

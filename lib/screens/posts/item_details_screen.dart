@@ -349,9 +349,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     if (result == null || !mounted) return false;
 
     if (result == 'login') {
-      await Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+      await Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen(returnOnLogin: true)));
     } else {
-      await Navigator.push(context, MaterialPageRoute(builder: (_) => const SignupScreen()));
+      await Navigator.push(context, MaterialPageRoute(builder: (_) => const SignupScreen(returnOnLogin: true)));
     }
 
     if (!mounted) return false;

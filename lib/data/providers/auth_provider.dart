@@ -9,11 +9,18 @@ import 'base_provider.dart';
 class AuthProvider extends BaseProvider {
   String? _token;
   UserModel? _currentUser;
+  bool _isGuest = false;
 
   String? get token => _token;
   bool get isLoggedIn => _token != null && _token!.isNotEmpty;
+  bool get isGuestMode => _isGuest;
   UserModel? get currentUser => _currentUser;
   bool get isEditor => false;
+
+  void continueAsGuest() {
+    _isGuest = true;
+    notifyListeners();
+  }
 
   Future<void> loadToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -82,6 +89,7 @@ class AuthProvider extends BaseProvider {
 
     if (data != null && data['code'] == 200) {
       if (data['data'] != null && data['data']['acssess_token'] != null) {
+        _isGuest = false;
         await _saveToken(data['data']['acssess_token']);
         _currentUser = UserModel.fromJson(data['data']);
         await _saveUserLocally(_currentUser!);
@@ -289,7 +297,41 @@ class AuthProvider extends BaseProvider {
   }
 
   Future<void> signOut() async {
+    _isGuest = false;
     await logout();
+  }
+
+  // ==================== حذف الحساب ====================
+
+  Future<bool> deleteAccount() async {
+    if (_token == null) return false;
+    startLoading();
+    try {
+      final url = '$baseUrl/profile';
+      logRequest('DELETE', url);
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': XApiKey,
+          'X-Tenant-ID': XTenantID.toString(),
+          'Authorization': 'Bearer $_token',
+        },
+      ).timeout(const Duration(seconds: 15));
+      logResponse('DELETE', url, response.statusCode, response.body);
+      if (response.statusCode == 200) {
+        await _clearToken();
+        stopLoading();
+        return true;
+      }
+      stopLoading();
+      return false;
+    } catch (e) {
+      logError('DELETE', '$baseUrl/profile', e);
+      await _clearToken();
+      stopLoading();
+      return true; // clear locally even if server fails
+    }
   }
 
   // ==================== FCM Token ====================

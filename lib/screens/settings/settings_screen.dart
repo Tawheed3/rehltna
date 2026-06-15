@@ -311,6 +311,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   // زر تسجيل الخروج
                   if (user != null) _buildLogoutButton(authProvider),
+                  if (user != null) const SizedBox(height: 12),
+
+                  // زر حذف الحساب
+                  if (user != null) _buildDeleteAccountButton(authProvider),
                   const SizedBox(height: 24),
 
                   // إصدار التطبيق
@@ -892,6 +896,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // ==================== أزرار الإجراءات ====================
   Widget _buildActionButtons(bool isDark) {
     return const SizedBox.shrink();
+  }
+
+  // ==================== زر حذف الحساب ====================
+  Widget _buildDeleteAccountButton(AuthProvider ap) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => _showDeleteAccountDialog(ap),
+        icon: const Icon(Icons.delete_forever_outlined, color: Colors.red),
+        label: const Text('حذف الحساب', style: TextStyle(color: Colors.red)),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.red),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteAccountDialog(AuthProvider ap) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('حذف الحساب', style: TextStyle(color: Colors.red)),
+        content: const Text(
+          'هل أنت متأكد من حذف حسابك؟\nسيتم حذف جميع بياناتك ويمكنك التسجيل مجدداً بنفس البريد الإلكتروني.',
+        ),
+        backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('إلغاء'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              final success = await ap.deleteAccount();
+              if (mounted) {
+                if (success) {
+                  context.go(AppRoutes.login);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('فشل حذف الحساب، حاول مرة أخرى'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('حذف الحساب'),
+          ),
+        ],
+      ),
+    );
   }
 
   // ==================== زر تسجيل الخروج ====================

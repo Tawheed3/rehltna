@@ -359,6 +359,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+
+              // تصفح كضيف
+              TextButton.icon(
+                onPressed: () {
+                  final auth = Provider.of<AuthProvider>(context, listen: false);
+                  auth.continueAsGuest();
+                  context.go(AppRoutes.home);
+                },
+                icon: Icon(Icons.person_outline, color: isDark ? Colors.white54 : Colors.grey[600]),
+                label: Text(
+                  'تصفح كضيف',
+                  style: TextStyle(
+                    color: isDark ? Colors.white54 : Colors.grey[600],
+                    fontSize: 15,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

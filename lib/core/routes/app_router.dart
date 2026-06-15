@@ -34,6 +34,7 @@ class AppRouter {
 
     redirect: (BuildContext context, GoRouterState state) {
       final isLoggedIn = authProvider.isLoggedIn;
+      final isGuest = authProvider.isGuestMode;
       final location = state.matchedLocation;
 
       // الصفحات العامة التي لا تحتاج تسجيل دخول
@@ -48,10 +49,10 @@ class AppRouter {
 
       final isPublicPage = publicPages.contains(location);
 
-      developer.log('[Router] location=$location | loggedIn=$isLoggedIn | public=$isPublicPage', name: BaseProvider.logTag);
+      developer.log('[Router] location=$location | loggedIn=$isLoggedIn | guest=$isGuest | public=$isPublicPage', name: BaseProvider.logTag);
 
-      // إذا لم يكن مسجل دخول ويحاول دخول صفحة خاصة → يروح للوجين
-      if (!isLoggedIn && !isPublicPage) {
+      // إذا لم يكن مسجل دخول ولا في وضع الزائر ويحاول دخول صفحة خاصة → يروح للوجين
+      if (!isLoggedIn && !isGuest && !isPublicPage) {
         developer.log('[Router] Redirecting to login', name: BaseProvider.logTag);
         return AppRoutes.login;
       }

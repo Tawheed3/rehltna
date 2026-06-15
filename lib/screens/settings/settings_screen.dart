@@ -742,7 +742,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (s.facebook.isNotEmpty) {
       links.add({
-        'icon': Icons.facebook,
+        'image': 'assets/social/facebook.png',
         'color': const Color(0xFF1877F2),
         'url': s.facebook.first,
         'label': 'فيسبوك',
@@ -751,7 +751,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (s.instagram.isNotEmpty) {
       links.add({
-        'icon': Icons.photo_camera,
+        'image': 'assets/social/instagram.jpeg',
         'color': const Color(0xFFE4405F),
         'url': s.instagram.first,
         'label': 'انستغرام',
@@ -760,8 +760,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (s.twitter.isNotEmpty) {
       links.add({
-        'icon': Icons.alternate_email,
-        'color': const Color(0xFF1DA1F2),
+        'image': 'assets/social/twitter.png',
+        'color': const Color(0xFF000000),
         'url': s.twitter.first,
         'label': 'تويتر',
       });
@@ -769,7 +769,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (s.youtube.isNotEmpty) {
       links.add({
-        'icon': Icons.play_circle_fill,
+        'image': 'assets/social/youtube.png',
         'color': const Color(0xFFFF0000),
         'url': s.youtube.first,
         'label': 'يوتيوب',
@@ -778,7 +778,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (s.tiktok.isNotEmpty) {
       links.add({
-        'icon': Icons.music_note,
+        'image': 'assets/social/tiktok.png',
         'color': const Color(0xFF010101),
         'url': s.tiktok.first,
         'label': 'تيك توك',
@@ -787,7 +787,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (s.snapchat.isNotEmpty) {
       links.add({
-        'icon': Icons.camera_enhance,
+        'image': 'assets/social/snapchat.png',
         'color': const Color(0xFFFFFC00),
         'url': s.snapchat.first,
         'label': 'سناب شات',
@@ -841,30 +841,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 16),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: 12,
+            runSpacing: 12,
             children: links.map((link) {
+              final color = link['color'] as Color;
+              final hasImage = link.containsKey('image');
               return InkWell(
-                onTap: () => _launchURL(link['url']),
-                borderRadius: BorderRadius.circular(20),
+                onTap: () => _launchURL(link['url'] as String),
+                borderRadius: BorderRadius.circular(16),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  width: 64,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: (link['color'] as Color).withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: (link['color'] as Color).withOpacity(0.7), width: 1.5),
+                    color: Colors.white.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
                   ),
-                  child: Row(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(link['icon'] as IconData, color: link['color'] as Color, size: 16),
-                      const SizedBox(width: 6),
+                      hasImage
+                          ? Image.asset(
+                              link['image'] as String,
+                              width: 28,
+                              height: 28,
+                              fit: BoxFit.contain,
+                            )
+                          : Icon(link['icon'] as IconData, color: color, size: 28),
+                      const SizedBox(height: 6),
                       Text(
                         link['label'] as String,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: link['color'] as Color,
-                          fontWeight: FontWeight.w600,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],

@@ -796,7 +796,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (s.whatsappNumber.isNotEmpty) {
       links.add({
-        'icon': Icons.chat,
+        'image': 'assets/social/whatsapp.png',
         'color': const Color(0xFF25D366),
         'url': 'https://wa.me/${s.whatsappNumber}',
         'label': 'واتساب',

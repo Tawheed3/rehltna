@@ -8,6 +8,8 @@ import '../../data/providers/items_provider.dart';
 import '../../data/providers/auth_provider.dart';
 import '../../data/providers/reviews_provider.dart';
 import '../../data/services/settings_service.dart';
+import '../auth/login_screen.dart';
+import '../auth/signup_screen.dart';
 import '../payment/payment_options_screen.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
@@ -269,7 +271,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   // ==================== الانتقال للدفع ====================
 
-  void _goPayment() {
+  Future<void> _goPayment() async {
     if (_item == null) return;
     final attendees = _getTotalAttendees();
     if (attendees == 0) {
@@ -282,12 +284,20 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       return;
     }
 
+    // إذا كان الزائر غير مسجل → نطلب منه الدخول أولاً
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isLoggedIn) {
+      final loggedIn = await _showGuestLoginDialog();
+      if (!loggedIn || !mounted) return;
+    }
+
     for (var controller in _videoControllers.values) {
       controller?.pause();
     }
 
     final selectedPrices =
     _item!.prices.isNotEmpty ? _buildSelectedPrices() : null;
+    if (!mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -299,6 +309,54 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         ),
       ),
     );
+  }
+
+  /// يعرض نافذة تطلب من الزائر تسجيل الدخول أو إنشاء حساب.
+  /// يعيد true إذا أتمّ المستخدم تسجيل الدخول بنجاح.
+  Future<bool> _showGuestLoginDialog() async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.lock_outline, color: Colors.orange),
+            SizedBox(width: 8),
+            Text('يجب تسجيل الدخول أولاً'),
+          ],
+        ),
+        content: const Text(
+          'لإتمام الحجز يجب أن تكون مسجلاً.\nهل تريد تسجيل الدخول أو إنشاء حساب جديد؟',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('إلغاء'),
+          ),
+          OutlinedButton(
+            onPressed: () => Navigator.pop(ctx, 'register'),
+            child: const Text('إنشاء حساب'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, 'login'),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            child: const Text('تسجيل الدخول', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (result == null || !mounted) return false;
+
+    if (result == 'login') {
+      await Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+    } else {
+      await Navigator.push(context, MaterialPageRoute(builder: (_) => const SignupScreen()));
+    }
+
+    if (!mounted) return false;
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    return authProvider.isLoggedIn;
   }
 
   // ==================== ألوان مساعدة ====================

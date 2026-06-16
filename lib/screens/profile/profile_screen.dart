@@ -1436,7 +1436,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(width: 12),
               Text(
-                'وثائق رحلاتي',
+                'وثائق رحلتنا',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w900,

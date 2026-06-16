@@ -93,7 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (await inAppReview.isAvailable()) {
       inAppReview.requestReview();
     } else {
-      await _launchURL('https://play.google.com/store/apps/details?id=com.example.rehlaty');
+      await _launchURL('https://play.google.com/store/apps/details?id=com.rehltna.app');
     }
   }
 

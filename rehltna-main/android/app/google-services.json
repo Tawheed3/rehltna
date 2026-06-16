@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "386444914382",
+    "project_id": "rehltna-392b6",
+    "storage_bucket": "rehltna-392b6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386444914382:android:c420d065f7f4b884126a9f",
+        "android_client_info": {
+          "package_name": "com.example.rehlatna"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU0y-InmJvlxgYKAcUQRtLl_kc3xIn9kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

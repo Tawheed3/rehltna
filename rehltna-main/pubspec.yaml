@@ -1,0 +1,120 @@
+name: rehlaty
+description: تطبيق رحلات متكامل
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # للتنقل
+  go_router: ^13.0.0
+
+  # للصور
+  cached_network_image: ^3.3.0
+
+  # للأنيميشن
+  animations: ^2.0.7
+  flutter_staggered_animations: ^1.1.0
+
+  # لإدارة الحالة
+  provider: ^6.1.1
+
+  # للتخزين المحلي
+  shared_preferences: ^2.2.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # للخرائط والموقع
+  google_maps_flutter: ^2.5.3
+  geolocator: ^10.1.0
+
+  # للروابط الاجتماعية
+  url_launcher: ^6.2.4
+
+  # للتقييم على المتاجر
+  in_app_review: ^2.0.8
+
+  # للتاريخ والوقت
+  intl: ^0.20.2
+
+  # لعرض ملفات PDF داخل التطبيق
+  syncfusion_flutter_pdfviewer: ^29.0.0
+
+  # للصور
+  image_picker: ^1.0.5
+
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.10
+  # للإشعارات
+  flutter_local_notifications: ^18.0.1
+
+  # للتعامل مع جهات الاتصال
+  flutter_contacts: ^1.1.7
+
+  # لطلب الصلاحيات
+  permission_handler: ^11.0.1
+
+  # لتحميل الملفات ومسارات التخزين
+  dio: ^5.4.0
+  path_provider: ^2.1.2
+
+  # لاتجاه القبلة والبوصلة
+  flutter_compass: ^0.8.0
+
+
+  # للخطوط
+  google_fonts: ^6.2.0
+
+  flutter_widget_from_html: ^0.15.0
+
+  video_player: ^2.9.2
+
+  # للشيمر (skeleton loading)
+  shimmer: ^3.0.0
+
+  # للترجمة
+  flutter_localizations:
+    sdk: flutter
+  intl_utils: ^2.8.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.8
+  hive_generator: ^2.0.1
+  flutter_launcher_icons: ^0.13.1
+
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/rehlatnalogo.jpeg"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/rehlatnalogo.jpeg"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  background_color_ios: "#ffffff"
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/rehlatnalogo.jpeg
+    - assets/cruse.jpeg
+    - assets/education.jpeg
+    - assets/erup.jpeg
+    - assets/turkish.jpeg
+    - assets/visa.jpeg
+    - assets/package.jpeg
+    - assets/social/facebook.png
+    - assets/social/instagram.jpeg
+    - assets/social/twitter.png
+    - assets/social/youtube.png
+    - assets/social/tiktok.png
+    - assets/social/snapchat.png
+    - assets/social/whatsapp.png

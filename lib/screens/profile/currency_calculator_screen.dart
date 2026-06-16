@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../core/constants/app_colors.dart';
 
 // ─────────────────────────────────────────────────────────────
 //  Full currency list — static so mosque_screen can reference it
@@ -73,12 +74,18 @@ class CurrencyCalculatorScreen extends StatefulWidget {
 // ─────────────────────────────────────────────────────────────
 //  State
 // ─────────────────────────────────────────────────────────────
-class _CurrencyCalculatorScreenState extends State<CurrencyCalculatorScreen> {
+class _CurrencyCalculatorScreenState extends State<CurrencyCalculatorScreen>
+    with SingleTickerProviderStateMixin {
   late final Map<String, double> _fullRates;
   String _from = 'SAR';
   String _to   = 'USD';
   final _ctrl  = TextEditingController(text: '1');
+  final _focus = FocusNode();
   double _amount = 1.0;
+
+  late final AnimationController _swapAnim;
+
+  static const _quickAmounts = [1, 10, 100, 500, 1000];
 
   @override
   void initState() {
@@ -88,10 +95,19 @@ class _CurrencyCalculatorScreenState extends State<CurrencyCalculatorScreen> {
       final v = double.tryParse(_ctrl.text) ?? 0;
       if (v != _amount) setState(() => _amount = v);
     });
+    _swapAnim = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    _focus.dispose();
+    _swapAnim.dispose();
+    super.dispose();
+  }
 
   // ── Conversion ──
 
@@ -102,9 +118,17 @@ class _CurrencyCalculatorScreenState extends State<CurrencyCalculatorScreen> {
     return (_amount / fr) * tr;
   }
 
-  void _swap() => setState(() {
-    final t = _from; _from = _to; _to = t;
-  });
+  void _swap() {
+    _swapAnim.forward(from: 0);
+    setState(() {
+      final t = _from; _from = _to; _to = t;
+    });
+  }
+
+  void _setQuickAmount(int v) {
+    _ctrl.text = v.toString();
+    setState(() => _amount = v.toDouble());
+  }
 
   // ── Formatting ──
 
@@ -120,19 +144,39 @@ class _CurrencyCalculatorScreenState extends State<CurrencyCalculatorScreen> {
     return v.toStringAsFixed(6);
   }
 
-  String _rateHint() {
+  String _fwdRate() {
     if (_from == _to) return '';
     final fr = _fullRates[_from] ?? 0;
     final tr = _fullRates[_to]   ?? 0;
     if (fr == 0 || tr == 0) return '';
-    final fwdRate  = tr / fr;          // 1 FROM = ? TO
-    final backRate = fr / tr;          // 1 TO   = ? FROM
-    return '1 $_from = ${_fmt(fwdRate)} $_to   •   1 $_to = ${_fmt(backRate)} $_from';
+    return _fmt(tr / fr);
+  }
+
+  String _backRate() {
+    if (_from == _to) return '';
+    final fr = _fullRates[_from] ?? 0;
+    final tr = _fullRates[_to]   ?? 0;
+    if (fr == 0 || tr == 0) return '';
+    return _fmt(fr / tr);
+  }
+
+  void _copyResult() {
+    Clipboard.setData(ClipboardData(text: _fmt(_result)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('تم نسخ النتيجة'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 2),
+        backgroundColor: AppColors.primary,
+      ),
+    );
   }
 
   // ── Currency picker ──
 
   void _openPicker(bool isFrom) {
+    FocusScope.of(context).unfocus();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -157,17 +201,18 @@ class _CurrencyCalculatorScreenState extends State<CurrencyCalculatorScreen> {
     return GestureDetector(
       onTap: () => _openPicker(isFrom),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: onDark ? Colors.white.withOpacity(0.15) : Colors.black.withOpacity(0.06),
+          color: onDark ? Colors.white.withOpacity(0.18) : Colors.black.withOpacity(0.05),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: onDark ? Colors.white.withOpacity(0.25) : Colors.black.withOpacity(0.1),
+            color: onDark ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.08),
           ),
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Text(sym, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,
-              color: onDark ? Colors.white : const Color(0xFF2d5016))),
+          Text(sym, style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold,
+              color: onDark ? Colors.white : AppColors.primary)),
           const SizedBox(width: 8),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(code, style: TextStyle(fontSize: 10,
@@ -177,8 +222,45 @@ class _CurrencyCalculatorScreenState extends State<CurrencyCalculatorScreen> {
           ]),
           const SizedBox(width: 6),
           Icon(Icons.keyboard_arrow_down_rounded, size: 18,
-              color: onDark ? Colors.white60 : Colors.grey.shade600),
+              color: onDark ? Colors.white60 : Colors.grey.shade500),
         ]),
+      ),
+    );
+  }
+
+  Widget _quickAmountChips() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        children: _quickAmounts.map((v) {
+          final selected = _amount == v.toDouble();
+          return Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: GestureDetector(
+              onTap: () => _setQuickAmount(v),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+                decoration: BoxDecoration(
+                  color: selected ? Colors.white : Colors.white.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: selected ? Colors.white : Colors.white.withOpacity(0.3),
+                  ),
+                ),
+                child: Text(
+                  v >= 1000 ? '${v ~/ 1000}K' : '$v',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: selected ? AppColors.primary : Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -187,120 +269,194 @@ class _CurrencyCalculatorScreenState extends State<CurrencyCalculatorScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bg     = isDark ? const Color(0xFF0f1723) : const Color(0xFFF0F2F5);
+    final fwd = _fwdRate();
+    final bck = _backRate();
 
     return Scaffold(
       backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF2d5016),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.primary, AppColors.secondary],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
-        title: const Text('💱 حاسبة العملات',
+        title: const Text('حاسبة العملات',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(children: [
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(children: [
 
-          // ── FROM card (green) ──
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF2d5016), Color(0xFF4a8a1a)],
-                begin: Alignment.topRight, end: Alignment.bottomLeft,
-              ),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [BoxShadow(color: const Color(0xFF2d5016).withOpacity(0.3),
-                  blurRadius: 14, offset: const Offset(0, 6))],
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text('من', style: const TextStyle(fontSize: 13, color: Colors.white70)),
-                _currencyBtn(_from, true, true),
-              ]),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _ctrl,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))],
-                style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: '0',
-                  hintStyle: TextStyle(color: Colors.white30, fontSize: 40),
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
+            // ── FROM card ──
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.primary, AppColors.secondary],
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
                 ),
-                textAlign: TextAlign.end,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [BoxShadow(
+                    color: AppColors.primary.withOpacity(0.35),
+                    blurRadius: 16, offset: const Offset(0, 8))],
               ),
-            ]),
-          ),
-
-          // ── Swap button ──
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 6),
-            child: Center(
-              child: GestureDetector(
-                onTap: _swap,
-                child: Container(
-                  width: 48, height: 48,
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1c2333) : Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12),
-                        blurRadius: 10, offset: const Offset(0, 4))],
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  const Text('من', style: TextStyle(fontSize: 13, color: Colors.white70)),
+                  _currencyBtn(_from, true, true),
+                ]),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _ctrl,
+                  focusNode: _focus,
+                  onTap: () => _ctrl.selection = TextSelection(
+                      baseOffset: 0, extentOffset: _ctrl.text.length),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))],
+                  style: const TextStyle(fontSize: 44, fontWeight: FontWeight.bold, color: Colors.white),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: '0',
+                    hintStyle: TextStyle(color: Colors.white30, fontSize: 44),
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
                   ),
-                  child: const Center(
-                    child: Text('⇅', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                  ),
+                  textAlign: TextAlign.end,
                 ),
-              ),
-            ),
-          ),
-
-          // ── TO card (white/dark) ──
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1c2333) : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.07),
-                  blurRadius: 14, offset: const Offset(0, 4))],
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text('إلى', style: TextStyle(fontSize: 13,
-                    color: isDark ? Colors.white60 : Colors.grey.shade500)),
-                _currencyBtn(_to, false, false),
+                const SizedBox(height: 12),
+                _quickAmountChips(),
               ]),
-              const SizedBox(height: 12),
-              Text(
-                _fmt(_result),
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-            ]),
-          ),
+            ),
 
-          // ── Rate hint ──
-          if (_rateHint().isNotEmpty)
+            // ── Swap button ──
             Padding(
-              padding: const EdgeInsets.only(top: 14),
-              child: Text(
-                _rateHint(),
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Center(
+                child: GestureDetector(
+                  onTap: _swap,
+                  child: RotationTransition(
+                    turns: Tween(begin: 0.0, end: 0.5).animate(
+                        CurvedAnimation(parent: _swapAnim, curve: Curves.easeInOut)),
+                    child: Container(
+                      width: 48, height: 48,
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF1c2333) : Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [BoxShadow(
+                            color: Colors.black.withOpacity(0.12),
+                            blurRadius: 10, offset: const Offset(0, 4))],
+                      ),
+                      child: Icon(Icons.swap_vert_rounded,
+                          size: 26, color: AppColors.primary),
+                    ),
+                  ),
+                ),
               ),
             ),
 
-          const SizedBox(height: 20),
-        ]),
+            // ── TO card ──
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1c2333) : Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [BoxShadow(
+                    color: Colors.black.withOpacity(0.07),
+                    blurRadius: 14, offset: const Offset(0, 4))],
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Text('إلى', style: TextStyle(fontSize: 13,
+                      color: isDark ? Colors.white60 : Colors.grey.shade500)),
+                  _currencyBtn(_to, false, false),
+                ]),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Copy button
+                    GestureDetector(
+                      onTap: _copyResult,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(Icons.copy_rounded,
+                            size: 18, color: AppColors.primary),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        _fmt(_result),
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          fontSize: 44,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ]),
+            ),
+
+            // ── Rate info card ──
+            if (fwd.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF1c2333) : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.primary.withOpacity(0.2),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _rateChip('1 $_from', '$fwd $_to', isDark),
+                    Container(width: 1, height: 32,
+                        color: isDark ? Colors.white12 : Colors.grey.shade200),
+                    _rateChip('1 $_to', '$bck $_from', isDark),
+                  ],
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 24),
+          ]),
+        ),
       ),
+    );
+  }
+
+  Widget _rateChip(String label, String value, bool isDark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(label, style: TextStyle(
+            fontSize: 11, color: isDark ? Colors.white54 : Colors.grey.shade500)),
+        const SizedBox(height: 2),
+        Text(value, style: TextStyle(
+            fontSize: 13, fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : Colors.black87)),
+      ],
     );
   }
 }
@@ -359,7 +515,8 @@ class _CurrencyPickerState extends State<_CurrencyPicker> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
             child: Row(children: [
-              const Text('💱', style: TextStyle(fontSize: 20)),
+              Icon(Icons.currency_exchange_rounded,
+                  color: AppColors.primary, size: 22),
               const SizedBox(width: 8),
               Text('اختر العملة',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
@@ -388,14 +545,18 @@ class _CurrencyPickerState extends State<_CurrencyPicker> {
 
           // List
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               controller: scroll,
               itemCount: entries.length,
+              separatorBuilder: (_, __) => Divider(
+                height: 1,
+                indent: 74,
+                color: isDark ? Colors.white10 : Colors.grey.shade100,
+              ),
               itemBuilder: (_, i) {
                 final code = entries[i].key;
                 final info = entries[i].value;
                 final isSelected = code == widget.selected;
-                // compute rate hint: 1 code = X SAR
                 final rate = widget.fullRates[code] ?? 0;
                 final sarVal = rate > 0 ? (1 / rate) : 0.0;
                 final rateStr = rate > 0
@@ -407,7 +568,7 @@ class _CurrencyPickerState extends State<_CurrencyPicker> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     color: isSelected
-                        ? const Color(0xFF2d5016).withOpacity(0.08)
+                        ? AppColors.primary.withOpacity(0.07)
                         : Colors.transparent,
                     child: Row(children: [
                       // Symbol box
@@ -415,7 +576,7 @@ class _CurrencyPickerState extends State<_CurrencyPicker> {
                         width: 46, height: 46,
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? const Color(0xFF2d5016).withOpacity(0.15)
+                              ? AppColors.primary.withOpacity(0.15)
                               : (isDark ? Colors.white.withOpacity(0.07) : Colors.grey.shade100),
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -425,7 +586,7 @@ class _CurrencyPickerState extends State<_CurrencyPicker> {
                                   fontSize: info.$2.length > 2 ? 11 : 16,
                                   fontWeight: FontWeight.bold,
                                   color: isSelected
-                                      ? const Color(0xFF2d5016)
+                                      ? AppColors.primary
                                       : (isDark ? Colors.white70 : Colors.black87))),
                         ),
                       ),
@@ -434,7 +595,7 @@ class _CurrencyPickerState extends State<_CurrencyPicker> {
                         Text(info.$1,
                             style: TextStyle(fontSize: 14,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                color: isSelected ? const Color(0xFF2d5016) : textColor)),
+                                color: isSelected ? AppColors.primary : textColor)),
                         if (rateStr.isNotEmpty)
                           Text(rateStr,
                               style: TextStyle(fontSize: 11, color: Colors.grey.shade400)),
@@ -444,8 +605,8 @@ class _CurrencyPickerState extends State<_CurrencyPicker> {
                               fontWeight: FontWeight.w600)),
                       const SizedBox(width: 8),
                       if (isSelected)
-                        const Icon(Icons.check_circle_rounded,
-                            color: Color(0xFF4a8a1a), size: 20),
+                        Icon(Icons.check_circle_rounded,
+                            color: AppColors.primary, size: 20),
                     ]),
                   ),
                 );

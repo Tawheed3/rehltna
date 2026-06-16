@@ -1,0 +1,67 @@
+{
+  "adhkar": [
+    {
+      "id": "1",
+      "category": "morning",
+      "arabic_text": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ",
+      "transliteration": "Asbahna wa asbahal mulku lillah wal hamdu lillah",
+      "translation": "We have entered the morning and the whole kingdom belongs to Allah, all praise is for Allah",
+      "count": 1,
+      "reference": "Muslim"
+    },
+    {
+      "id": "2",
+      "category": "morning",
+      "arabic_text": "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ",
+      "transliteration": "Allahumma bika asbahna wa bika amsaina wa bika nahya wa bika namutu wa ilaikan nushur",
+      "translation": "O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and to You is the resurrection",
+      "count": 1,
+      "reference": "Tirmidhi"
+    },
+    {
+      "id": "3",
+      "category": "evening",
+      "arabic_text": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ",
+      "transliteration": "Amsaina wa amsal mulku lillah wal hamdu lillah",
+      "translation": "We have entered the evening and the whole kingdom belongs to Allah, all praise is for Allah",
+      "count": 1,
+      "reference": "Muslim"
+    },
+    {
+      "id": "4",
+      "category": "sleep",
+      "arabic_text": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
+      "transliteration": "Bismika Allahumma amutu wa ahya",
+      "translation": "In Your name O Allah, I die and I live",
+      "count": 1,
+      "reference": "Bukhari"
+    },
+    {
+      "id": "5",
+      "category": "general",
+      "arabic_text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+      "transliteration": "Subhanallahi wa bihamdihi",
+      "translation": "Glory be to Allah and praise Him",
+      "count": 100,
+      "reference": "Muslim"
+    },
+    {
+      "id": "6",
+      "category": "general",
+      "arabic_text": "أَسْتَغْفِرُ اللَّهَ",
+      "transliteration": "Astaghfirullah",
+      "translation": "I seek forgiveness from Allah",
+      "count": 100,
+      "reference": "Bukhari"
+    },
+    {
+      "id": "7",
+      "category": "general",
+      "arabic_text": "لَا إِلَهَ إِلَّا اللَّهُ",
+      "transliteration": "La ilaha illallah",
+      "translation": "There is no god but Allah",
+      "count": 100,
+      "reference": "Bukhari"
+    }
+  ]
+}

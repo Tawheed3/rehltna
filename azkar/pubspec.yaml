@@ -1,0 +1,61 @@
+name: islamic_dawah_app
+description: Islamic Dawah app for prayer tracking, Quran, Adhkar, and Qibla
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  riverpod: ^2.4.0
+  flutter_riverpod: ^2.4.0
+
+  # Routing
+  go_router: ^12.0.0
+
+  # Local Storage
+  hive_flutter: ^1.1.0
+  hive: ^2.2.3
+
+  # Location & Permissions
+  location: ^5.0.0
+  permission_handler: ^11.0.0
+
+  # Networking
+  dio: ^5.3.2
+  json_annotation: ^4.8.1
+  http: ^1.1.0
+
+  # voice
+  just_audio: ^0.10.5
+
+  # Notifications
+  flutter_local_notifications: ^17.2.2
+
+  # ✅ مكتبة imad_flutter بإصدار متوافق
+  qcf_quran_plus: ^0.0.8
+
+  # Utilities
+  equatable: ^2.0.5
+  dartz: ^0.10.1
+  intl: ^0.18.1
+
+  # UI
+  google_fonts: ^6.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  build_runner: ^2.4.6
+  hive_generator: ^2.0.0
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/

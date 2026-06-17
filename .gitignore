@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# ===== إضافة لحماية ملفات التوقيع =====
+# Keystore properties (معلومات التوقيع الحساسة)
+android/key.properties
+*.jks
+*.keystore
+/key.properties
+# ======================================

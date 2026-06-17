@@ -1,4 +1,3 @@
-// android/app/build.gradle.kts
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -6,8 +5,19 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+// ===== إضافة جزء التوقيع (لقراءة key.properties) =====
+import java.util.Properties
+        import java.io.FileInputStream
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+// =====================================================
+
 android {
-    namespace = "com.example.rehlaty"
+    namespace = "com.example.rehlatna"
     compileSdk = 36
     ndkVersion = "27.0.12077973"
 
@@ -23,16 +33,32 @@ android {
 
     defaultConfig {
         applicationId = "com.example.rehlatna"
-        minSdk = flutter.minSdkVersion  // Firebase محتاج 21 على الأقل، 23 أحسن
+        minSdk = flutter.minSdkVersion
         targetSdk = 36
-        versionCode = flutter.versionCode
+        versionCode = flutter.versionCode.toInt()
         versionName = flutter.versionName
         multiDexEnabled = true
     }
 
+    // ===== إضافة إعدادات التوقيع =====
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String?
+        }
+    }
+    // =================================
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

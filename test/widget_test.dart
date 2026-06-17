@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rehlaty/main.dart';
-import 'package:rehlaty/data/providers/auth_provider.dart';
+import 'package:rehlatna/data/providers/auth_provider.dart';
+import 'package:rehlatna/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rehlaty/main.dart';
+import 'package:rehlaty/data/providers/auth_provider.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget( const MyApp());
+    final authProvider = AuthProvider();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MyApp(authProvider: authProvider),
+      ),
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -319,7 +319,9 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+          :
+      SafeArea(
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ClipRRect(
@@ -650,6 +652,7 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
           ),
         ]),
       ),
+      )
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/item_model.dart';
@@ -179,12 +180,13 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
                 height: 100,
                 color: Colors.grey.shade200,
                 child: banner.isNotEmpty
-                    ? Image.network(
-                  banner,
+                    ? CachedNetworkImage(
+                  imageUrl: banner,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
-                  errorBuilder: (c, e, s) => Container(
+                  placeholder: (c, url) => Container(color: Colors.grey.shade200),
+                  errorWidget: (c, url, e) => Container(
                     color: Colors.grey.shade200,
                     child: const Icon(Icons.broken_image, color: Colors.grey, size: 40),
                   ),

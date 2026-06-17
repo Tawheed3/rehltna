@@ -44,8 +44,8 @@ class ItemsProvider extends BaseProvider {
 
   Future<void> fetchItems({int? limit, int page = 1}) async {
     startLoading();
-    String endpoint = 'items?per_page=200';
-    if (page > 1) endpoint += '&page=$page';
+    const int perPage = 12;
+    final String endpoint = 'items?per_page=$perPage&page=$page';
     final data = await getRequest(endpoint);
     if (data != null && data['code'] == 200 && data['data'] != null) {
       final itemsData = data['data']['items']['data'] as List;
@@ -56,7 +56,7 @@ class ItemsProvider extends BaseProvider {
             itemsData.map((item) => ItemModel.fromJson(item)).toList());
       }
       _currentPage = page;
-      _hasMoreData = itemsData.length >= (limit ?? 20);
+      _hasMoreData = itemsData.length >= perPage;
       developer.log('Loaded ${_items.length} items (page $page)', name: BaseProvider.logTag);
     }
     _hasLoadedOnce = true;
@@ -116,7 +116,7 @@ class ItemsProvider extends BaseProvider {
   }
 
   Future<void> _fetchAndCacheItems() async {
-    final data = await getRequest('items?per_page=200');
+    final data = await getRequest('items?per_page=100');
     if (data != null && data['code'] == 200 && data['data'] != null) {
       _applyItemsData(data);
       CacheService().set(_cacheKeyItems, data);
@@ -134,7 +134,7 @@ class ItemsProvider extends BaseProvider {
   void _applyItemsData(Map<String, dynamic> data) {
     final itemsData = data['data']['items']['data'] as List;
     _items = itemsData.map((item) => ItemModel.fromJson(item)).toList();
-    _hasMoreData = _items.length >= 200;
+    _hasMoreData = _items.length >= 100;
     _currentPage = 1;
     developer.log('Items applied: ${_items.length}', name: BaseProvider.logTag);
   }

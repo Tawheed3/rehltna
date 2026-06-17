@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -239,10 +240,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   panEnabled: true,
                   minScale: 0.8,
                   maxScale: 4.0,
-                  child: Image.network(
-                    url,
+                  child: CachedNetworkImage(
+                    imageUrl: url,
                     fit: BoxFit.contain,
-                    errorBuilder: (c, e, s) => const Center(
+                    errorWidget: (c, url, e) => const Center(
                       child: Icon(Icons.broken_image, size: 80, color: Colors.grey),
                     ),
                   ),
@@ -1116,12 +1117,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     child: r.icon.isNotEmpty
                         ? ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        r.icon,
+                      child: CachedNetworkImage(
+                        imageUrl: r.icon,
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
-                        errorBuilder: (c, e, s) => const Icon(
+                        errorWidget: (c, url, e) => const Icon(
                           Icons.check_circle,
                           color: Colors.green,
                           size: 18,
@@ -1199,12 +1200,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     child: e.icon.isNotEmpty
                         ? ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        e.icon,
+                      child: CachedNetworkImage(
+                        imageUrl: e.icon,
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
-                        errorBuilder: (c, er, s) => const Icon(
+                        errorWidget: (c, url, er) => const Icon(
                           Icons.cancel,
                           color: Colors.red,
                           size: 18,
@@ -1314,11 +1315,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               if (_isVideo(type)) return _buildVideoItem(url, i);
               return GestureDetector(
                 onTap: () => _showFullImg(c, url),
-                child: Image.network(
-                  url,
+                child: CachedNetworkImage(
+                  imageUrl: url,
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  errorBuilder: (c, e, s) => Container(
+                  placeholder: (c, url) => Container(color: Colors.grey.shade300),
+                  errorWidget: (c, u, e) => Container(
                     color: Colors.grey.shade300,
                     child: const Center(
                       child: Icon(Icons.broken_image, size: 50, color: Colors.grey),

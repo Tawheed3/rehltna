@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -189,10 +190,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return AppBar(
       toolbarHeight: barHeight,
       title: sp.settings != null
-          ? Image.network(
-              sp.settings!.getLogo(isDark),
+          ? CachedNetworkImage(
+              imageUrl: sp.settings!.getLogo(isDark),
               height: iconBox * 0.85,
-              errorBuilder: (c, e, s) => Text(
+              errorWidget: (c, url, e) => Text(
                 sp.settings!.getSiteName(ss.languageCode),
                 style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black),
               ),
@@ -486,10 +487,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     // صورة البانر
                     if (bannerUrl != null && bannerUrl.isNotEmpty)
-                      Image.network(
-                        bannerUrl,
+                      CachedNetworkImage(
+                        imageUrl: bannerUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (c, e, s) => Container(
+                        errorWidget: (c, url, e) => Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [

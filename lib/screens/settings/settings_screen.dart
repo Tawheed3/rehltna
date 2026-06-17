@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -510,12 +511,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     // صورة من السيرفر
     if (user.avatarUrl != null && user.avatarUrl!.isNotEmpty) {
-      return Image.network(
-        user.avatarUrl!,
+      return CachedNetworkImage(
+        imageUrl: user.avatarUrl!,
         width: 80,
         height: 80,
         fit: BoxFit.cover,
-        errorBuilder: (c, e, s) => Center(
+        errorWidget: (c, url, e) => Center(
           child: Text(
             user.initials,
             style: const TextStyle(

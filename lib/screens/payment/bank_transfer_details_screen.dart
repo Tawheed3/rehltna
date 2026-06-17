@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -335,10 +336,11 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
-                    widget.method.banner,
+                  CachedNetworkImage(
+                    imageUrl: widget.method.banner,
                     width: double.infinity, height: 160, fit: BoxFit.cover,
-                    errorBuilder: (ctx, e, s) => Container(
+                    placeholder: (c, url) => Container(height: 160, color: Colors.grey.shade200),
+                    errorWidget: (ctx, url, e) => Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [AppColors.primary, AppColors.secondary],
@@ -446,10 +448,11 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
               Row(children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    widget.item.getBanner(ss.languageCode),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.item.getBanner(ss.languageCode),
                     width: 50, height: 50, fit: BoxFit.cover,
-                    errorBuilder: (ctx, e, s) => Container(
+                    placeholder: (c, url) => Container(width: 50, height: 50, color: Colors.grey.shade300),
+                    errorWidget: (ctx, url, e) => Container(
                       width: 50, height: 50, color: Colors.grey.shade300,
                       child: const Icon(Icons.image, size: 30),
                     ),

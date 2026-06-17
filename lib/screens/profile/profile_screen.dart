@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pdf_viewer_screen.dart';
@@ -544,14 +545,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // ✅ صورة الباك إند مع cache
     if (user.avatarUrl != null && user.avatarUrl!.isNotEmpty) {
-      return Image.network(
-        user.avatarUrl!,
+      return CachedNetworkImage(
+        imageUrl: user.avatarUrl!,
         width: 120,
         height: 120,
         fit: BoxFit.cover,
-        cacheWidth: 240,  // ✅ كاش للصورة
-        cacheHeight: 240,
-        errorBuilder: (c, e, s) => _buildInitialsAvatar(user),
+        errorWidget: (c, url, e) => _buildInitialsAvatar(user),
       );
     }
 

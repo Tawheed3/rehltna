@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
@@ -276,12 +277,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 width: double.infinity,
                 color: Colors.grey.shade200,
                 child: banner.isNotEmpty
-                    ? Image.network(
-                  banner,
+                    ? CachedNetworkImage(
+                  imageUrl: banner,
                   height: 120,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
+                  placeholder: (c, url) => Container(color: Colors.grey.shade200),
+                  errorWidget: (context, url, error) {
                     return Container(
                       color: Colors.grey.shade200,
                       child: const Icon(Icons.broken_image,
@@ -383,12 +385,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 height: 100,
                 color: Colors.grey.shade200,
                 child: banner.isNotEmpty
-                    ? Image.network(
-                  banner,
+                    ? CachedNetworkImage(
+                  imageUrl: banner,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
+                  placeholder: (c, url) => Container(color: Colors.grey.shade200),
+                  errorWidget: (context, url, error) {
                     return Container(
                       color: Colors.grey.shade200,
                       child: const Icon(Icons.broken_image,

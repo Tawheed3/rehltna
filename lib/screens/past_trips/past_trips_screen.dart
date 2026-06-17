@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/item_model.dart';
@@ -220,10 +221,11 @@ class _PastTripsScreenState extends State<PastTripsScreen> {
                 height: 100,
                 color: Colors.blueGrey.withOpacity(0.1),
                 child: trip.getBanner('ar').isNotEmpty
-                    ? Image.network(
-                  trip.getBanner('ar'),
+                    ? CachedNetworkImage(
+                  imageUrl: trip.getBanner('ar'),
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
+                  placeholder: (c, url) => Container(color: Colors.blueGrey.withOpacity(0.1)),
+                  errorWidget: (context, url, error) {
                     return Container(
                       color: Colors.blueGrey.withOpacity(0.1),
                       child: const Icon(

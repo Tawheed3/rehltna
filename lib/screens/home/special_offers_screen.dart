@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
@@ -173,12 +174,13 @@ class _SpecialOffersScreenState extends State<SpecialOffersScreen> {
                 height: 100,
                 color: Colors.grey.shade200,
                 child: banner.isNotEmpty
-                    ? Image.network(
-                  banner,
+                    ? CachedNetworkImage(
+                  imageUrl: banner,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
-                  errorBuilder: (c, e, s) => Container(
+                  placeholder: (c, url) => Container(color: Colors.grey.shade200),
+                  errorWidget: (c, url, e) => Container(
                     color: Colors.grey.shade200,
                     child: const Icon(
                       Icons.broken_image,

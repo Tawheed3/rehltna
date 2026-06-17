@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -1410,12 +1411,12 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                   if (_selectedMethod != null)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        _selectedMethod!.banner,
+                      child: CachedNetworkImage(
+                        imageUrl: _selectedMethod!.banner,
                         width: 70,
                         height: 50,
                         fit: BoxFit.cover,
-                        errorBuilder: (ctx, e, s) => Icon(
+                        errorWidget: (ctx, url, e) => Icon(
                           _selectedMethod!.isTamara
                               ? Icons.credit_score
                               : _selectedMethod!.isBankTransfer
@@ -1495,12 +1496,13 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              method.banner,
+                            child: CachedNetworkImage(
+                              imageUrl: method.banner,
                               width: 140,
                               height: 100,
                               fit: BoxFit.cover,
-                              errorBuilder: (ctx, e, s) =>
+                              placeholder: (c, url) => Container(width: 140, height: 100, color: cardColor.withOpacity(0.05)),
+                              errorWidget: (ctx, url, e) =>
                                   Container(
                                     width: 120,
                                     height: 100,
@@ -1574,12 +1576,13 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: companyLogo.isNotEmpty
-                                ? Image.network(
-                              companyLogo,
+                                ? CachedNetworkImage(
+                              imageUrl: companyLogo,
                               width: 140,
                               height: 100,
                               fit: BoxFit.contain,
-                              errorBuilder: (ctx, e, s) =>
+                              placeholder: (c, url) => Container(width: 140, height: 100, color: const Color(0xFF25D366).withOpacity(0.05)),
+                              errorWidget: (ctx, url, e) =>
                                   Container(
                                     width: 140,
                                     height: 100,

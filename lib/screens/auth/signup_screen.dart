@@ -170,7 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   autofillHints: const [AutofillHints.email], // 👈 للإكمال التلقائي
                   decoration: InputDecoration(
                     labelText: 'البريد الإلكتروني',
-                    hintText: 'example@email.com',
+                    hintText: 'rehltna@email.com',
                     prefixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),

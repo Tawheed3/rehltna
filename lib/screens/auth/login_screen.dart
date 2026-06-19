@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // ✅ التحقق من البريد الإلكتروني
     final email = _emailController.text.trim();
     if (!_isValidEmail(email)) {
-      _showError('البريد الإلكتروني غير صحيح\nمثال: example@domain.com');
+      _showError('البريد الإلكتروني غير صحيح\nمثال: rehltna@domain.com');
       return;
     }
 
@@ -207,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: 'البريد الإلكتروني',
-                        hintText: 'example@email.com',
+                        hintText: 'rehltna@email.com',
                         prefixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         filled: true,

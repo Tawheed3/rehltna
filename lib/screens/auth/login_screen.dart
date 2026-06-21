@@ -48,8 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // ✅ التحقق من كلمة المرور
     final password = _passwordController.text;
-    if (password.length < 6) {
-      _showError('كلمة المرور قصيرة جداً\nيجب أن تكون 6 أحرف على الأقل');
+    if (password.length < 5) {
+      _showError('كلمة المرور قصيرة جداً\nيجب أن تكون 5 أحرف على الأقل');
       return;
     }
 

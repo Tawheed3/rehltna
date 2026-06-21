@@ -259,12 +259,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     if (value == null || value.isEmpty) {
                       return 'الرجاء إدخال كلمة المرور';
                     }
-                    if (value.length < 6) {
-                      return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-                    }
-                    // تحقق من وجود حرف كبير ورقم (اختياري)
-                    if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$').hasMatch(value)) {
-                      return 'كلمة المرور يجب أن تحتوي على حرف ورقم على الأقل';
+                    if (value.length < 5) {
+                      return 'كلمة المرور يجب أن تكون 5 أحرف على الأقل';
                     }
                     return null;
                   },

@@ -11,6 +11,7 @@ import '../../data/models/item_model.dart';
 import '../../data/providers/payment_methods_provider.dart';
 import '../../data/providers/auth_provider.dart';
 import '../../data/services/settings_service.dart';
+import '../auth/login_screen.dart';
 
 class BankTransferDetailsScreen extends StatefulWidget {
   final PaymentMethodModel method;
@@ -76,7 +77,51 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
 
   // ==================== رفع الإيصال ====================
 
+  void _showLoginRequired() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(children: [
+          Icon(Icons.lock_outline, color: AppColors.primary),
+          SizedBox(width: 8),
+          Text('تسجيل الدخول مطلوب'),
+        ]),
+        content: const Text(
+          'يجب تسجيل الدخول لإتمام الحجز ورفع الإيصال.\nسيتم إعادتك لهذه الصفحة بعد تسجيل الدخول.',
+          textAlign: TextAlign.right,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('إلغاء', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginScreen(returnOnLogin: true)),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text('تسجيل الدخول'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _pickReceipt() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isLoggedIn) {
+      _showLoginRequired();
+      return;
+    }
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     if (image != null) {
       setState(() => _receiptFile = File(image.path));
@@ -84,6 +129,12 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
   }
 
   Future<void> _createOrderAndUploadReceipt() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isLoggedIn) {
+      _showLoginRequired();
+      return;
+    }
+
     if (_receiptFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('الرجاء اختيار صورة الإيصال'), backgroundColor: Colors.orange),

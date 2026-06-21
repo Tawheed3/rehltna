@@ -412,10 +412,10 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
         }
 
         setState(() {
-          _isCouponValid = true;
+          _isCouponValid = _couponDiscount > 0;
           _couponMessage = _couponDiscount > 0
               ? '✅ خصم ${_couponDiscount.toStringAsFixed(0)} ريال'
-              : '✅ تم تطبيق الكوبون';
+              : '❌ هذا الكوبون غير متاح لهذه الرحلة';
           _isCheckingCoupon = false;
         });
 

@@ -285,13 +285,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       return;
     }
 
-    // إذا كان الزائر غير مسجل → نطلب منه الدخول أولاً
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (!authProvider.isLoggedIn) {
-      final loggedIn = await _showGuestLoginDialog();
-      if (!loggedIn || !mounted) return;
-    }
-
     for (var controller in _videoControllers.values) {
       controller?.pause();
     }

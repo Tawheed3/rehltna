@@ -58,10 +58,25 @@ class _BankTransferDetailsScreenState extends State<BankTransferDetailsScreen> {
     _nameController = TextEditingController(text: user?.name ?? '');
     _emailController = TextEditingController(text: user?.email ?? '');
     _phoneController = TextEditingController(text: user?.phone ?? '');
+
+    authProvider.addListener(_onAuthChanged);
+  }
+
+  void _onAuthChanged() {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final user = authProvider.currentUser;
+    if (user != null && mounted) {
+      setState(() {
+        _nameController.text = user.name ?? '';
+        _emailController.text = user.email ?? '';
+        _phoneController.text = user.phone ?? '';
+      });
+    }
   }
 
   @override
   void dispose() {
+    Provider.of<AuthProvider>(context, listen: false).removeListener(_onAuthChanged);
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();

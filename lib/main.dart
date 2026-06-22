@@ -16,7 +16,6 @@ import 'data/providers/settings_provider.dart';
 import 'data/providers/user_provider.dart';
 import 'data/providers/search_provider.dart';
 import 'data/providers/payment_methods_provider.dart';
-import 'data/providers/pixel_provider.dart';
 import 'data/providers/reviews_provider.dart';
 import 'data/providers/custom_pages_provider.dart';
 
@@ -60,7 +59,6 @@ void main() async {
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
         ChangeNotifierProvider<SearchProvider>.value(value: searchProvider),
         ChangeNotifierProvider(create: (context) => PaymentMethodsProvider()),
-        ChangeNotifierProvider(create: (context) => PixelProvider()),
         ChangeNotifierProvider(create: (context) => ReviewsProvider()),
         ChangeNotifierProvider(create: (context) => CustomPagesProvider()),
       ],

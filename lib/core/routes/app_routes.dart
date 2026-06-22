@@ -17,5 +17,4 @@ class AppRoutes {
   static const String pastTrips = '/past-trips';
   static const String specialOffers = '/special-offers';
   static const String dashboard = '/dashboard';
-  static const String adminDashboard = '/admin-dashboard';
 }

@@ -15,7 +15,6 @@ import '../../screens/past_trips/past_trips_screen.dart';
 import '../../screens/posts/item_details_screen.dart';
 import '../../screens/profile/profile_screen.dart';
 import '../../screens/settings/settings_screen.dart';
-import '../../screens/dashboard/admin_dashboard_screen.dart';
 import '../../screens/category/category_screen.dart';
 import '../../screens/category/subcategory_screen.dart';
 import '../../screens/splash/splash_screen.dart';
@@ -108,12 +107,6 @@ class AppRouter {
             child: const ProfileScreen(),
           );
         },
-      ),
-
-      GoRoute(
-        path: AppRoutes.adminDashboard,
-        name: AppRoutes.adminDashboard,
-        builder: (context, state) => const AdminDashboardScreen(),
       ),
 
       // ==================== صفحات البحث والرحلات ====================

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +95,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (await inAppReview.isAvailable()) {
       inAppReview.requestReview();
     } else {
-      await _launchURL('https://play.google.com/store/apps/details?id=com.rehltna.app');
+      final url = Platform.isIOS
+          ? 'https://apps.apple.com/app/id6746780603'
+          : 'https://play.google.com/store/apps/details?id=com.rehltna.app';
+      await _launchURL(url);
     }
   }
 

@@ -25,10 +25,8 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
-	<!-- صلاحيات الموقع لاتجاه القبلة -->
+	<!-- صلاحيات الموقع لاتجاه القبلة (When In Use فقط) -->
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة بدقة</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة بدقة</string>
 
 	<!-- صلاحية البوصلة للقبلة -->
@@ -40,10 +38,6 @@
 	<string>يحتاج التطبيق إلى الكاميرا لالتقاط صورة الملف الشخصي</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>يحتاج التطبيق إلى مكتبة الصور لاختيار صورة الملف الشخصي</string>
-
-	<!-- صلاحية جهات الاتصال -->
-	<key>NSContactsUsageDescription</key>
-	<string>يحتاج التطبيق إلى جهات اتصالك</string>
 
 	<!-- روابط URL الخارجية (واتساب) -->
 	<key>LSApplicationQueriesSchemes</key>

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -22,52 +24,31 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-
-	<!-- صلاحيات الموقع لاتجاه القبلة (When In Use فقط) -->
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة بدقة</string>
-
-	<!-- صلاحية البوصلة للقبلة -->
-	<key>NSMotionUsageDescription</key>
-	<string>يحتاج التطبيق إلى البوصلة لتحديد اتجاه القبلة</string>
-
-	<!-- صلاحيات الكاميرا والصور لتغيير صورة الملف الشخصي -->
-	<key>NSCameraUsageDescription</key>
-	<string>يحتاج التطبيق إلى الكاميرا لالتقاط صورة الملف الشخصي</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>يحتاج التطبيق إلى مكتبة الصور لاختيار صورة الملف الشخصي</string>
-
-	<!-- روابط URL الخارجية (واتساب) -->
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<string>NO</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>whatsapp</string>
 		<string>tel</string>
 		<string>mailto</string>
 	</array>
-
-	<!-- إعدادات الإشعارات لـ iOS -->
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>يحتاج التطبيق إلى الكاميرا لالتقاط صورة الملف الشخصي</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة بدقة</string>
+	<key>NSMotionUsageDescription</key>
+	<string>يحتاج التطبيق إلى البوصلة لتحديد اتجاه القبلة</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>يحتاج التطبيق إلى مكتبة الصور لاختيار صورة الملف الشخصي</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
-
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<string>NO</string>
-
-	<!-- طلب إذن الإشعارات -->
-	<key>UIUserNotificationSettings</key>
-	<array>
-		<dict>
-			<key>UIUserNotificationActionContext</key>
-			<string>default</string>
-			<key>UIUserNotificationCategory</key>
-			<array/>
-		</dict>
-	</array>
-
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -85,9 +66,14 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
+	<key>UIUserNotificationSettings</key>
+	<array>
+		<dict>
+			<key>UIUserNotificationActionContext</key>
+			<string>default</string>
+			<key>UIUserNotificationCategory</key>
+			<array/>
+		</dict>
+	</array>
 </dict>
 </plist>

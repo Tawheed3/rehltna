@@ -1,1 +1,7 @@
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
 #include "Generated.xcconfig"
+
+// Disable Xcode 16+ explicitly-built modules so CLANG_ALLOW_NON_MODULAR_INCLUDES
+// is honored (firebase_messaging 14.x imports the non-modular <Firebase/Firebase.h>).
+CLANG_ENABLE_EXPLICIT_MODULES = NO
+SWIFT_ENABLE_EXPLICIT_MODULES = NO

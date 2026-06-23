@@ -52,9 +52,6 @@ dependencies:
   # للإشعارات
   flutter_local_notifications: ^18.0.1
 
-  # للتعامل مع جهات الاتصال
-  flutter_contacts: ^1.1.7
-
   # لطلب الصلاحيات
   permission_handler: ^11.0.1
 

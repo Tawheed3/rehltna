@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Reusable circle button builder
     Widget btn(Widget icon, VoidCallback onTap, Color bg,
-        {EdgeInsetsGeometry margin = const EdgeInsets.only(right: 5)}) {
+        {EdgeInsetsGeometry margin = const EdgeInsetsDirectional.only(end: 5)}) {
       return Container(
         width: iconBox, height: iconBox,
         margin: margin,
@@ -237,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Icon(Icons.settings_outlined, color: AppColors.primary, size: iconInner),
           () => context.push('/settings'),
           AppColors.primary,
-          margin: const EdgeInsets.only(right: 8),
+          margin: const EdgeInsetsDirectional.only(end: 8),
         ),
       ],
     );

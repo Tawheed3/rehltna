@@ -36,9 +36,13 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>يحتاج التطبيق إلى الكاميرا لالتقاط صورة الملف الشخصي</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة وإيجاد أقرب المساجد</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
 	<string>يحتاج التطبيق إلى موقعك لتحديد اتجاه القبلة بدقة</string>
-	<key>NSMotionUsageDescription</key>
+	<key>NSMicrophoneUsageDescription</key>
+		<string>يحتاج التطبيق إلى الميكروفون فقط عند تسجيل مقطع فيديو لصورة الملف الشخصي</string>
+		<key>NSMotionUsageDescription</key>
 	<string>يحتاج التطبيق إلى البوصلة لتحديد اتجاه القبلة</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>يحتاج التطبيق إلى مكتبة الصور لاختيار صورة الملف الشخصي</string>

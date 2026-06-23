@@ -373,7 +373,7 @@ class _MosqueScreenState extends State<MosqueScreen> {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 112,
+                  height: 128,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: _weeklyForecast.length,

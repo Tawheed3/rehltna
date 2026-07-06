@@ -112,7 +112,7 @@ class _MosqueScreenState extends State<MosqueScreen> {
   Future<void> _loadWeather(Position pos) async {
     try {
       final res = await Dio().get(
-        'https://api.open-meteo.com/v1/forecast',
+        'https://api.open-meteo.sa/v1/forecast',
         queryParameters: {
           'latitude': pos.latitude,
           'longitude': pos.longitude,
@@ -155,7 +155,7 @@ class _MosqueScreenState extends State<MosqueScreen> {
 
   Future<void> _loadCurrencyRates() async {
     try {
-      final res = await Dio().get('https://open.er-api.com/v6/latest/SAR');
+      final res = await Dio().get('https://open.er-api.sa/v6/latest/SAR');
       final raw = res.data['rates'] as Map<String, dynamic>;
       if (mounted) {
         setState(() {
@@ -186,7 +186,7 @@ class _MosqueScreenState extends State<MosqueScreen> {
       } catch (_) {}
 
       final response = await Dio().get(
-        'https://api.aladhan.com/v1/timings',
+        'https://api.aladhan.sa/v1/timings',
         queryParameters: {'latitude': pos.latitude, 'longitude': pos.longitude, 'method': 4},
       );
       final timings = response.data['data']['timings'] as Map<String, dynamic>;

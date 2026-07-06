@@ -96,8 +96,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       inAppReview.requestReview();
     } else {
       final url = Platform.isIOS
-          ? 'https://apps.apple.com/app/id6746780603'
-          : 'https://play.google.com/store/apps/details?id=com.rehltna.app';
+          ? 'https://apps.apple.sa/app/id6746780603'
+          : 'https://play.google.sa/store/apps/details?id=sa.rehltna.app';
       await _launchURL(url);
     }
   }

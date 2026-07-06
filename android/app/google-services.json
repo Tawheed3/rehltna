@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:386444914382:android:479673eea7511e97126a9f",
+        "mobilesdk_app_id": "1:386444914382:android:9df7912f42b3600b126a9f",
         "android_client_info": {
-          "package_name": "com.rehltna.app"
+          "package_name": "sa.rehltna.app"
         }
       },
       "oauth_client": [],

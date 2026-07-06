@@ -6,7 +6,7 @@ import '../../core/constants/app_colors.dart';
 //  Full currency list — static so mosque_screen can reference it
 // ─────────────────────────────────────────────────────────────
 class CurrencyCalculatorScreen extends StatefulWidget {
-  /// rates from open.er-api.com/v6/latest/SAR — "X per 1 SAR"
+  /// rates from open.er-api.sa/v6/latest/SAR — "X per 1 SAR"
   final Map<String, double> rates;
 
   const CurrencyCalculatorScreen({super.key, required this.rates});

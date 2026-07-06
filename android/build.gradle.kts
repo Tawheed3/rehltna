@@ -1,7 +1,6 @@
 // android/build.gradle.kts
 buildscript {
-    // تعريف kotlin_version مباشرة بدون استخدام project properties
-    val kotlin_version = "1.9.0"
+    val kotlin_version = "2.2.20"
 
     repositories {
         google()
@@ -9,9 +8,9 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.1.0")
+        classpath("com.android.tools.build:gradle:8.11.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
-        classpath("com.google.gms:google-services:4.4.0")
+        classpath("com.google.gms:google-services:4.4.2")
     }
 }
 

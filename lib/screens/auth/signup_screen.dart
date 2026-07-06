@@ -170,7 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   autofillHints: const [AutofillHints.email], // 👈 للإكمال التلقائي
                   decoration: InputDecoration(
                     labelText: 'البريد الإلكتروني',
-                    hintText: 'rehltna@email.com',
+                    hintText: 'rehltna@email.sa',
                     prefixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -186,7 +186,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       return 'الرجاء إدخال البريد الإلكتروني';
                     }
                     if (!_isValidEmail(value)) {
-                      return 'البريد الإلكتروني غير صالح (مثال: name@domain.com)';
+                      return 'البريد الإلكتروني غير صالح (مثال: name@domain.sa)';
                     }
                     return null;
                   },

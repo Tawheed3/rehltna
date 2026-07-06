@@ -85,7 +85,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
                     labelText: 'البريد الإلكتروني',
-                    hintText: 'rehltna@email.com',
+                    hintText: 'rehltna@email.sa',
                     prefixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     filled: true,

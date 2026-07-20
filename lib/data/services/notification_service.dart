@@ -1,5 +1,7 @@
 // ==================== notification_service.dart ====================
 import 'dart:developer' as developer;
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -27,22 +29,33 @@ class NotificationService {
 
     try {
       developer.log('[Notifications] Initializing...', name: BaseProvider.logTag);
+      debugPrint('[Notifications] Initializing...');
 
+      // ✅ نطلب إذن الإشعارات عند فتح التطبيق
       NotificationSettings settings = await _firebaseMessaging.requestPermission(
         alert: true,
         badge: true,
         sound: true,
       );
 
-      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+      developer.log('[Notifications] Permission status: ${settings.authorizationStatus}', name: BaseProvider.logTag);
+      debugPrint('[Notifications] Permission status: ${settings.authorizationStatus}');
+
+      // نكمّل طالما المستخدم ما رفضش صراحة (authorized أو provisional)
+      if (settings.authorizationStatus == AuthorizationStatus.denied) {
         developer.log('[Notifications] Permission denied by user', name: BaseProvider.logTag, level: 900);
+        debugPrint('[Notifications] Permission denied by user — enable it from iOS Settings');
         return;
       }
 
       await _initLocalNotifications();
 
-      _fcmToken = await _firebaseMessaging.getToken();
-      developer.log('[Notifications] FCM Token: $_fcmToken', name: BaseProvider.logTag);
+      _fcmToken = await _fetchFcmToken();
+      // ⚠️ نطبع التوكن في وضع التطوير فقط — عشان ما يتسربش في الإنتاج
+      if (kDebugMode) {
+        developer.log('[Notifications] FCM Token: $_fcmToken', name: BaseProvider.logTag);
+        debugPrint('[Notifications] FCM Token: $_fcmToken');
+      }
 
       if (_fcmToken != null) {
         final prefs = await SharedPreferences.getInstance();
@@ -50,7 +63,9 @@ class NotificationService {
       }
 
       _firebaseMessaging.onTokenRefresh.listen((newToken) async {
-        developer.log('[Notifications] FCM Token refreshed: $newToken', name: BaseProvider.logTag);
+        if (kDebugMode) {
+          developer.log('[Notifications] FCM Token refreshed: $newToken', name: BaseProvider.logTag);
+        }
         _fcmToken = newToken;
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('fcm_token', newToken);
@@ -352,12 +367,48 @@ class NotificationService {
 
   Future<String?> getToken() async {
     if (_fcmToken == null) {
-      _fcmToken = await _firebaseMessaging.getToken();
+      _fcmToken = await _fetchFcmToken();
       if (_fcmToken != null) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('fcm_token', _fcmToken!);
       }
     }
     return _fcmToken;
+  }
+
+  /// ✅ جلب FCM token — على iOS لازم ننتظر APNs token الأول
+  /// وإلا بيرجع null (وده سبب إن iOS ما كانش بيبعت توكن للـ backend)
+  Future<String?> _fetchFcmToken() async {
+    try {
+      if (Platform.isIOS) {
+        String? apnsToken = await _firebaseMessaging.getAPNSToken();
+
+        // APNs token ممكن ياخد لحظات بعد التسجيل — نعمل retry بسيط
+        for (var i = 0; i < 10 && apnsToken == null; i++) {
+          debugPrint('[Notifications] Waiting for APNS token... attempt ${i + 1}');
+          await Future.delayed(const Duration(seconds: 1));
+          apnsToken = await _firebaseMessaging.getAPNSToken();
+        }
+
+        if (apnsToken == null) {
+          developer.log(
+            '[Notifications] APNS token still null — cannot mint FCM token',
+            name: BaseProvider.logTag,
+            level: 900,
+          );
+          debugPrint('[Notifications] APNS token still NULL — no APNs registration (check permission / Firebase APNs key / Push capability)');
+          return null;
+        }
+        if (kDebugMode) {
+          developer.log('[Notifications] APNS Token: $apnsToken', name: BaseProvider.logTag);
+          debugPrint('[Notifications] APNS Token: $apnsToken');
+        }
+      }
+
+      return await _firebaseMessaging.getToken();
+    } catch (e) {
+      developer.log('[Notifications] getToken error: $e', name: BaseProvider.logTag, level: 1000);
+      return null;
+    }
   }
 }

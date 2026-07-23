@@ -48,6 +48,13 @@ class NotificationService {
         return;
       }
 
+      // iOS: show banners even when app is in foreground
+      await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
       await _initLocalNotifications();
 
       _fcmToken = await _fetchFcmToken();
@@ -90,7 +97,14 @@ class NotificationService {
 
   Future<void> _initLocalNotifications() async {
     const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings();
+    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      defaultPresentAlert: true,
+      defaultPresentBadge: true,
+      defaultPresentSound: true,
+    );
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
@@ -125,7 +139,7 @@ class NotificationService {
 
       final NotificationDetails notificationDetails = NotificationDetails(
         android: androidDetails,
-        iOS: const DarwinNotificationDetails(),
+        iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
       );
 
       await _localNotifications.show(

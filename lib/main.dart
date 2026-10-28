@@ -37,6 +37,15 @@ void main() async {
     CacheService().init(),
   ]);
 
+  // Keep the server's copy of the device token current for users who stay logged in:
+  // Firebase rotates tokens over time, and login is otherwise the only sync point.
+  notificationService.onTokenChanged = authProvider.updateFcmTokenInBackground;
+  if (authProvider.isLoggedIn) {
+    notificationService.getToken().then((token) {
+      if (token != null) authProvider.updateFcmTokenInBackground(token);
+    });
+  }
+
   final userProvider = UserProvider(authProvider: authProvider);
 
   // إنشاء المزودين الأساسيين — البحث سيُحمَّل بعد تحميل الصفحة الرئيسية

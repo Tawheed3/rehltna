@@ -151,11 +151,11 @@ class ItemsProvider extends BaseProvider {
     for (var type in _itemTypes) {
       type.items.clear();
       type.items.addAll(
-          _items.where((i) => i.itemTypeId == type.id && _isTripActive(i)));
+          _items.where((i) => i.belongsToType(type.id) && _isTripActive(i)));
       for (var child in type.children) {
         child.items.clear();
         child.items.addAll(
-            _items.where((i) => i.itemTypeId == child.id && _isTripActive(i)));
+            _items.where((i) => i.belongsToType(child.id) && _isTripActive(i)));
       }
     }
     _updateAllRecursiveCounts();
@@ -318,7 +318,7 @@ class ItemsProvider extends BaseProvider {
     stopLoading();
   }
   List<ItemModel> getItemsByType(int typeId) =>
-      _items.where((item) => item.itemTypeId == typeId && _isTripActive(item)).toList();
+      _items.where((item) => item.belongsToType(typeId) && _isTripActive(item)).toList();
   List<ItemModel> getGroupTours() => getItemsByType(5);
   List<ItemModel> getCruises() => getItemsByType(4);
   List<ItemModel> getEducationalTours() => getItemsByType(3);

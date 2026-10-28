@@ -21,6 +21,9 @@ class NotificationService {
   String? _fcmToken;
   bool _isInitialized = false;
 
+  /// Called whenever Firebase rotates the device token, so it can be re-sent to the server.
+  void Function(String token)? onTokenChanged;
+
   /// ✅ مفتاح التنقل العام عشان نقدر نروح لأي شاشة من الإشعار
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -76,6 +79,7 @@ class NotificationService {
         _fcmToken = newToken;
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('fcm_token', newToken);
+        onTokenChanged?.call(newToken);
       });
 
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

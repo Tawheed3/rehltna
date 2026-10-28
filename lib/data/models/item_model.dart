@@ -3,6 +3,10 @@ import 'dart:convert';
 class ItemModel {
   final int id;
   final int itemTypeId;
+  /// every category the trip is listed under (includes [itemTypeId])
+  final List<int> itemTypeIds;
+
+  bool belongsToType(int typeId) => itemTypeId == typeId || itemTypeIds.contains(typeId);
   final String titleAr;
   final String titleEn;
   final String bannerAr;
@@ -37,6 +41,7 @@ class ItemModel {
   ItemModel({
     required this.id,
     required this.itemTypeId,
+    this.itemTypeIds = const [],
     required this.titleAr,
     required this.titleEn,
     required this.bannerAr,
@@ -98,6 +103,7 @@ class ItemModel {
     return ItemModel(
       id: json['id'] ?? 0,
       itemTypeId: int.tryParse(json['item_type_id']?.toString() ?? '0') ?? 0,
+      itemTypeIds: _parseTypeIds(json['item_type_ids']),
       titleAr: json['title_ar'] ?? '',
       titleEn: json['title_en'] ?? '',
       bannerAr: json['banner_ar'] ?? '',
@@ -164,6 +170,7 @@ class ItemModel {
     return ItemModel(
       id: json['id'] ?? 0,
       itemTypeId: int.tryParse(json['item_type_id']?.toString() ?? '0') ?? 0,
+      itemTypeIds: _parseTypeIds(json['item_type_ids']),
       titleAr: json['title_ar'] ?? '',
       titleEn: json['title_en'] ?? '',
       bannerAr: json['banner_ar'] ?? '',
@@ -288,6 +295,11 @@ class ItemModel {
 
   PriceModel? getPriceById(int priceId) {
     try { return prices.firstWhere((p) => p.id == priceId); } catch (e) { return null; }
+  }
+
+  static List<int> _parseTypeIds(dynamic raw) {
+    if (raw is! List) return const [];
+    return raw.map((e) => int.tryParse(e.toString())).whereType<int>().toList();
   }
 }
 
